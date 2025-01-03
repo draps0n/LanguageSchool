@@ -1,7 +1,7 @@
-const roleModel = require("../models/roleModel");
+const levelModel = require("../models/levelModel");
 
-const getAllRoles = (req, res) => {
-  roleModel.getAllRoles((error, results) => {
+const getAllLevels = (req, res) => {
+  levelModel.getAllLevels((error, results) => {
     if (error) {
       return res.status(500).send("Internal Server Error");
     }
@@ -9,15 +9,15 @@ const getAllRoles = (req, res) => {
   });
 };
 
-const getRoleById = (req, res) => {
+const getLevelById = (req, res) => {
   const id = req.params.id;
-  roleModel.getRoleById(id, (error, results) => {
+  levelModel.getLevelById(id, (error, results) => {
     if (error) {
       return res.status(500).send("Internal Server Error");
     }
 
     if (!results) {
-      return res.status(404).send("Role not found");
+      return res.status(404).send("Level not found");
     }
 
     res.status(200).json(results);
@@ -25,6 +25,6 @@ const getRoleById = (req, res) => {
 };
 
 module.exports = {
-  getAllRoles,
-  getRoleById,
+  getAllLevels,
+  getLevelById,
 };
