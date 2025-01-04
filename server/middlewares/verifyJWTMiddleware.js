@@ -11,7 +11,7 @@ const verifyJWT = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+    req.userData = decoded.userData;
     next();
   } catch (error) {
     return res.status(403).send("Forbidden");

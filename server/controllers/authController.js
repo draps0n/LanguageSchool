@@ -27,9 +27,13 @@ const login = async (req, res) => {
       return res.status(401).send("Invalid email or password");
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+      { userData: { userId: user.id, roleId: user.role } },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
+    );
     const refreshToken = jwt.sign(
       { userId: user.id },
       process.env.JWT_REFRESH_SECRET,
@@ -141,20 +145,7 @@ const register = async (req, res) => {
 
           connection.release();
 
-          const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-            expiresIn: "15m",
-          });
-          const refreshToken = jwt.sign(
-            { userId },
-            process.env.JWT_REFRESH_SECRET,
-            {
-              expiresIn: "1d",
-            }
-          );
-
-          await userModel.updateUserRefreshToken(userId, refreshToken);
-
-          res.status(201).send({ token, refreshToken });
+          res.sendStatus(201);
         });
       } catch (error) {
         console.log(error);
@@ -181,9 +172,13 @@ const handleRefreshToken = async (req, res) => {
       return res.status(401).send("Invalid refresh token");
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "15m",
-    });
+    const token = jwt.sign(
+      { userData: { userId: user.id, roleId: user.role } },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "15m",
+      }
+    );
     const newRefreshToken = jwt.sign(
       { userId: user.id },
       process.env.JWT_REFRESH_SECRET,
