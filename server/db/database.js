@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require("mysql2/promise");
 
 const pool = mysql.createPool({
   host: "localhost",
@@ -7,15 +7,15 @@ const pool = mysql.createPool({
   database: "language_school",
 });
 
-const connectDB = () => {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.error("Error connecting to MySQL:", err.message);
-      process.exit(1);
-    }
-    if (connection) connection.release();
+const connectDB = async () => {
+  try {
+    const connection = await pool.getConnection();
+    connection.release();
     console.log("MySQL connected...");
-  });
+  } catch (error) {
+    console.error("Error connecting to MySQL:", error.message);
+    process.exit(1);
+  }
 };
 
 module.exports = { pool, connectDB };

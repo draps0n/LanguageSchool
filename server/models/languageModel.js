@@ -1,66 +1,34 @@
 const { pool } = require("../db/database");
 
-const getAllLanguages = () => {
-  return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM jezyk", (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
-    });
-  });
+const getAllLanguages = async () => {
+  const [results] = await pool.query("SELECT * FROM jezyk");
+  return results;
 };
 
-const getLanguageById = (id) => {
-  return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM jezyk WHERE id = ?", id, (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results[0]);
-    });
-  });
+const getLanguageById = async (id) => {
+  const [results] = await pool.query("SELECT * FROM jezyk WHERE id = ?", [id]);
+  return results[0];
 };
 
-const createLanguage = (language) => {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      "INSERT INTO jezyk (nazwa, skrot) VALUES(?, ?)",
-      [language.name, language.code],
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results);
-      }
-    );
-  });
+const createLanguage = async (language) => {
+  const [results] = await pool.query(
+    "INSERT INTO jezyk (nazwa, skrot) VALUES(?, ?)",
+    [language.name, language.code]
+  );
+  return results;
 };
 
-const updateLanguage = (id, language) => {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      "UPDATE jezyk SET nazwa = ?, skrot = ? WHERE id = ?",
-      [language.name, language.code, id],
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results);
-      }
-    );
-  });
+const updateLanguage = async (id, language) => {
+  const [results] = await pool.query(
+    "UPDATE jezyk SET nazwa = ?, skrot = ? WHERE id = ?",
+    [language.name, language.code, id]
+  );
+  return results;
 };
 
-const deleteLanguage = (id) => {
-  return new Promise((resolve, reject) => {
-    pool.query("DELETE FROM jezyk WHERE id = ?", id, (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
-    });
-  });
+const deleteLanguage = async (id) => {
+  const [results] = await pool.query("DELETE FROM jezyk WHERE id = ?", [id]);
+  return results;
 };
 
 module.exports = {

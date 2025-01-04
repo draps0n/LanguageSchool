@@ -1,29 +1,16 @@
 const { pool } = require("../db/database");
 
-const getAllStates = () => {
-  return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM Status_zgloszenia", (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
-    });
-  });
+const getAllStates = async () => {
+  const [results] = await pool.query("SELECT * FROM Status_zgloszenia");
+  return results;
 };
 
-const getStateById = (id) => {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      "SELECT * FROM Status_zgloszenia WHERE id = ?",
-      id,
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results[0]);
-      }
-    );
-  });
+const getStateById = async (id) => {
+  const [results] = await pool.query(
+    "SELECT * FROM Status_zgloszenia WHERE id = ?",
+    id
+  );
+  return results[0];
 };
 
 module.exports = {

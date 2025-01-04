@@ -1,80 +1,46 @@
 const { pool } = require("../db/database");
 
-const getAllStudents = () => {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
+const getAllStudents = async () => {
+  const [results] = await pool.query(
+    `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
       k.czy_rabat, k.opis
       FROM kursant k
-      INNER JOIN uzytkownik u ON k.id = u.id`,
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results);
-      }
-    );
-  });
+      INNER JOIN uzytkownik u ON k.id = u.id`
+  );
+  return results;
 };
 
-const getStudentById = (id) => {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
-      k.czy_rabat, k.opis
-      FROM kursant k
-      INNER JOIN uzytkownik u ON k.id = u.id
-      WHERE u.id = ?`,
-      id,
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results[0]);
-      }
-    );
-  });
+const getStudentById = async (id) => {
+  const [results] = await pool.query(
+    `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
+    k.czy_rabat, k.opis
+    FROM kursant k
+    INNER JOIN uzytkownik u ON k.id = u.id
+    WHERE u.id = ?`,
+    [id]
+  );
+  return results[0];
 };
 
-const createStudent = (userId, student, connection) => {
-  return new Promise((resolve, reject) => {
-    connection.query(
-      "INSERT INTO kursant (id, czy_rabat, opis) VALUES(?, 'n', ?)",
-      [userId, student.description],
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results);
-      }
-    );
-  });
+const createStudent = async (userId, student, connection) => {
+  const [results] = await connection.query(
+    "INSERT INTO kursant (id, czy_rabat, opis) VALUES(?, 'n', ?)",
+    [userId, student.description]
+  );
+  return results;
 };
 
-const updateStudent = (id, student) => {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      "UPDATE kursant SET czy_rabat = ?, opis = ? WHERE id = ?",
-      [student.discount, student.description, id],
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results);
-      }
-    );
-  });
+const updateStudent = async (id, student) => {
+  const [results] = await pool.query(
+    "UPDATE kursant SET czy_rabat = ?, opis = ? WHERE id = ?",
+    [student.discount, student.description, id]
+  );
+  return results;
 };
 
-const deleteStudent = (id) => {
-  return new Promise((resolve, reject) => {
-    pool.query("DELETE FROM kursant WHERE id = ?", id, (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
-    });
-  });
+const deleteStudent = async (id) => {
+  const [results] = await pool.query("DELETE FROM kursant WHERE id = ?", [id]);
+  return results;
 };
 
 module.exports = {

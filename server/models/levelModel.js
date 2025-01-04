@@ -1,29 +1,16 @@
 const { pool } = require("../db/database");
 
-const getAllLevels = () => {
-  return new Promise((resolve, reject) => {
-    pool.query("SELECT * FROM Poziom_jezyka", (error, results) => {
-      if (error) {
-        return reject(error);
-      }
-      resolve(results);
-    });
-  });
+const getAllLevels = async () => {
+  const [results] = await pool.query("SELECT * FROM Poziom_jezyka");
+  return results;
 };
 
-const getLevelById = (id) => {
-  return new Promise((resolve, reject) => {
-    pool.query(
-      "SELECT * FROM Poziom_jezyka WHERE id = ?",
-      id,
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-        resolve(results[0]);
-      }
-    );
-  });
+const getLevelById = async (id) => {
+  const [results] = await pool.query(
+    "SELECT * FROM Poziom_jezyka WHERE id = ?",
+    [id]
+  );
+  return results[0];
 };
 
 module.exports = {

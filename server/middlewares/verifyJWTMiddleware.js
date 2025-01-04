@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const verifyJWT = (req, res, next) => {
   const authHeader = req.header("Authorization");
-  if (!authHeader) {
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).send("Access denied");
   }
 
@@ -11,7 +11,8 @@ const verifyJWT = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userData = decoded.userData;
+    req.userId = decoded.userData.userId;
+    req.roleId = decoded.userData.roleId;
     next();
   } catch (error) {
     return res.status(403).send("Forbidden");
