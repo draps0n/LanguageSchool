@@ -48,6 +48,29 @@ const getUserById = async (id) => {
   return user;
 };
 
+const getUserByRefreshToken = async (refreshToken) => {
+  const [results] = await pool.query(
+    "SELECT * FROM uzytkownik WHERE refresh_token = ?",
+    [refreshToken]
+  );
+
+  if (results.length === 0) {
+    return null;
+  }
+
+  const user = {
+    id: results[0].id,
+    name: results[0].imie,
+    lastName: results[0].nazwisko,
+    email: results[0].email,
+    dateOfBirth: results[0].data_urodzenia,
+    password: results[0].haslo,
+    refreshToken: results[0].refresh_token,
+    role: results[0].rola,
+  };
+  return user;
+};
+
 const createUser = async (user, roleId, connection) => {
   const { name, lastName, email, dateOfBirth, password } = user;
 
@@ -78,6 +101,7 @@ const updateUserRefreshToken = async (userId, refreshToken) => {
 module.exports = {
   getAllUsers,
   getUserByEmail,
+  getUserByRefreshToken,
   getUserById,
   createUser,
   updateUserRefreshToken,
