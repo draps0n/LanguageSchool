@@ -1,27 +1,26 @@
 const applicationStateModel = require("../models/applicationStateModel");
 
-const getAllStates = (req, res) => {
-  applicationStateModel.getAllStates((error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
-    res.status(200).json(results);
-  });
+const getAllStates = async (req, res) => {
+  try {
+    const states = await applicationStateModel.getAllStates();
+    res.status(200).json(states);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
 };
 
-const getStateById = (req, res) => {
+const getStateById = async (req, res) => {
   const id = req.params.id;
-  applicationStateModel.getStateById(id, (error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
 
-    if (!results) {
+  try {
+    const state = await applicationStateModel.getStateById(id);
+    if (!state) {
       return res.status(404).send("Application state not found");
     }
-
-    res.status(200).json(results);
-  });
+    return res.status(200).json(state);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
 module.exports = {

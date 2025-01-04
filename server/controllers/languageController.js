@@ -56,9 +56,21 @@ const updateLanguage = (req, res) => {
   });
 };
 
+const deleteLanguage = (req, res) => {
+  const id = req.params.id;
+
+  languageModel.deleteLanguage(id, (error, results) => {
+    if (error) {
+      return res.status(500).send("Internal Server Error");
+    }
+    res.status(200).send("Language deleted successfully");
+  });
+};
+
 module.exports = {
   getLanguages,
   getLanguageById,
   createLanguage,
   updateLanguage,
+  deleteLanguage,
 };

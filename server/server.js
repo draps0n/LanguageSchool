@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { connectDB } = require("./db/database");
+const verifyJWT = require("./middlewares/verifyJWTMiddleware");
+const authRoutes = require("./routes/authRoutes");
 const languageRoutes = require("./routes/languageRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 const levelRoutes = require("./routes/levelRoutes");
@@ -15,6 +17,10 @@ connectDB();
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(bodyParser.json());
+
+app.use("/auth", authRoutes);
+
+app.use(verifyJWT);
 
 app.use("/languages", languageRoutes);
 app.use("/roles", roleRoutes);

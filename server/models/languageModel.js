@@ -44,9 +44,19 @@ const updateLanguage = (id, language, callback) => {
   );
 };
 
+const deleteLanguage = (id, callback) => {
+  pool.query("DELETE FROM jezyk WHERE id = ?", id, (error, results) => {
+    if (error) {
+      return callback(error);
+    }
+    callback(null, results);
+  });
+};
+
 module.exports = {
   getAllLanguages,
   getLanguageById,
   createLanguage,
   updateLanguage,
+  deleteLanguage,
 };
