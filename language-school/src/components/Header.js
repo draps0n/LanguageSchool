@@ -6,16 +6,25 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthContext from "../context/AuthProvider";
 
 function Header() {
+  // Pobierz dane użytkownika i funkcję do ich aktualizacji z kontekstu
   const { userData, setUserData } = useContext(AuthContext);
+
+  // Funkcja do nawigacji
   const navigate = useNavigate();
 
+  // Funkcja do wylogowania użytkownika
   const handleLogout = async () => {
     try {
-      await axios.post("/auth/logout", {}, { withCredentials: true });
+      // Zapytanie do serwera o wylogowanie
+      await axios.get("/auth/logout", { withCredentials: true });
+
+      // Aktualizacja danych użytkownika
       setUserData(null);
+
+      // Przekierowanie na stronę główną
       navigate("/");
     } catch (error) {
-      console.log(error); // TODO: popup window
+      console.log(error);
       toast.error("Wystąpił błąd podczas wylogowywania. Spróbuj ponownie.");
     }
   };

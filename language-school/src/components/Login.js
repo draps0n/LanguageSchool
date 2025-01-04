@@ -6,17 +6,21 @@ import AuthContext from "../context/AuthProvider";
 import "../styles/Login.css";
 
 function Login() {
+  // Pobieranie funkcji setUserData z kontekstu
   const { setUserData } = useContext(AuthContext);
+
+  // Hook do nawigacji
   const navigate = useNavigate();
 
+  // Hooki do przechowywania danych formularza i błędów
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-
   const [emailError, setEmailError] = useState("");
 
+  // Funkcja do walidacji adresu email
   const validateEmail = (email) => {
     if (email === "") {
       setEmailError("");
@@ -32,10 +36,12 @@ function Login() {
     return true;
   };
 
+  // Funkcja do obsługi zdarzenia submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Wysłanie zapytania do serwera
       const response = await axios.post(
         "/auth/login",
         JSON.stringify({ email: formData.email, password: formData.password }),
@@ -46,11 +52,23 @@ function Login() {
           withCredentials: true,
         }
       );
-      const { token } = response.data;
-      setUserData({ accessToken: token });
+
+      // Pobranie tokenu z odpowiedzi serwera i zapisanie go w kontekście
+      const { accessToken } = response.data;
+      setUserData({
+        accessToken,
+        userId: response.data.userId,
+        name: response.data.name,
+        lastName: response.data.lastName,
+        email: response.data.email,
+        role: response.data.role,
+        dateOfBirth: response.data.dateOfBirth,
+      });
+
+      // Usunięcie błędów i przekierowanie na stronę z informacjami o użytkowniku
       setError("");
       setFormData({ email: "", password: "" });
-      navigate("/user-info");
+      navigate("/profile");
     } catch (error) {
       if (error && !error.response) {
         setError("Brak odpowiedzi ze strony serwera");
