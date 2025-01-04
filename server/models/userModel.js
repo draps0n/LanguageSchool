@@ -1,6 +1,6 @@
 const { pool } = require("../db/database");
 
-const getUserByEmail = (email, callback) => {
+const getUserByEmail = (email) => {
   return new Promise((resolve, reject) => {
     pool.query(
       `SELECT * FROM uzytkownik WHERE email = ?`,
@@ -10,6 +10,10 @@ const getUserByEmail = (email, callback) => {
           return reject(error);
         }
 
+        if (results.length === 0) {
+          return resolve(null);
+        }
+
         user = {
           id: results[0].id,
           name: results[0].imie,
@@ -26,7 +30,7 @@ const getUserByEmail = (email, callback) => {
   });
 };
 
-const getUserById = (id, callback) => {
+const getUserById = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(
       `SELECT * FROM uzytkownik WHERE id = ?`,
@@ -36,6 +40,10 @@ const getUserById = (id, callback) => {
           return reject(error);
         }
 
+        if (results.length === 0) {
+          return resolve(null);
+        }
+
         user = {
           id: results[0].id,
           name: results[0].imie,
@@ -52,85 +60,31 @@ const getUserById = (id, callback) => {
   });
 };
 
-const createUser = (user, callback) => {
+const createUser = (user, roleId, connection) => {
   return new Promise((resolve, reject) => {
-    const {
-      name,
-      lastName,
-      email,
-      dateOfBirth,
-      password,
-      refreshToken,
-      role,
-      description,
-    } = user;
+    const { name, lastName, email, dateOfBirth, password } = user;
 
-    pool.getConnection((err, connection) => {
-      if (err) {
-        return reject(err);
-      }
+    console.log(user);
 
-      connection.beginTransaction((err) => {
-        if (err) {
-          connection.release();
-          return reject(err);
+    const insertUserQuery = `
+      INSERT INTO uzytkownik (imie, nazwisko, email, data_urodzenia, haslo, refresh_token, rola)
+      VALUES (?, ?, ?, ?, ?, '', ?)
+    `;
+
+    connection.query(
+      insertUserQuery,
+      [name, lastName, email, dateOfBirth, password, roleId],
+      (error, results) => {
+        if (error) {
+          return reject(error);
         }
-
-        const insertUserQuery = `
-          INSERT INTO uzytkownik (imie, nazwisko, email, data_urodzenia, haslo, refresh_token, rola)
-          VALUES (?, ?, ?, ?, ?, ?, ?)
-        `;
-
-        connection.query(
-          insertUserQuery,
-          [name, lastName, email, dateOfBirth, password, refreshToken, role],
-          (error, results) => {
-            if (error) {
-              return connection.rollback(() => {
-                connection.release();
-                reject(error);
-              });
-            }
-
-            const userId = results.insertId;
-
-            const insertStudentQuery = `
-              INSERT INTO kursant (id, czy_rabat, opis)
-              VALUES (?, 'n', ?)
-            `;
-
-            connection.query(
-              insertStudentQuery,
-              [userId, description],
-              (error, results) => {
-                if (error) {
-                  return connection.rollback(() => {
-                    connection.release();
-                    reject(error);
-                  });
-                }
-
-                connection.commit((err) => {
-                  if (err) {
-                    return connection.rollback(() => {
-                      connection.release();
-                      reject(err);
-                    });
-                  }
-
-                  connection.release();
-                  resolve(userId);
-                });
-              }
-            );
-          }
-        );
-      });
-    });
+        resolve(results.insertId);
+      }
+    );
   });
 };
 
-const updateUserRefreshToken = (userId, refreshToken, callback) => {
+const updateUserRefreshToken = (userId, refreshToken) => {
   return new Promise((resolve, reject) => {
     pool.query(
       "UPDATE uzytkownik SET refresh_token = ? WHERE id = ?",
