@@ -1,5 +1,6 @@
 .login-container {
-    max-width: 400px;
+    min-width: 500px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 2rem;
     background-color: #fff;
@@ -35,7 +36,7 @@ input {
 button {
     width: 100%;
     padding: 0.75rem;
-    background-color: #007bff;
+    background-color: #313a4c;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -50,17 +51,20 @@ button:disabled {
 }
 
 button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #181c25;
 }
 
 .error {
     color: #ff0000;
     font-size: 0.875rem;
     margin-top: 0.5rem;
+    word-wrap: break-word;
 }
 
 @media (max-width: 768px) {
     .login-container {
+        min-width: none;
+        max-width: 400;
         padding: 1rem;
     }
 

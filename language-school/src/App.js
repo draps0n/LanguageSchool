@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import Login from "./components/Login";
+import Register from "./components/Register";
 import "./App.css";
 import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
@@ -20,6 +21,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ToastContainer
@@ -33,7 +35,7 @@ function App() {
             pauseOnFocusLoss
             draggable
             pauseOnHover={false}
-            toastStyle={{ marginRight: "1rem" }}
+            toastStyle={{ marginRight: "1rem", marginTop: "6rem" }}
             closeButton={false}
           />
         </main>

@@ -128,7 +128,7 @@ function Login() {
         </div>
         {error && <p className="error">{error}</p>}
         <div className="form-group">
-          <Link to="/auth/register">Zarejestruj się</Link>
+          <Link to="/register">Zarejestruj się</Link>
         </div>
         <button
           type="submit"

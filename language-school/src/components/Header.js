@@ -4,6 +4,13 @@ import axios from "../api/axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthContext from "../context/AuthProvider";
+import {
+  FaCircleInfo,
+  FaSquarePhone,
+  FaSchool,
+  FaHouseUser,
+  FaBook,
+} from "react-icons/fa6";
 import "../styles/Header.css";
 
 function Header() {
@@ -23,7 +30,7 @@ function Header() {
       setUserData(null);
 
       // Wyświetlenie komunikatu o wylogowaniu
-      toast.success("Zostałeś wylogowany.");
+      toast.info("Zostałeś wylogowany.");
 
       // Przekierowanie na stronę główną
       navigate("/");
@@ -44,22 +51,32 @@ function Header() {
             </div>
           </li>
           <li>
-            <Link to="/">Szkoła</Link>
+            <Link to="/" className="link-with-icon">
+              Szkoła <FaSchool className="icon" />
+            </Link>
           </li>
           <li>
-            <Link to="/about">O nas</Link>
+            <Link to="/about" className="link-with-icon">
+              O nas <FaCircleInfo className="icon" />
+            </Link>
           </li>
           <li>
-            <Link to="/contact">Kontakt</Link>
+            <Link to="/contact" className="link-with-icon">
+              Kontakt <FaSquarePhone className="icon" />
+            </Link>
           </li>
           {userData && (
             <li>
-              <Link to="/courses">Moje kursy</Link>
+              <Link to="/course" className="link-with-icon">
+                Kursy <FaBook className="icon" />
+              </Link>
             </li>
           )}
           {userData && (
             <li>
-              <Link to="/profile">Mój profil</Link>
+              <Link to="/profile" className="link-with-icon">
+                Profil <FaHouseUser className="icon" />
+              </Link>
             </li>
           )}
           <li>

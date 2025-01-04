@@ -115,15 +115,14 @@ const register = async (req, res) => {
 
   const birthDate = new Date(user.dateOfBirth);
   const today = new Date();
-  const age = today.getFullYear() - birthDate.getFullYear();
-  const monthDiff = today.getMonth() - birthDate.getMonth();
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-  ) {
-    age--;
+  if (birthDate > today) {
+    return res.status(400).send("Date of birth cannot be in the future");
   }
-  if (age < 18) {
+
+  if (
+    birthDate >
+    new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+  ) {
     return res.status(400).send("User must be at least 18 years old");
   }
 
@@ -137,7 +136,7 @@ const register = async (req, res) => {
   try {
     const userExists = await userModel.getUserByEmail(user.email);
     if (userExists) {
-      return res.status(400).send("User with this email already exists");
+      return res.status(409).send("User with this email already exists");
     }
 
     // Zahasowanie hasła

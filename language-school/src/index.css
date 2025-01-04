@@ -29,13 +29,13 @@ textarea {
 }
 
 a {
-    color: #007bff;
+    color: #313a4c;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 a:hover {
-    color: #0056b3;
+    color: #181c25;
 }
 
 @media (max-width: 768px) {
