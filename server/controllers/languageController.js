@@ -1,70 +1,77 @@
 const languageModel = require("../models/languageModel");
 
-const getLanguages = (req, res) => {
-  languageModel.getAllLanguages((error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
-    res.status(200).json(results);
-  });
+const getLanguages = async (req, res) => {
+  try {
+    const fetchedLanguages = await languageModel.getAllLanguages();
+    res.status(200).json(fetchedLanguages);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
 };
 
-const getLanguageById = (req, res) => {
+const getLanguageById = async (req, res) => {
   const id = req.params.id;
-  languageModel.getLanguageById(id, (error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
+  try {
+    const fetchedLanguage = await languageModel.getLanguageById(id);
+    if (!fetchedLanguage) {
+      return res.status(404).send("Language not found");
     }
+    res.status(200).json(fetchedLanguage);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+};
 
-    if (!results) {
+const createLanguage = async (req, res) => {
+  const language = req.body;
+
+  if (!language.name || !language.code) {
+    return res.status(400).send("Please provide all required fields");
+  }
+
+  try {
+    await languageModel.createLanguage(language);
+    res.status(201).send("Language created successfully");
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const updateLanguage = async (req, res) => {
+  const id = req.params.id;
+  const language = req.body;
+
+  if (!language.name || !language.code) {
+    return res.status(400).send("Please provide all required fields");
+  }
+
+  try {
+    const fetchedLanguage = languageModel.getLanguageById(id);
+    if (!fetchedLanguage) {
       return res.status(404).send("Language not found");
     }
 
-    res.status(200).json(results);
-  });
-};
-
-const createLanguage = (req, res) => {
-  const language = req.body;
-
-  if (!language.name || !language.code) {
-    return res.status(400).send("Please provide all required fields");
-  }
-
-  languageModel.createLanguage(language, (error, results) => {
-    if (error) {
-      console.log(error);
-      return res.status(500).send("Internal Server Error");
-    }
-    res.status(201).send("Language created successfully");
-  });
-};
-
-const updateLanguage = (req, res) => {
-  const id = req.params.id;
-  const language = req.body;
-
-  if (!language.name || !language.code) {
-    return res.status(400).send("Please provide all required fields");
-  }
-
-  languageModel.updateLanguage(id, language, (error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
+    await languageModel.updateLanguage(id, language);
     res.status(200).send("Language updated successfully");
-  });
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
 };
 
-const deleteLanguage = (req, res) => {
+const deleteLanguage = async (req, res) => {
   const id = req.params.id;
 
-  languageModel.deleteLanguage(id, (error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
+  try {
+    const fetchedLanguage = languageModel.getLanguageById(id);
+    if (!fetchedLanguage) {
+      return res.status(404).send("Language not found");
     }
+
+    await languageModel.deleteLanguage(id);
     res.status(200).send("Language deleted successfully");
-  });
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 module.exports = {

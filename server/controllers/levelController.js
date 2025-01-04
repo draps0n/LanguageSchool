@@ -1,27 +1,26 @@
 const levelModel = require("../models/levelModel");
 
-const getAllLevels = (req, res) => {
-  levelModel.getAllLevels((error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
-    res.status(200).json(results);
-  });
+const getAllLevels = async (req, res) => {
+  try {
+    const fetchedLevels = await levelModel.getAllLevels();
+    return res.status(200).json(fetchedLevels);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
-const getLevelById = (req, res) => {
+const getLevelById = async (req, res) => {
   const id = req.params.id;
-  levelModel.getLevelById(id, (error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
-
-    if (!results) {
+  try {
+    const fetchedLevel = await levelModel.getLevelById(id);
+    if (!fetchedLevel) {
       return res.status(404).send("Level not found");
     }
 
-    res.status(200).json(results);
-  });
+    return res.status(200).json(fetchedLevel);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 };
 
 module.exports = {

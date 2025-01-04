@@ -1,55 +1,65 @@
 const { pool } = require("../db/database");
 
-const getAllLanguages = (callback) => {
-  pool.query("SELECT * FROM jezyk", (error, results) => {
-    if (error) {
-      return callback(error);
-    }
-    callback(null, results);
+const getAllLanguages = () => {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM jezyk", (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
   });
 };
 
-const getLanguageById = (id, callback) => {
-  pool.query("SELECT * FROM jezyk WHERE id = ?", id, (error, results) => {
-    if (error) {
-      return callback(error);
-    }
-    callback(null, results[0]);
+const getLanguageById = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM jezyk WHERE id = ?", id, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results[0]);
+    });
   });
 };
 
-const createLanguage = (language, callback) => {
-  pool.query(
-    "INSERT INTO jezyk (nazwa, skrot) VALUES(?, ?)",
-    [language.name, language.code],
-    (error, results) => {
-      if (error) {
-        return callback(error);
+const createLanguage = (language) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "INSERT INTO jezyk (nazwa, skrot) VALUES(?, ?)",
+      [language.name, language.code],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
       }
-      callback(null, results);
-    }
-  );
+    );
+  });
 };
 
-const updateLanguage = (id, language, callback) => {
-  pool.query(
-    "UPDATE jezyk SET nazwa = ?, skrot = ? WHERE id = ?",
-    [language.name, language.code, id],
-    (error, results) => {
-      if (error) {
-        return callback(error);
+const updateLanguage = (id, language) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "UPDATE jezyk SET nazwa = ?, skrot = ? WHERE id = ?",
+      [language.name, language.code, id],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
       }
-      callback(null, results);
-    }
-  );
+    );
+  });
 };
 
-const deleteLanguage = (id, callback) => {
-  pool.query("DELETE FROM jezyk WHERE id = ?", id, (error, results) => {
-    if (error) {
-      return callback(error);
-    }
-    callback(null, results);
+const deleteLanguage = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query("DELETE FROM jezyk WHERE id = ?", id, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
   });
 };
 

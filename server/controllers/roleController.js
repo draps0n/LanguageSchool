@@ -1,27 +1,30 @@
 const roleModel = require("../models/roleModel");
 
-const getAllRoles = (req, res) => {
-  roleModel.getAllRoles((error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
-    res.status(200).json(results);
-  });
+const getAllRoles = async (req, res) => {
+  try {
+    const fetchedRoles = await roleModel.getAllRoles();
+    res.status(200).json(fetchedRoles);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
 };
 
-const getRoleById = (req, res) => {
+const getRoleById = async (req, res) => {
   const id = req.params.id;
-  roleModel.getRoleById(id, (error, results) => {
-    if (error) {
-      return res.status(500).send("Internal Server Error");
-    }
+  if (isNaN(id)) {
+    return res.status(400).send("Invalid ID");
+  }
+  try {
+    const fetchedRole = await roleModel.getRoleById(id);
 
-    if (!results) {
+    if (!fetchedRole) {
       return res.status(404).send("Role not found");
     }
 
-    res.status(200).json(results);
-  });
+    res.status(200).json(fetchedRole);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
 };
 
 module.exports = {

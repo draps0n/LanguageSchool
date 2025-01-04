@@ -1,20 +1,24 @@
 const { pool } = require("../db/database");
 
-const getAllRoles = (callback) => {
-  pool.query("SELECT * FROM rola", (error, results) => {
-    if (error) {
-      return callback(error);
-    }
-    callback(null, results);
+const getAllRoles = () => {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM rola", (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
   });
 };
 
-const getRoleById = (id, callback) => {
-  pool.query("SELECT * FROM rola WHERE id = ?", id, (error, results) => {
-    if (error) {
-      return callback(error);
-    }
-    callback(null, results[0]);
+const getRoleById = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query("SELECT * FROM rola WHERE id = ?", id, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results[0]);
+    });
   });
 };
 

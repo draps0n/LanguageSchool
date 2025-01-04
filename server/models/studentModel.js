@@ -1,69 +1,79 @@
 const { pool } = require("../db/database");
 
-const getAllStudents = (callback) => {
-  pool.query(
-    `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
-    s.czy_rabat, s.opis
-    FROM student s
-    INNER JOIN uzytkownik u ON s.id = u.id`,
-    (error, results) => {
-      if (error) {
-        return callback(error);
+const getAllStudents = () => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
+      s.czy_rabat, s.opis
+      FROM student s
+      INNER JOIN uzytkownik u ON s.id = u.id`,
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
       }
-      callback(null, results);
-    }
-  );
+    );
+  });
 };
 
-const getStudentById = (id, callback) => {
-  pool.query(
-    `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
-    s.czy_rabat, s.opis
-    FROM student s
-    INNER JOIN uzytkownik u ON s.id = u.id
-    WHERE u.id = ?`,
-    id,
-    (error, results) => {
-      if (error) {
-        return callback(error);
+const getStudentById = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      `SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia,
+      s.czy_rabat, s.opis
+      FROM student s
+      INNER JOIN uzytkownik u ON s.id = u.id
+      WHERE u.id = ?`,
+      id,
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results[0]);
       }
-      callback(null, results[0]);
-    }
-  );
+    );
+  });
 };
 
-const createStudent = (userId, student, callback) => {
-  pool.query(
-    "INSERT INTO student (id, czy_rabat, opis) VALUES(?, ?, ?)",
-    [userId, student.discount, student.description],
-    (error, results) => {
-      if (error) {
-        return callback(error);
+const createStudent = (userId, student) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "INSERT INTO student (id, czy_rabat, opis) VALUES(?, ?, ?)",
+      [userId, student.discount, student.description],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
       }
-      callback(null, results);
-    }
-  );
+    );
+  });
 };
 
-const updateStudent = (id, student, callback) => {
-  pool.query(
-    "UPDATE student SET czy_rabat = ?, opis = ? WHERE id = ?",
-    [student.discount, student.description, id],
-    (error, results) => {
-      if (error) {
-        return callback(error);
+const updateStudent = (id, student) => {
+  return new Promise((resolve, reject) => {
+    pool.query(
+      "UPDATE student SET czy_rabat = ?, opis = ? WHERE id = ?",
+      [student.discount, student.description, id],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        resolve(results);
       }
-      callback(null, results);
-    }
-  );
+    );
+  });
 };
 
-const deleteStudent = (id, callback) => {
-  pool.query("DELETE FROM student WHERE id = ?", id, (error, results) => {
-    if (error) {
-      return callback(error);
-    }
-    callback(null, results);
+const deleteStudent = (id) => {
+  return new Promise((resolve, reject) => {
+    pool.query("DELETE FROM student WHERE id = ?", id, (error, results) => {
+      if (error) {
+        return reject(error);
+      }
+      resolve(results);
+    });
   });
 };
 

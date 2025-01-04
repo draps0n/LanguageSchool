@@ -11,7 +11,7 @@ const getAllStates = () => {
   });
 };
 
-const getStateById = (id, callback) => {
+const getStateById = (id) => {
   return new Promise((resolve, reject) => {
     pool.query(
       "SELECT * FROM Status_zgloszenia WHERE id = ?",
