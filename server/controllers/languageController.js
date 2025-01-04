@@ -11,6 +11,10 @@ const getLanguages = async (req, res) => {
 
 const getLanguageById = async (req, res) => {
   const id = req.params.id;
+  if (!id || isNaN(id)) {
+    return res.status(400).send("Language ID is required");
+  }
+
   try {
     const fetchedLanguage = await languageModel.getLanguageById(id);
     if (!fetchedLanguage) {
@@ -26,7 +30,7 @@ const createLanguage = async (req, res) => {
   const language = req.body;
 
   if (!language.name || !language.code) {
-    return res.status(400).send("Please provide all required fields");
+    return res.status(400).send("All fields are required");
   }
 
   try {
@@ -41,7 +45,11 @@ const updateLanguage = async (req, res) => {
   const id = req.params.id;
   const language = req.body;
 
-  if (!language.name || !language.code) {
+  if (!id || isNaN(id)) {
+    return res.status(400).send("Language ID is required");
+  }
+
+  if (!language || !language.name || !language.code) {
     return res.status(400).send("Please provide all required fields");
   }
 
@@ -60,6 +68,10 @@ const updateLanguage = async (req, res) => {
 
 const deleteLanguage = async (req, res) => {
   const id = req.params.id;
+
+  if (!id || isNaN(id)) {
+    return res.status(400).send("Language ID is required");
+  }
 
   try {
     const fetchedLanguage = languageModel.getLanguageById(id);

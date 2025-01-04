@@ -11,9 +11,10 @@ const getAllRoles = async (req, res) => {
 
 const getRoleById = async (req, res) => {
   const id = req.params.id;
-  if (isNaN(id)) {
+  if (!id || isNaN(id)) {
     return res.status(400).send("Invalid ID");
   }
+
   try {
     const fetchedRole = await roleModel.getRoleById(id);
 

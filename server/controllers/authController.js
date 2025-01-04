@@ -11,6 +11,11 @@ const login = async (req, res) => {
     return res.status(400).send("Email and password are required");
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).send("Invalid email format");
+  }
+
   try {
     const user = await userModel.getUserByEmail(email);
     if (!user) {
@@ -54,6 +59,46 @@ const register = async (req, res) => {
     !user.description
   ) {
     return res.status(400).send("All fields are required");
+  }
+
+  if (user.name.length < 2 || user.name.length > 50) {
+    return res.status(400).send("Name must be between 2 and 50 characters");
+  }
+
+  if (user.lastName.length < 2 || user.lastName.length > 50) {
+    return res
+      .status(400)
+      .send("Last name must be between 2 and 50 characters");
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(user.email)) {
+    return res.status(400).send("Invalid email format");
+  }
+
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(user.dateOfBirth)) {
+    return res.status(400).send("Date must be in YYYY-MM-DD format");
+  }
+
+  const birthDate = new Date(user.dateOfBirth);
+  const today = new Date();
+  const age = today.getFullYear() - birthDate.getFullYear();
+  const monthDiff = today.getMonth() - birthDate.getMonth();
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < birthDate.getDate())
+  ) {
+    age--;
+  }
+  if (age < 18) {
+    return res.status(400).send("User must be at least 18 years old");
+  }
+
+  if (user.description.length < 10 || user.description.length > 200) {
+    return res
+      .status(400)
+      .send("Description must be between 10 and 200 characters");
   }
 
   try {

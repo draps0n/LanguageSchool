@@ -12,6 +12,10 @@ const getAllStates = async (req, res) => {
 const getStateById = async (req, res) => {
   const id = req.params.id;
 
+  if (!id || isNaN(id)) {
+    return res.status(400).send("Application state ID is required");
+  }
+
   try {
     const fetchedState = await applicationStateModel.getStateById(id);
     if (!fetchedState) {

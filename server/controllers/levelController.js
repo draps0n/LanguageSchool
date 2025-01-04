@@ -11,6 +11,10 @@ const getAllLevels = async (req, res) => {
 
 const getLevelById = async (req, res) => {
   const id = req.params.id;
+  if (!id || isNaN(id)) {
+    return res.status(400).send("Id is required");
+  }
+
   try {
     const fetchedLevel = await levelModel.getLevelById(id);
     if (!fetchedLevel) {
