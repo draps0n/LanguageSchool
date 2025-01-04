@@ -20,7 +20,12 @@ const startServer = async () => {
     const applicationStateRoutes = require("./routes/applicationStateRoutes");
 
     app.use(express.urlencoded({ extended: true }));
-    app.use(cors());
+    app.use(
+      cors({
+        origin: "http://localhost:3000",
+        credentials: true,
+      })
+    );
     app.use(bodyParser.json());
 
     app.use("/auth", authRoutes);
