@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { toast } from "react-toastify";
@@ -40,16 +40,25 @@ function Header() {
     }
   };
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
   return (
     <header className="App-header">
       <nav>
-        <ul>
-          <li>
-            <div className="logo-container">
-              <img src="/favicon.ico" alt="Logo" className="logo" />
-              <span className="logo-text">Szkoła Inglisz</span>
-            </div>
-          </li>
+        <div className="logo-container">
+          <img src="/favicon.ico" alt="Logo" className="logo" />
+          <span className="logo-text">Szkoła Inglisz</span>
+        </div>
+        <div className="menu-toggle" onClick={toggleMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
           <li>
             <Link to="/" className="link-with-icon">
               Szkoła <FaSchool className="icon" />
@@ -67,7 +76,7 @@ function Header() {
           </li>
           {userData && (
             <li>
-              <Link to="/course" className="link-with-icon">
+              <Link to="/courses" className="link-with-icon">
                 Kursy <FaBook className="icon" />
               </Link>
             </li>

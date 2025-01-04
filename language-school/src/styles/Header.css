@@ -2,56 +2,108 @@ header {
     width: 100%;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-nav {
-    max-width: 1600px;
+  }
+  
+  nav {
+    max-width: 1200px;
     margin: 0 auto;
-}
-
-nav ul {
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative; /* Dodane */
+  }
+  
+  .nav-links {
     display: flex;
     align-items: center;
     list-style: none;
     padding: 0;
     margin: 0;
-    height: 60px;
-}
-
-nav ul li:first-child {
-    margin-right: auto;
-    padding-left: 1rem;
-}
-
-nav ul li:not(:first-child) {
-    margin-left: 2rem;
-}
-
-.link-with-icon {
+  }
+  
+  .nav-links li {
+    margin-left: 1rem;
+  }
+  
+  .nav-links li:first-child {
+    margin-left: 0;
+  }
+  
+  .link-with-icon {
     display: inline-flex;
     align-items: center;
-}
-
-.icon {
+  }
+  
+  .icon {
     vertical-align: middle;
     margin-left: 0.5rem;
-    /* Opcjonalnie, aby dodać odstęp między tekstem a ikoną */
-}
-
-.logo-container {
+  }
+  
+  .logo-container {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-}
-
-.logo {
+  }
+  
+  .logo {
     width: 60px;
     height: 60px;
     border-radius: 35%;
-}
-
-.logo-text {
+  }
+  
+  .logo-text {
     font-size: 1.1rem;
     font-weight: 600;
     color: #333;
-}
+  }
+  
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    position: absolute; /* Dodane */
+    right: 1rem; /* Dodane */
+  }
+  
+  .menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 4px 0;
+    transition: 0.4s;
+  }
+  
+  @media (max-width: 768px) {
+    nav {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .nav-links {
+      flex-direction: column;
+      width: 100%;
+      display: none;
+    }
+  
+    .nav-links li {
+      margin: 0.5rem 0;
+    }
+  
+    .logo {
+      width: 50px;
+      height: 50px;
+    }
+  
+    .logo-text {
+      font-size: 1rem;
+    }
+  
+    .menu-toggle {
+      display: flex;
+    }
+  
+    .nav-links.active {
+      display: flex;
+    }
+  }

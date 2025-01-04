@@ -6,11 +6,16 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import CoursesList from "./components/CoursesList";
+import CourseDetails from "./components/CourseDetails";
 import "./App.css";
 import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
+import { useAuthInterceptor } from "./api/axios";
 
 function App() {
+  useAuthInterceptor();
+
   return (
     <Router>
       <div className="App">
@@ -22,6 +27,8 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/courses" element={<CoursesList />} />
+            <Route path="/courses/:id" element={<CourseDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ToastContainer
@@ -32,7 +39,7 @@ function App() {
             stacked
             closeOnClick
             rtl={false}
-            pauseOnFocusLoss
+            pauseOnFocusLoss={false}
             draggable
             pauseOnHover={false}
             toastStyle={{ marginRight: "1rem", marginTop: "6rem" }}

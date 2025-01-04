@@ -24,6 +24,7 @@ const startServer = async () => {
     const roleRoutes = require("./routes/roleRoutes");
     const levelRoutes = require("./routes/levelRoutes");
     const applicationStateRoutes = require("./routes/applicationStateRoutes");
+    const groupRoutes = require("./routes/groupRoutes");
 
     // Ustaw middleware do obsługi formularzy
     app.use(express.urlencoded({ extended: true }));
@@ -53,6 +54,7 @@ const startServer = async () => {
     app.use("/roles", roleRoutes);
     app.use("/levels", levelRoutes);
     app.use("/applicationStates", applicationStateRoutes);
+    app.use("/groups", groupRoutes);
 
     // Nasłuchuj na porcie
     app.listen(port, () => {

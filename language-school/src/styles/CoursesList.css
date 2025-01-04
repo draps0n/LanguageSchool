@@ -1,0 +1,55 @@
+/* filepath: /c:/Users/krzys/OneDrive/Dokumenty/PJATK/5. semestr/TIN/TIN-projekt/language-school/src/components/CoursesList.css */
+.group-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.group-item {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    min-width: 500px;
+}
+
+.group-image {
+    width: 150px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.group-details {
+    flex: 1;
+}
+
+.group-details h3 {
+    margin: 0 0 10px;
+}
+
+.group-details p {
+    margin: 5px 0;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    cursor: not-allowed;
+}
