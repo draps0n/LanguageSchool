@@ -33,6 +33,16 @@ function Header() {
           <li>
             <Link to="/contact">Kontakt</Link>
           </li>
+          {userData && (
+            <li>
+              <Link to="/courses">Moje kursy</Link>
+            </li>
+          )}
+          {userData && (
+            <li>
+              <Link to="/profile">Mój profil</Link>
+            </li>
+          )}
           <li>
             {userData ? (
               <button onClick={handleLogout}>Wyloguj się</button>
