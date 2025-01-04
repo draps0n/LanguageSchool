@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthContext from "../context/AuthProvider";
+import "../styles/Header.css";
 
 function Header() {
   // Pobierz dane użytkownika i funkcję do ich aktualizacji z kontekstu
@@ -21,6 +22,9 @@ function Header() {
       // Aktualizacja danych użytkownika
       setUserData(null);
 
+      // Wyświetlenie komunikatu o wylogowaniu
+      toast.success("Zostałeś wylogowany.");
+
       // Przekierowanie na stronę główną
       navigate("/");
     } catch (error) {
@@ -33,6 +37,12 @@ function Header() {
     <header className="App-header">
       <nav>
         <ul>
+          <li>
+            <div className="logo-container">
+              <img src="/favicon.ico" alt="Logo" className="logo" />
+              <span className="logo-text">Szkoła Inglisz</span>
+            </div>
+          </li>
           <li>
             <Link to="/">Szkoła</Link>
           </li>
@@ -56,24 +66,11 @@ function Header() {
             {userData ? (
               <button onClick={handleLogout}>Wyloguj się</button>
             ) : (
-              <Link to="/login">Zaloguj się</Link>
+              <button onClick={() => navigate("/login")}>Zaloguj się</button>
             )}
           </li>
         </ul>
       </nav>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover={false}
-        toastStyle={{ marginRight: "1rem" }}
-        closeButton={false}
-      />
     </header>
   );
 }

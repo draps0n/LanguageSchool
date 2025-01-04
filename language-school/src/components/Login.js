@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import axios from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
 import AuthContext from "../context/AuthProvider";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 
 function Login() {
@@ -68,6 +69,8 @@ function Login() {
       // Usunięcie błędów i przekierowanie na stronę z informacjami o użytkowniku
       setError("");
       setFormData({ email: "", password: "" });
+      // toast.error("Pomyślnie zalogowano do systemu!");
+      toast.success("Zalogowano pomyślnie!");
       navigate("/profile");
     } catch (error) {
       if (error && !error.response) {
