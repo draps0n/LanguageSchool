@@ -167,31 +167,53 @@ const handleRefreshToken = async (req, res) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     const userId = decoded.userId;
-    const user = await userModel.getUserById(userId);
-    if (!user || user.refreshToken !== refreshToken) {
+    const fetchedUser = await userModel.getUserById(userId);
+    if (!fetchedUser || fetchedUser.refreshToken !== refreshToken) {
       return res.status(401).send("Invalid refresh token");
     }
 
     const token = jwt.sign(
-      { userData: { userId: user.id, roleId: user.role } },
+      { userData: { userId: fetchedUser.id, roleId: fetchedUser.role } },
       process.env.JWT_SECRET,
       {
         expiresIn: "15m",
       }
     );
     const newRefreshToken = jwt.sign(
-      { userId: user.id },
+      { userId: fetchedUser.id },
       process.env.JWT_REFRESH_SECRET,
       {
         expiresIn: "1d",
       }
     );
 
-    await userModel.updateUserRefreshToken(user.id, newRefreshToken);
+    await userModel.updateUserRefreshToken(fetchedUser.id, newRefreshToken);
 
     res.status(200).send({ token, refreshToken: newRefreshToken });
   } catch (error) {
-    return res.status(500).send("Internal server error");
+    return res.status(401).send("Invalid refresh token");
+  }
+};
+
+const logout = async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    return res.status(400).send("Refresh token is required");
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const userId = decoded.userId;
+    const fetchedUser = await userModel.getUserById(userId);
+    if (!fetchedUser || fetchedUser.refreshToken !== refreshToken) {
+      return res.status(401).send("Invalid refresh token");
+    }
+
+    await userModel.updateUserRefreshToken(fetchedUser.id, "");
+
+    res.sendStatus(200);
+  } catch (error) {
+    return res.status(401).send("Invalid refresh token");
   }
 };
 
@@ -199,4 +221,5 @@ module.exports = {
   login,
   register,
   handleRefreshToken,
+  logout,
 };
