@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "../api/axios";
+import useAxiosAuth from "../hooks/useAxiosAuth";
 import "../styles/CoursesList.css";
 
 const CoursesList = () => {
   const navigate = useNavigate();
+  const axios = useAxiosAuth();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [groups, setGroups] = useState([]);

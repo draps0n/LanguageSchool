@@ -1,10 +1,10 @@
-// filepath: /c:/Users/krzys/OneDrive/Dokumenty/PJATK/5. semestr/TIN/TIN-projekt/language-school/src/components/CourseDetails.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "../api/axios";
-import "../styles/CourseDetails.css"; // Importowanie pliku CSS
+import useAxiosAuth from "../hooks/useAxiosAuth";
+import "../styles/CourseDetails.css";
 
 const CourseDetails = () => {
+  const axios = useAxiosAuth();
   const { id } = useParams();
   const [course, setCourse] = useState(null);
 

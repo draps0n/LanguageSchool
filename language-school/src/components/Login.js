@@ -1,17 +1,23 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from "../api/axios";
-import { Link, useNavigate } from "react-router-dom";
-import AuthContext from "../context/AuthProvider";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 
 function Login() {
-  // Pobieranie funkcji setUserData z kontekstu
-  const { setUserData } = useContext(AuthContext);
+  // Hook do przechowywania danych użytkownika
+  const { setUserData } = useAuth();
 
   // Hook do nawigacji
   const navigate = useNavigate();
+
+  // Hook do przechowywania informacji o lokalizacji
+  const location = useLocation();
+
+  // Pobranie ścieżki, z której użytkownik próbował wejść na stronę logowania
+  const { from } = location.state || { from: { pathname: "/profile" } };
 
   // Hooki do przechowywania danych formularza i błędów
   const [formData, setFormData] = useState({
@@ -58,20 +64,19 @@ function Login() {
       const { accessToken } = response.data;
       setUserData({
         accessToken,
-        userId: response.data.userId,
-        name: response.data.name,
-        lastName: response.data.lastName,
-        email: response.data.email,
-        role: response.data.role,
-        dateOfBirth: response.data.dateOfBirth,
+        userId: response.data.userData.userId,
+        name: response.data.userData.name,
+        lastName: response.data.userData.lastName,
+        email: response.data.userData.email,
+        roleId: response.data.userData.role,
+        dateOfBirth: response.data.userData.dateOfBirth,
       });
 
       // Usunięcie błędów i przekierowanie na stronę z informacjami o użytkowniku
       setError("");
       setFormData({ email: "", password: "" });
-      // toast.error("Pomyślnie zalogowano do systemu!");
       toast.success("Zalogowano pomyślnie!");
-      navigate("/profile");
+      navigate(from, { replace: true });
     } catch (error) {
       if (error && !error.response) {
         setError("Brak odpowiedzi ze strony serwera");

@@ -1,9 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
+import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import AuthContext from "../context/AuthProvider";
 import {
   FaCircleInfo,
   FaSquarePhone,
@@ -11,11 +10,12 @@ import {
   FaHouseUser,
   FaBook,
 } from "react-icons/fa6";
+import "react-toastify/dist/ReactToastify.css";
 import "../styles/Header.css";
 
 function Header() {
   // Pobierz dane użytkownika i funkcję do ich aktualizacji z kontekstu
-  const { userData, setUserData } = useContext(AuthContext);
+  const { userData, setUserData } = useAuth();
 
   // Funkcja do nawigacji
   const navigate = useNavigate();
@@ -40,8 +40,10 @@ function Header() {
     }
   };
 
+  // Stan do przechowywania informacji o menu w mniejszych rozdzielczościach
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Funkcja do otwierania/zamykania menu
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };

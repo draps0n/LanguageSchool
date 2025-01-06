@@ -20,7 +20,6 @@ const getAllGroups = async (req, res) => {
 };
 
 const getGroupById = async (req, res) => {
-  console.log("getGroupById");
   const id = req.params.id;
 
   try {
