@@ -3,10 +3,17 @@ const teacherModel = require("../models/teacherModel");
 const levelModel = require("../models/levelModel");
 const languageModel = require("../models/languageModel");
 const applicationModel = require("../models/applicationModel");
-const studentModel = require("../models/studentModel");
 const daysOfWeek = require("../constants/daysOfWeek");
 
 const getAllGroups = async (req, res) => {
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
   // Pobranie parametrów paginacji
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 5;
@@ -32,6 +39,14 @@ const getAllGroups = async (req, res) => {
 
 const getGroupById = async (req, res) => {
   const id = req.params.id;
+
+  if (!id) {
+    return res.status(400).json({ message: "Group id is required" });
+  }
+
+  if (isNaN(id)) {
+    return res.status(400).json({ message: "Group id must be a number" });
+  }
 
   try {
     // Pobranie grupy
@@ -103,12 +118,20 @@ const validateGroup = async (group) => {
     return { code: 400, message: "All group fields are required" };
   }
 
+  if (isNaN(places)) {
+    return { code: 400, message: "Places must be a number" };
+  }
+
   if (places < 6 || places > 20) {
     return { code: 400, message: "Places must be between 6 and 20" };
   }
 
-  if (price < 0) {
-    return { code: 400, message: "Price must be a positive number" };
+  if (isNaN(price)) {
+    return { code: 400, message: "Price must be a number" };
+  }
+
+  if (price < 0 || price > 1000) {
+    return { code: 400, message: "Price must be in range (0, 1000)" };
   }
 
   if (description.length < 5 || description.length > 250) {
@@ -157,10 +180,14 @@ const createGroup = async (req, res) => {
     return res.status(error.code).json({ message: error.message });
   }
 
+  // Konwersja miejsc i ceny na liczby
+  group.places = parseInt(group.places);
+  group.price = parseInt(group.price);
+
   // Dodanie grupy do bazy
   try {
-    await groupModel.createGroup(group);
-    res.status(201).send("Group created");
+    const groupId = await groupModel.addNewGroup(group);
+    res.status(201).json({ message: "Group created", groupId });
   } catch (error) {
     console.error("Error creating group:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -176,11 +203,19 @@ const updateGroup = async (req, res) => {
     return res.status(400).json({ message: "Group id is required" });
   }
 
+  if (isNaN(id)) {
+    return res.status(400).json({ message: "Group id must be a number" });
+  }
+
   // Walidacja grupy
   error = await validateGroup(group);
   if (error) {
     return res.status(error.code).send(error.message);
   }
+
+  // Konwersja miejsc i ceny na liczby
+  group.places = parseInt(group.places);
+  group.price = parseInt(group.price);
 
   // Aktualizacja grupy w bazie
   try {

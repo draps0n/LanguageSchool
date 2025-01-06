@@ -12,7 +12,7 @@ import CoursesList from "./components/CoursesList";
 import CourseDetails from "./components/CourseDetails";
 import Body from "./components/Body";
 import Forbidden from "./components/Forbidden";
-import CourseEdit from "./components/CourseEdit";
+import CourseForm from "./components/CourseForm";
 import CourseApply from "./components/CourseApply";
 import CourseDeleteConfirmation from "./components/CourseDeleteConfirmation";
 import "./App.css";
@@ -43,11 +43,12 @@ function App() {
           </Route>
 
           <Route element={<RequireAuth allowedRoles={[roles.EMPLOYEE]} />}>
-            <Route path="courses/:id/edit" element={<CourseEdit />} />
+            <Route path="courses/:id/edit" element={<CourseForm />} />
             <Route
               path="courses/:id/delete"
               element={<CourseDeleteConfirmation />}
             />
+            <Route path="courses/add" element={<CourseForm />} />
           </Route>
 
           {/* Ścieżki do błędów */}

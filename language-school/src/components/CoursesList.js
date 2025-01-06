@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
+import useAuth from "../hooks/useAuth";
+import roles from "../constants/roles";
 import "../styles/CoursesList.css";
 
 const CoursesList = () => {
+  const { userData } = useAuth();
   const navigate = useNavigate();
   const axios = useAxiosAuth();
 
@@ -27,7 +30,7 @@ const CoursesList = () => {
     };
 
     fetchGroups();
-  }, [currentPage]);
+  }, [currentPage, axios]);
 
   // Funkcja do obsługi przycisku "Następna"
   const nextPage = () => {
@@ -48,8 +51,19 @@ const CoursesList = () => {
     navigate(`/courses/${id}`);
   };
 
+  const addGroup = () => {
+    navigate("/courses/add");
+  };
+
   return (
-    <div>
+    <div className="group-list-container">
+      <h1 className="text-center">Lista grup</h1>
+      {userData.roleId === roles.EMPLOYEE && (
+        <button className="group-add-button" onClick={addGroup}>
+          Dodaj
+        </button>
+      )}
+
       <ul className="group-list">
         {groups.map((group, index) => (
           <li

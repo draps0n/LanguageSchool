@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa";
 import "../styles/Login.css";
 
-function CourseEdit() {
+function CourseForm() {
   // Hook do pobrania axios'a z autoryzacją
   const axios = useAxiosAuth();
 
@@ -21,7 +21,7 @@ function CourseEdit() {
   const [formData, setFormData] = useState({
     places: 0,
     description: "",
-    price: "",
+    price: 0,
     teacher: {
       id: "",
       name: "",
@@ -137,7 +137,8 @@ function CourseEdit() {
     fetchTeachers();
     fetchLanguages();
     fetchLevels();
-    fetchCourse();
+
+    if (id) fetchCourse();
   }, [id, axios]);
 
   // Walidatory
@@ -147,6 +148,14 @@ function CourseEdit() {
         setErrors({
           ...errors,
           places: "Liczba miejsc jest wymagana",
+        });
+        return false;
+      }
+
+      if (isNaN(places)) {
+        setErrors({
+          ...errors,
+          places: "Liczba miejsc musi być liczbą",
         });
         return false;
       }
@@ -213,10 +222,18 @@ function CourseEdit() {
         return false;
       }
 
-      if (price < 0) {
+      if (isNaN(price)) {
         setErrors({
           ...errors,
-          price: "Cena nie może być ujemna",
+          price: "Cena musi być liczbą",
+        });
+        return false;
+      }
+
+      if (price < 0 || price > 1000) {
+        setErrors({
+          ...errors,
+          price: "Cena musi być w przedziale (0, 1000)",
         });
         return false;
       }
@@ -413,16 +430,21 @@ function CourseEdit() {
 
     // Wysłanie danych na serwer
     try {
-      await axios.put(`/groups/${id}`, toSend);
-      toast.success("Zaktualizowano grupę");
+      if (id) {
+        await axios.put(`/groups/${id}`, toSend);
+        toast.success("Zaktualizowano grupę");
+      } else {
+        await axios.post("/groups", toSend);
+        toast.success("Dodano nową grupę");
+      }
       navigate(`/courses/${id}`);
     } catch (error) {
       console.error(error);
     }
   };
 
-  // Sprawdzenie czy dane zostały już pobrane
-  if (!group.places) {
+  // Sprawdzenie czy dane zostały już pobrane, jeśli podczas edycji
+  if (id && !group.places) {
     return <div>Ładowanie...</div>;
   }
 
@@ -438,9 +460,10 @@ function CourseEdit() {
             className="login-input"
             type="number"
             name="places"
-            value={formData.places}
+            value={formData.places || ""}
             onChange={handleChange}
             required
+            placeholder="6-20"
           />
           {errors.places && <p className="error">{errors.places}</p>}
         </div>
@@ -450,9 +473,10 @@ function CourseEdit() {
             className="login-input"
             type="text"
             name="description"
-            value={formData.description}
+            value={formData.description || ""}
             onChange={handleChange}
             required
+            placeholder="Opis grupy (5-250 znaków)"
           />
           {errors.description && <p className="error">{errors.description}</p>}
         </div>
@@ -463,7 +487,8 @@ function CourseEdit() {
             type="number"
             step="0.01"
             name="price"
-            value={formData.price}
+            value={formData.price || ""}
+            placeholder="0.00"
             onChange={handleChange}
             required
           />
@@ -476,8 +501,11 @@ function CourseEdit() {
             className="login-input"
             name="teacher"
             onChange={handleChange}
-            value={formData.teacher.id}
+            value={formData.teacher.id || ""}
           >
+            <option value="" disabled hidden>
+              Wybierz nauczyciela
+            </option>
             {teachers.map((teacher) => (
               <option key={teacher.id} value={teacher.id}>
                 {teacher.name + " " + teacher.lastName}
@@ -492,9 +520,12 @@ function CourseEdit() {
           <select
             className="login-input"
             name="language"
-            value={formData.language.id}
+            value={formData.language.id || ""}
             onChange={handleChange}
           >
+            <option value="" disabled hidden>
+              Wybierz język
+            </option>
             {languages.map((language) => (
               <option key={language.id} value={language.id}>
                 {language.name}
@@ -510,8 +541,11 @@ function CourseEdit() {
             className="login-input"
             name="level"
             onChange={handleChange}
-            value={formData.level.id}
+            value={formData.level.id || ""}
           >
+            <option value="" disabled hidden>
+              Wybierz poziom
+            </option>
             {levels.map((level) => (
               <option key={level.id} value={level.id}>
                 {level.name}
@@ -527,8 +561,11 @@ function CourseEdit() {
             className="login-input"
             name="day"
             onChange={handleChange}
-            value={formData.day}
+            value={formData.day || ""}
           >
+            <option value="" disabled hidden>
+              Wybierz dzień tygodnia
+            </option>
             {daysOfWeek.map((day) => (
               <option key={day} value={day}>
                 {day}
@@ -544,7 +581,7 @@ function CourseEdit() {
             className="login-input"
             type="time"
             name="startTime"
-            value={formData.startTime}
+            value={formData.startTime || ""}
             onChange={handleChange}
             required
           />
@@ -556,7 +593,7 @@ function CourseEdit() {
             className="login-input"
             type="time"
             name="endTime"
-            value={formData.endTime}
+            value={formData.endTime || ""}
             onChange={handleChange}
             required
           />
@@ -587,4 +624,4 @@ function CourseEdit() {
   );
 }
 
-export default CourseEdit;
+export default CourseForm;
