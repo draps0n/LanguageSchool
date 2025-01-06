@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+body {
+    overflow-y: scroll;
+}
+
 html,
 body {
     height: 100%;
@@ -11,8 +15,6 @@ body {
     background-color: #f8f9fa;
     color: #333;
     line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
