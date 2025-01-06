@@ -34,7 +34,7 @@ const login = async (req, res) => {
 
     // Generowanie access i refresh tokenu
     const accessToken = jwt.sign(
-      { userData: { userId: user.id, roleId: user.role } },
+      { userData: { userId: user.id, roleId: user.roleId } },
       process.env.JWT_SECRET,
       {
         expiresIn: "1h",
@@ -62,17 +62,23 @@ const login = async (req, res) => {
     // Wysłanie access tokenu  i danych użytkownika
     res.status(200).send({
       accessToken,
-      userData: {
-        userId: user.id,
-        name: user.name,
-        lastName: user.lastName,
-        email: user.email,
-        dateOfBirth: user.dateOfBirth,
-        role: user.role,
+      userId: user.id,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+      role: {
+        id: user.roleId,
+        name: user.role,
       },
+      workedHours: user.workedHours,
+      hourlyRate: user.hourlyRate,
+      discount: user.discount,
+      description: user.description,
+      salary: user.salary,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return res.status(500).send("Internal server error");
   }
 };
@@ -157,7 +163,7 @@ const register = async (req, res) => {
       res.sendStatus(201);
     } catch (error) {
       await connection.rollback();
-      console.log(error);
+      console.error(error);
       return res.status(500).send("Internal server error");
     } finally {
       connection.release();

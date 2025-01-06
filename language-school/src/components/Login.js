@@ -60,17 +60,11 @@ function Login() {
         }
       );
 
+      console.log(response.data);
+
       // Pobranie tokenu z odpowiedzi serwera i zapisanie go w kontekście
-      const { accessToken } = response.data;
-      setUserData({
-        accessToken,
-        userId: response.data.userData.userId,
-        name: response.data.userData.name,
-        lastName: response.data.userData.lastName,
-        email: response.data.userData.email,
-        roleId: response.data.userData.role,
-        dateOfBirth: response.data.userData.dateOfBirth,
-      });
+      // const { accessToken } = response.data;
+      setUserData(response.data);
 
       // Usunięcie błędów i przekierowanie na stronę z informacjami o użytkowniku
       setError("");
