@@ -79,7 +79,7 @@ const addNewApplication = async (req, res) => {
   }
 };
 
-const deleteApplicationById = async (req, res) => {
+const deleteApplication = async (req, res) => {
   const applicationId = req.params.id;
 
   try {
@@ -91,7 +91,7 @@ const deleteApplicationById = async (req, res) => {
       return;
     }
 
-    await applicationModel.deleteApplicationById(req.params.id);
+    await applicationModel.deleteApplication(req.params.id);
     res.status(200).send("Application deleted");
   } catch (error) {
     console.error(error);
@@ -101,5 +101,5 @@ const deleteApplicationById = async (req, res) => {
 
 module.exports = {
   addNewApplication,
-  deleteApplicationById,
+  deleteApplication,
 };

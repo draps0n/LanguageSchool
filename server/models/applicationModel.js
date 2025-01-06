@@ -16,11 +16,16 @@ const addNewApplication = async (application) => {
   return results;
 };
 
-const deleteApplicationById = async (id) => {
+const deleteApplication = async (id) => {
   await pool.query(`DELETE FROM zgloszenie WHERE id = ?`, [id]);
+};
+
+const deleteApplicationByGroupId = async (groupId) => {
+  await pool.query(`DELETE FROM zgloszenie WHERE grupa = ?`, [groupId]);
 };
 
 module.exports = {
   addNewApplication,
-  deleteApplicationById,
+  deleteApplication,
+  deleteApplicationByGroupId,
 };

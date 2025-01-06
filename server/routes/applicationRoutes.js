@@ -4,6 +4,6 @@ const applicationController = require("../controllers/applicationController");
 
 router
   .post("/", applicationController.addNewApplication)
-  .delete("/:id", applicationController.deleteApplicationById);
+  .delete("/:id", applicationController.deleteApplication);
 
 module.exports = router;

@@ -147,6 +147,16 @@ const updateGroup = async (groupId, group) => {
   );
 };
 
+const deleteStudentGroupAssignments = async (groupId) => {
+  await pool.query(
+    `
+    DELETE FROM uczestnictwo
+    WHERE grupa = ?
+    `,
+    [groupId]
+  );
+};
+
 module.exports = {
   getAllGroups,
   getTotalGroups,
@@ -155,4 +165,5 @@ module.exports = {
   deleteGroup,
   addNewGroup,
   updateGroup,
+  deleteStudentGroupAssignments,
 };
