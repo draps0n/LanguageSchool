@@ -9,7 +9,7 @@ function BackButton() {
   };
 
   return (
-    <button className="small-button" onClick={goBack}>
+    <button className="small-button" onClick={goBack} type="button">
       <FaAngleLeft className="icon" />
       Wróć
     </button>

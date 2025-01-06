@@ -8,25 +8,14 @@ import { FaSave } from "react-icons/fa";
 import "../styles/Login.css";
 
 function CourseEdit() {
+  // Hook do pobrania axios'a z autoryzacją
+  const axios = useAxiosAuth();
+
+  // Hook do nawigacji
   const navigate = useNavigate();
 
   // Id edytowanej grupy
   const { id } = useParams();
-
-  // Stan do przechowywania danych edytowanej grupy
-  const [group, setGroup] = useState({});
-
-  // Stan do przechowywania błędów
-  const [errors, setErrors] = useState({
-    places: "",
-    description: "",
-    price: "",
-    teacher: "",
-    language: "",
-    level: "",
-    day: "",
-    time: "",
-  });
 
   // Stan do przechowywania danych formularza
   const [formData, setFormData] = useState({
@@ -52,8 +41,20 @@ function CourseEdit() {
     endTime: "",
   });
 
-  // Hook do pobrania axios'a z autoryzacją
-  const axios = useAxiosAuth();
+  // Stan do przechowywania początkowych danych edytowanej grupy
+  const [group, setGroup] = useState({});
+
+  // Stan do przechowywania błędów
+  const [errors, setErrors] = useState({
+    places: "",
+    description: "",
+    price: "",
+    teacher: "",
+    language: "",
+    level: "",
+    day: "",
+    time: "",
+  });
 
   // Stany do przechowywania danych z serwera
   const [teachers, setTeachers] = useState([]);
@@ -102,7 +103,7 @@ function CourseEdit() {
           levelId: response.data.group.level.id,
           day: response.data.group.day,
           startTime: response.data.group.startTime,
-          endTime: response.data.group,
+          endTime: response.data.group.endTime,
           code: response.data.group.language.code,
         });
 
@@ -139,6 +140,7 @@ function CourseEdit() {
     fetchCourse();
   }, [id, axios]);
 
+  // Walidatory
   const validators = {
     places: (places) => {
       if (!places) {
@@ -293,6 +295,7 @@ function CourseEdit() {
           ...errors,
           time: "Godzina rozpoczęcia i zakończenia są wymagane",
         });
+        return false;
       }
 
       const startTime = name === "startTime" ? value : formData.startTime;
@@ -303,16 +306,19 @@ function CourseEdit() {
           ...errors,
           time: "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia",
         });
+        return false;
       } else if (endTime <= startTime) {
         setErrors({
           ...errors,
           time: "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia",
         });
+        return false;
       } else {
         setErrors({
           ...errors,
           time: "",
         });
+        return true;
       }
     },
   };
@@ -357,9 +363,26 @@ function CourseEdit() {
     }
   };
 
+  // Obsługa wysłania formularza
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Walidacja formularza
+    if (
+      !validators.places(formData.places) ||
+      !validators.description(formData.description) ||
+      !validators.price(formData.price) ||
+      !validators.teacher(formData.teacher) ||
+      !validators.language(formData.language) ||
+      !validators.level(formData.level) ||
+      !validators.day(formData.day) ||
+      !validators.time("startTime", formData.startTime)
+    ) {
+      toast.error("Formularz zawiera błędy!");
+      return;
+    }
+
+    // Dane do wysłania
     const toSend = {
       places: formData.places,
       description: formData.description,
@@ -372,7 +395,23 @@ function CourseEdit() {
       endTime: formData.endTime,
     };
 
-    // TODO : logikę do wysyłania danych na serwer
+    // Sprawdzenie czy wprowadzono zmiany
+    if (
+      toSend.places === group.places &&
+      toSend.description === group.description &&
+      toSend.price === group.price &&
+      toSend.teacherId === group.teacherId &&
+      toSend.languageId === group.languageId &&
+      toSend.levelId === group.levelId &&
+      toSend.day === group.day &&
+      toSend.startTime === group.startTime &&
+      toSend.endTime === group.endTime
+    ) {
+      toast.error("Nie wprowadzono zmian");
+      return;
+    }
+
+    // Wysłanie danych na serwer
     try {
       await axios.put(`/groups/${id}`, toSend);
       toast.success("Zaktualizowano grupę");
@@ -382,6 +421,7 @@ function CourseEdit() {
     }
   };
 
+  // Sprawdzenie czy dane zostały już pobrane
   if (!group.places) {
     return <div>Ładowanie...</div>;
   }
@@ -524,7 +564,20 @@ function CourseEdit() {
         {errors.time && <p className="error">{errors.time}</p>}
         <div className="form-buttons">
           <BackButton />
-          <button className="small-button" type="submit">
+          <button
+            className="small-button"
+            type="submit"
+            disabled={
+              errors.places ||
+              errors.description ||
+              errors.price ||
+              errors.teacher ||
+              errors.language ||
+              errors.level ||
+              errors.day ||
+              errors.time
+            }
+          >
             <FaSave className="icon" />
             Zapisz
           </button>

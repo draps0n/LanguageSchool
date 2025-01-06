@@ -13,6 +13,7 @@
     padding: 10px;
     background-color: #f9f9f9;
     min-width: 500px;
+    cursor: pointer;
 }
 
 .group-image {
@@ -47,9 +48,11 @@
     border: none;
     border-radius: 5px;
     color: white;
+    background-color: #313a4c;
     cursor: pointer;
 }
 
 .pagination button:disabled {
     cursor: not-allowed;
+    background-color: #ccc;
 }
