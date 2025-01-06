@@ -92,9 +92,16 @@ function Header() {
           )}
           <li>
             {userData ? (
-              <button onClick={handleLogout}>Wyloguj się</button>
+              <button className="header-button" onClick={handleLogout}>
+                Wyloguj się
+              </button>
             ) : (
-              <button onClick={() => navigate("/login")}>Zaloguj się</button>
+              <button
+                className="header-button"
+                onClick={() => navigate("/login")}
+              >
+                Zaloguj się
+              </button>
             )}
           </li>
         </ul>

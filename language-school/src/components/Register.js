@@ -285,7 +285,9 @@ function Register() {
       <h1>Rejestracja</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Imię:</label>
+          <label className="login-label" htmlFor="name">
+            Imię:
+          </label>
           <input
             type="text"
             id="name"
@@ -294,12 +296,15 @@ function Register() {
             value={formData.name}
             onChange={handleChange}
             required
+            className="login-input"
           />
           {errors.name && <p className="error">{errors.name}</p>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="lastName">Nazwisko:</label>
+          <label className="login-label" htmlFor="lastName">
+            Nazwisko:
+          </label>
           <input
             type="text"
             id="lastName"
@@ -308,12 +313,15 @@ function Register() {
             value={formData.lastName}
             onChange={handleChange}
             required
+            className="login-input"
           />
           {errors.lastName && <p className="error">{errors.lastName}</p>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label className="login-label" htmlFor="email">
+            Email:
+          </label>
           <input
             type="email"
             id="email"
@@ -322,12 +330,15 @@ function Register() {
             value={formData.email}
             onChange={handleChange}
             required
+            className="login-input"
           />
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="dateOfBirth">Data urodzenia:</label>
+          <label className="login-label" htmlFor="dateOfBirth">
+            Data urodzenia:
+          </label>
           <input
             type="date"
             id="dateOfBirth"
@@ -336,12 +347,15 @@ function Register() {
             value={formData.dateOfBirth}
             onChange={handleChange}
             required
+            className="login-input"
           />
           {errors.dateOfBirth && <p className="error">{errors.dateOfBirth}</p>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="password">Hasło:</label>
+          <label className="login-label" htmlFor="password">
+            Hasło:
+          </label>
           <input
             type="password"
             id="password"
@@ -350,12 +364,15 @@ function Register() {
             value={formData.password}
             onChange={handleChange}
             required
+            className="login-input"
           />
           {errors.password && <p className="error">{errors.password}</p>}
         </div>
 
         <div className="form-group">
-          <label htmlFor="confirmPassword">Powtórz hasło:</label>
+          <label className="login-label" htmlFor="confirmPassword">
+            Powtórz hasło:
+          </label>
           <input
             type="password"
             id="confirmPassword"
@@ -364,6 +381,7 @@ function Register() {
             value={formData.confirmPassword}
             onChange={handleChange}
             required
+            className="login-input"
           />
           {errors.confirmPassword && (
             <p className="error">{errors.confirmPassword}</p>
@@ -371,7 +389,9 @@ function Register() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Opis:</label>
+          <label className="login-label" htmlFor="description">
+            Opis:
+          </label>
           <textarea
             id="description"
             name="description"
@@ -394,6 +414,7 @@ function Register() {
         </div>
 
         <button
+          className="login-button"
           type="submit"
           disabled={
             errors.name ||

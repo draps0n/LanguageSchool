@@ -104,10 +104,12 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1>Logowanie</h1>
+      <h1 className="login-text">Logowanie</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="email">Email:</label>
+          <label className="login-label" htmlFor="email">
+            Email:
+          </label>
           <input
             type="email"
             id="email"
@@ -116,11 +118,14 @@ function Login() {
             onChange={handleChange}
             required
             autoComplete="email"
+            className="login-input"
           />
           {emailError && <p className="error">{emailError}</p>}
         </div>
         <div className="form-group">
-          <label htmlFor="password">Hasło:</label>
+          <label className="login-label" htmlFor="password">
+            Hasło:
+          </label>
           <input
             type="password"
             id="password"
@@ -129,6 +134,7 @@ function Login() {
             onChange={handleChange}
             required
             autoComplete="current-password"
+            className="login-input"
           />
         </div>
         {error && <p className="error">{error}</p>}
@@ -136,6 +142,7 @@ function Login() {
           <Link to="/register">Zarejestruj się</Link>
         </div>
         <button
+          className="login-button"
           type="submit"
           disabled={!formData.email || !formData.password || emailError !== ""}
         >

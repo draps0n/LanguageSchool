@@ -37,7 +37,19 @@ const getGroupById = async (req, res) => {
   }
 };
 
+const deleteGroup = async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    return res.status(400).send("Group id is required");
+  }
+
+  await groupModel.deleteGroup(id);
+
+  res.status(200).send("Group deleted");
+};
+
 module.exports = {
   getAllGroups,
   getGroupById,
+  deleteGroup,
 };

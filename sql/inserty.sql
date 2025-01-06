@@ -5,9 +5,9 @@ VALUES
 
 INSERT INTO Rola (nazwa)
 VALUES
-('Pracownik administracyjny'),
-('Kursant'),
-('Nauczyciel');
+(1, 'Pracownik administracyjny'),
+(2, 'Kursant'),
+(3, 'Nauczyciel');
 
 INSERT INTO Poziom_jezyka (pozycja, nazwa)
 VALUES

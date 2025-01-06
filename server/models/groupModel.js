@@ -83,9 +83,20 @@ const getTakenPlaces = async (groupId) => {
   return results[0].takenPlaces;
 };
 
+const deleteGroup = async (id) => {
+  await pool.query(
+    `
+    DELETE FROM grupa
+    WHERE id = ?
+    `,
+    [id]
+  );
+};
+
 module.exports = {
   getAllGroups,
   getTotalGroups,
   getGroupById,
   getTakenPlaces,
+  deleteGroup,
 };

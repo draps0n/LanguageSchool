@@ -4,6 +4,7 @@ const groupController = require("../controllers/groupController");
 
 router
   .get("/", groupController.getAllGroups)
-  .get("/:id", groupController.getGroupById);
+  .get("/:id", groupController.getGroupById)
+  .delete("/:id", groupController.deleteGroup);
 
 module.exports = router;

@@ -8,7 +8,7 @@
     border-radius: 8px;
 }
 
-h1 {
+.login-text {
     text-align: center;
     margin-bottom: 1.5rem;
     color: #333;
@@ -18,14 +18,14 @@ h1 {
     margin-bottom: 1rem;
 }
 
-label {
+.login-label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
     color: #333;
 }
 
-input {
+.login-input {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ccc;
@@ -33,7 +33,14 @@ input {
     font-size: 1rem;
 }
 
-button {
+.error {
+    color: #da3838;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    word-wrap: break-word;
+}
+
+.login-button {
     width: 100%;
     padding: 0.75rem;
     background-color: #313a4c;
@@ -45,20 +52,19 @@ button {
     transition: background-color 0.3s ease;
 }
 
-button:disabled {
+.login-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
 
-button:hover:not(:disabled) {
+.login-button:hover:not(:disabled) {
     background-color: #181c25;
 }
 
-.error {
-    color: #da3838;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    word-wrap: break-word;
+.form-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
 }
 
 @media (max-width: 768px) {
@@ -68,7 +74,7 @@ button:hover:not(:disabled) {
         padding: 1rem;
     }
 
-    h1 {
+    .login-text {
         font-size: 1.5rem;
     }
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "../styles/Error.css";
 
 const Forbidden = () => {
   // Hook do nawigacji
@@ -7,10 +8,12 @@ const Forbidden = () => {
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
-      <h1>404 - Forbidden</h1>
+      <h1>403 - Forbidden</h1>
       <p>Nie posiadasz uprawnień do wyświetlania tej strony.</p>
       <br />
-      <button onClick={() => navigate(-1)}>Wróć</button>
+      <button className="error-button" onClick={() => navigate(-1)}>
+        Wróć
+      </button>
     </div>
   );
 };

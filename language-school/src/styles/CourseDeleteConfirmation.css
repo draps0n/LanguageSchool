@@ -1,0 +1,13 @@
+.button-panel {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.delete-button {
+    background-color: rgb(179, 60, 60);
+}
+
+.delete-button:hover {
+    background-color: rgb(134, 58, 58);
+}

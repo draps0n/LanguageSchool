@@ -12,6 +12,9 @@ import CoursesList from "./components/CoursesList";
 import CourseDetails from "./components/CourseDetails";
 import Body from "./components/Body";
 import Forbidden from "./components/Forbidden";
+import CourseEdit from "./components/CourseEdit";
+import CourseApply from "./components/CourseApply";
+import CourseDeleteConfirmation from "./components/CourseDeleteConfirmation";
 import "./App.css";
 import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
@@ -33,6 +36,18 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="courses" element={<CoursesList />} />
             <Route path="courses/:id" element={<CourseDetails />} />
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={[roles.STUDENT]} />}>
+            <Route path="courses/:id/apply" element={<CourseApply />} />
+          </Route>
+
+          <Route element={<RequireAuth allowedRoles={[roles.EMPLOYEE]} />}>
+            <Route path="courses/:id/edit" element={<CourseEdit />} />
+            <Route
+              path="courses/:id/delete"
+              element={<CourseDeleteConfirmation />}
+            />
           </Route>
 
           {/* Ścieżki do błędów */}

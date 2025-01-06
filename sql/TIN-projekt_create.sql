@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2025-01-03 20:06:46.019
+-- Last modification date: 2025-01-06 16:09:46.867
 
 -- tables
 -- Table: Grupa
@@ -58,7 +58,7 @@ CREATE TABLE Pracownik_administracyjny (
 
 -- Table: Rola
 CREATE TABLE Rola (
-    id int  NOT NULL AUTO_INCREMENT,
+    id int  NOT NULL,
     nazwa nvarchar(30)  NOT NULL,
     CONSTRAINT Rola_pk PRIMARY KEY (id)
 );
@@ -97,6 +97,7 @@ CREATE TABLE Zgloszenie (
     kursant int  NOT NULL,
     grupa int  NOT NULL,
     data_rozpoczecia date  NOT NULL,
+    uwagi nvarchar(300)  NULL,
     data_przeslania date  NOT NULL,
     status int  NOT NULL,
     pracownik_rozpatrujacy int  NULL,
