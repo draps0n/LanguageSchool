@@ -3,11 +3,40 @@ const groupModel = require("../models/groupModel");
 const applicationStateModel = require("../models/applicationStateModel");
 
 const addNewApplication = async (req, res) => {
+  // Sprawdzenie czy użytkownik podał datę rozpoczęcia i id grupy
   if (!req.body.startDate || !req.body.groupId) {
-    res.status(400).json({ message: "Start date and group id are required" });
+    res.status(400).json({
+      message: "Start date and group id are required",
+    });
     return;
   }
 
+  // Sprawdzenie czy opis jest w odpowiednim zakresie
+  if (comment && (comment.length < 10 || comment.length > 300)) {
+    res.status(400).json({
+      message: "Comment must be between 10 and 300 characters",
+    });
+    return;
+  }
+
+  // Sprawdzenie czy data rozpoczęcia jest w odpowiednim zakresie
+  const today = new Date();
+  const nextMonth = new Date();
+  const nextWeek = new Date();
+  const startDateDate = new Date(startDate);
+
+  nextMonth.setMonth(today.getMonth() + 1);
+  nextWeek.setDate(today.getDate() + 7);
+
+  if (startDateDate > nextMonth || startDateDate < nextWeek) {
+    res.status(400).json({
+      message:
+        "Start date must be within the next month and not earlier than a week from now",
+    });
+    return;
+  }
+
+  // Sprawdzenie czy grupa istnieje
   try {
     const fetchedGroup = await groupModel.getGroupById(req.body.groupId);
     if (!fetchedGroup) {
@@ -15,12 +44,20 @@ const addNewApplication = async (req, res) => {
       return;
     }
 
+    // Sprawdzenie czy grupa nie jest pełna
+    const takenPlaces = await applicationModel.getTakenPlaces(req.body.groupId);
+    if (takenPlaces >= fetchedGroup.places) {
+      res.status(400).json({ message: "Group is full" });
+      return;
+    }
+
+    // Pobranie stanu z bazy danych
     const state = await applicationStateModel.getStateByName(
       "W trakcie rozpatrywania"
     );
 
     if (!state) {
-      console.log("state not found");
+      console.log("State not found");
       res.status(500).json({ message: "Internal server error" });
       return;
     }
@@ -33,11 +70,12 @@ const addNewApplication = async (req, res) => {
       state: state.id,
     };
 
+    // Dodanie zgłoszenia do bazy danych
     await applicationModel.addNewApplication(application);
     res.status(201).send("Application added");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -57,7 +95,7 @@ const deleteApplicationById = async (req, res) => {
     res.status(200).send("Application deleted");
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
