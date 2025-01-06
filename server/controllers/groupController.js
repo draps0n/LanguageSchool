@@ -48,8 +48,91 @@ const deleteGroup = async (req, res) => {
   res.status(200).send("Group deleted");
 };
 
+const createGroup = async (req, res) => {
+  const group = req.body;
+
+  const {
+    places,
+    price,
+    description,
+    levelId,
+    day,
+    startTime,
+    endTime,
+    teacherId,
+    languageId,
+  } = group;
+
+  if (
+    !places ||
+    !price ||
+    !description ||
+    !levelId ||
+    !day ||
+    !startTime ||
+    !endTime ||
+    !teacherId ||
+    !languageId
+  ) {
+    return res.status(400).send("All group fields are required");
+  }
+
+  try {
+    await groupModel.createGroup(group);
+    res.status(201).send("Group created");
+  } catch (error) {
+    console.error("Error creating group:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+const updateGroup = async (req, res) => {
+  const id = req.params.id;
+  const group = req.body;
+
+  const {
+    places,
+    price,
+    description,
+    levelId,
+    day,
+    startTime,
+    endTime,
+    teacherId,
+    languageId,
+  } = group;
+
+  if (
+    !places ||
+    !price ||
+    !description ||
+    !levelId ||
+    !day ||
+    !startTime ||
+    !endTime ||
+    !teacherId ||
+    !languageId
+  ) {
+    return res.status(400).send("All group fields are required");
+  }
+
+  if (!id) {
+    return res.status(400).send("Group id is required");
+  }
+
+  try {
+    await groupModel.updateGroup(id, group);
+    res.status(200).send("Group updated");
+  } catch (error) {
+    console.error("Error updating group:", error);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   getAllGroups,
   getGroupById,
   deleteGroup,
+  createGroup,
+  updateGroup,
 };

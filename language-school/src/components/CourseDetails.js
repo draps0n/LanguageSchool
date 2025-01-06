@@ -33,7 +33,7 @@ const CourseDetails = () => {
     <div>
       <div className="course-details">
         <h2>
-          {group.language} - {group.level}
+          {group.language.name} - {group.level.name}
         </h2>
         <p>
           <strong>Opis:</strong> {group.description}
@@ -57,8 +57,8 @@ const CourseDetails = () => {
           ></div>
         </div>
         <p>
-          <strong>Nauczyciel:</strong> {group.teacherName}{" "}
-          {group.teacherLastName}
+          <strong>Nauczyciel:</strong> {group.teacher.name}{" "}
+          {group.teacher.lastName}
         </p>
       </div>
       <CourseDetailsButtonPanel courseId={id} />

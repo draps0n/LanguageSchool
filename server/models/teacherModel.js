@@ -7,7 +7,18 @@ const getAllTeachers = async (callback) => {
     FROM nauczyciel n
     INNER JOIN uzytkownik u ON n.id = u.id`
   );
-  return results;
+
+  return results.map((teacher) => {
+    return {
+      id: teacher.id,
+      name: teacher.imie,
+      lastName: teacher.nazwisko,
+      email: teacher.email,
+      birthDate: teacher.data_urodzenia,
+      workedHours: teacher.przepracowane_godziny,
+      hourRate: teacher.stawka_godzinowa,
+    };
+  });
 };
 
 const getTeacherById = async (id) => {

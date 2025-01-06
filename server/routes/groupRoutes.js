@@ -5,6 +5,8 @@ const groupController = require("../controllers/groupController");
 router
   .get("/", groupController.getAllGroups)
   .get("/:id", groupController.getGroupById)
-  .delete("/:id", groupController.deleteGroup);
+  .delete("/:id", groupController.deleteGroup)
+  .post("/", groupController.createGroup)
+  .put("/:id", groupController.updateGroup);
 
 module.exports = router;

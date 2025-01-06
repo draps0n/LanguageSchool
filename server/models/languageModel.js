@@ -2,12 +2,22 @@ const { pool } = require("../db/database");
 
 const getAllLanguages = async () => {
   const [results] = await pool.query("SELECT * FROM jezyk");
-  return results;
+  return results.map((language) => ({
+    id: language.id,
+    name: language.nazwa,
+    code: language.skrot,
+  }));
 };
 
 const getLanguageById = async (id) => {
   const [results] = await pool.query("SELECT * FROM jezyk WHERE id = ?", [id]);
-  return results[0];
+
+  const language = {
+    id: results[0].id,
+    name: results[0].nazwa,
+    code: results[0].skrot,
+  };
+  return language;
 };
 
 const createLanguage = async (language) => {

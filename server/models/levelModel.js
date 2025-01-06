@@ -2,7 +2,11 @@ const { pool } = require("../db/database");
 
 const getAllLevels = async () => {
   const [results] = await pool.query("SELECT * FROM Poziom_jezyka");
-  return results;
+  return results.map((level) => ({
+    id: level.id,
+    name: level.nazwa,
+    position: level.pozycja,
+  }));
 };
 
 const getLevelById = async (id) => {
@@ -10,7 +14,14 @@ const getLevelById = async (id) => {
     "SELECT * FROM Poziom_jezyka WHERE id = ?",
     [id]
   );
-  return results[0];
+
+  const level = {
+    id: results[0].id,
+    name: results[0].nazwa,
+    position: results[0].pozycja,
+  };
+
+  return level;
 };
 
 module.exports = {
