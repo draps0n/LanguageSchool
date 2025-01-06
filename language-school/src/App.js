@@ -18,6 +18,7 @@ import CourseDeleteConfirmation from "./components/CourseDeleteConfirmation";
 import "./App.css";
 import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
+import Profile from "./components/Profile";
 
 function App() {
   return (
@@ -32,16 +33,19 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
 
-          {/* Ścieżki z ograniczonym dostępem */}
+          {/* Ścieżki dostępne po zalogowaniu */}
           <Route element={<RequireAuth />}>
             <Route path="courses" element={<CoursesList />} />
             <Route path="courses/:id" element={<CourseDetails />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
 
+          {/* Ścieżki dostępne dla studentów */}
           <Route element={<RequireAuth allowedRoles={[roles.STUDENT]} />}>
             <Route path="courses/:id/apply" element={<CourseApply />} />
           </Route>
 
+          {/* Ścieżki dostępne dla pracowników */}
           <Route element={<RequireAuth allowedRoles={[roles.EMPLOYEE]} />}>
             <Route path="courses/:id/edit" element={<CourseForm />} />
             <Route
