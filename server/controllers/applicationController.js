@@ -41,6 +41,27 @@ const addNewApplication = async (req, res) => {
   }
 };
 
+const deleteApplicationById = async (req, res) => {
+  const applicationId = req.params.id;
+
+  try {
+    const fetchedApplication = await applicationModel.getApplicationById(
+      applicationId
+    );
+    if (!fetchedApplication) {
+      res.status(404).json({ message: "Application not found" });
+      return;
+    }
+
+    await applicationModel.deleteApplicationById(req.params.id);
+    res.status(200).send("Application deleted");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   addNewApplication,
+  deleteApplicationById,
 };
