@@ -4,6 +4,7 @@ const levelModel = require("../models/levelModel");
 const languageModel = require("../models/languageModel");
 const applicationModel = require("../models/applicationModel");
 const daysOfWeek = require("../constants/daysOfWeek");
+const { pool } = require("../db/database");
 
 const getAllGroups = async (req, res) => {
   if (req.query.page && isNaN(req.query.page)) {
@@ -73,23 +74,36 @@ const deleteGroup = async (req, res) => {
     return res.status(400).json({ message: "Group id is required" });
   }
 
-  // TODO : dodać sprawdzenie czy grupa istnieje i transakcję
-  try {
-    // Usunięcie zgłoszeń na grupę
-    await applicationModel.deleteApplicationByGroupId(id);
-
-    // Usuń przypisania studentów do grupy
-    await groupModel.deleteStudentGroupAssignments(id);
-
-    // Usunięcie grupy
-    await groupModel.deleteGroup(id);
-  } catch (error) {
-    console.error("Error deleting group:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-    return;
+  if (isNaN(id)) {
+    return res.status(400).json({ message: "Group id must be a number" });
   }
 
-  res.status(200).send("Group deleted");
+  const fetchedGroup = await groupModel.getGroupById(id);
+  if (!fetchedGroup) {
+    return res.status(404).json({ message: "Group not found" });
+  }
+
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    // Usunięcie zgłoszeń na grupę
+    await applicationModel.deleteApplicationByGroupId(id, connection);
+
+    // Usuń przypisania studentów do grupy
+    await groupModel.deleteStudentGroupAssignments(id, connection);
+
+    // Usunięcie grupy
+    await groupModel.deleteGroup(id, connection);
+
+    await connection.commit();
+    res.status(200).send("Group deleted");
+  } catch (error) {
+    await connection.rollback();
+    console.error("Error deleting group:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  } finally {
+    connection.release();
+  }
 };
 
 const validateGroup = async (group) => {

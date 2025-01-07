@@ -20,8 +20,8 @@ const deleteApplication = async (id) => {
   await pool.query(`DELETE FROM zgloszenie WHERE id = ?`, [id]);
 };
 
-const deleteApplicationByGroupId = async (groupId) => {
-  await pool.query(`DELETE FROM zgloszenie WHERE grupa = ?`, [groupId]);
+const deleteApplicationByGroupId = async (groupId, connection) => {
+  await connection.query(`DELETE FROM zgloszenie WHERE grupa = ?`, [groupId]);
 };
 
 module.exports = {

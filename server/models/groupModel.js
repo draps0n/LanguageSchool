@@ -93,8 +93,8 @@ const getTakenPlaces = async (groupId) => {
   return results[0].takenPlaces;
 };
 
-const deleteGroup = async (id) => {
-  await pool.query(
+const deleteGroup = async (id, connection) => {
+  await connection.query(
     `
     DELETE FROM grupa
     WHERE id = ?
@@ -147,8 +147,8 @@ const updateGroup = async (groupId, group) => {
   );
 };
 
-const deleteStudentGroupAssignments = async (groupId) => {
-  await pool.query(
+const deleteStudentGroupAssignments = async (groupId, connection) => {
+  await connection.query(
     `
     DELETE FROM uczestnictwo
     WHERE grupa = ?
