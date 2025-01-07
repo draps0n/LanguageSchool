@@ -60,6 +60,7 @@ const login = async (req, res) => {
     });
 
     // Wysłanie access tokenu  i danych użytkownika
+    console.log(user);
     res.status(200).send({
       accessToken,
       userId: user.id,
@@ -71,7 +72,7 @@ const login = async (req, res) => {
         id: user.roleId,
         name: user.role,
       },
-      workedHours: user.workedHours,
+      hoursWorked: user.hoursWorked,
       hourlyRate: user.hourlyRate,
       discount: user.discount,
       description: user.description,

@@ -60,10 +60,7 @@ function Login() {
         }
       );
 
-      console.log(response.data);
-
       // Pobranie tokenu z odpowiedzi serwera i zapisanie go w kontekście
-      // const { accessToken } = response.data;
       setUserData(response.data);
 
       // Usunięcie błędów i przekierowanie na stronę z informacjami o użytkowniku
