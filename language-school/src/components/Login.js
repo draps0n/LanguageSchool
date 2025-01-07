@@ -3,6 +3,7 @@ import axios from "../api/axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import { validateEmail } from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 
@@ -26,22 +27,6 @@ function Login() {
   });
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
-
-  // Funkcja do walidacji adresu email
-  const validateEmail = (email) => {
-    if (email === "") {
-      setEmailError("");
-      return true;
-    }
-
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(email)) {
-      setEmailError("Proszę podać prawidłowy adres email");
-      return false;
-    }
-    setEmailError("");
-    return true;
-  };
 
   // Funkcja do obsługi zdarzenia submit
   const handleSubmit = async (e) => {
@@ -89,7 +74,7 @@ function Login() {
     }));
 
     if (name === "email") {
-      validateEmail(value);
+      setEmailError(validateEmail(value));
     }
   };
 

@@ -3,6 +3,16 @@ import { useParams, useNavigate } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import BackButton from "./BackButton";
 import daysOfWeek from "../constants/daysOfWeek";
+import {
+  validateGroupPlaces,
+  validateGroupDescription,
+  validateGroupPrice,
+  validateGroupTeacher,
+  validateGroupLanguage,
+  validateGroupLevel,
+  validateGroupDayOfWeek,
+  validateGroupTime,
+} from "../util/validators";
 import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa";
 import "../styles/Login.css";
@@ -141,213 +151,55 @@ function CourseForm() {
     if (id) fetchCourse();
   }, [id, axios]);
 
-  // Walidatory
-  const validators = {
-    places: (places) => {
-      if (!places) {
-        setErrors({
-          ...errors,
-          places: "Liczba miejsc jest wymagana",
-        });
-        return false;
-      }
-
-      if (isNaN(places)) {
-        setErrors({
-          ...errors,
-          places: "Liczba miejsc musi być liczbą",
-        });
-        return false;
-      }
-
-      if (places < 6) {
-        setErrors({
-          ...errors,
-          places: "Liczba miejsc nie może być mniejsza od 6",
-        });
-        return false;
-      }
-
-      if (places > 20) {
-        setErrors({
-          ...errors,
-          places: "Liczba miejsc nie może być większa od 20",
-        });
-        return false;
-      }
-
-      setErrors({
-        ...errors,
-        places: "",
-      });
-      return true;
-    },
-    description: (description) => {
-      if (!description) {
-        setErrors({
-          ...errors,
-          description: "Opis jest wymagany",
-        });
-        return false;
-      }
-
-      if (description.length < 5) {
-        setErrors({
-          ...errors,
-          description: "Opis musi zawierać co najmniej 5 znaków",
-        });
-        return false;
-      }
-
-      if (description.length > 250) {
-        setErrors({
-          ...errors,
-          description: "Opis nie może przekraczać 250 znaków",
-        });
-        return false;
-      }
-
-      setErrors({
-        ...errors,
-        description: "",
-      });
-      return true;
-    },
-    price: (price) => {
-      if (!price) {
-        setErrors({
-          ...errors,
-          price: "Cena jest wymagana",
-        });
-        return false;
-      }
-
-      if (isNaN(price)) {
-        setErrors({
-          ...errors,
-          price: "Cena musi być liczbą",
-        });
-        return false;
-      }
-
-      if (price < 0 || price > 1000) {
-        setErrors({
-          ...errors,
-          price: "Cena musi być w przedziale (0, 1000)",
-        });
-        return false;
-      }
-
-      setErrors({
-        ...errors,
-        price: "",
-      });
-      return true;
-    },
-    teacher: (teacher) => {
-      if (!teacher) {
-        setErrors({
-          ...errors,
-          teacher: "Nauczyciel jest wymagany",
-        });
-        return false;
-      }
-
-      // TODO : czy znów sprawdzać?
-
-      setErrors({
-        ...errors,
-        teacher: "",
-      });
-      return true;
-    },
-    language: (language) => {
-      if (!language) {
-        setErrors({
-          ...errors,
-          language: "Język jest wymagany",
-        });
-        return false;
-      }
-
-      setErrors({
-        ...errors,
-        language: "",
-      });
-      return true;
-    },
-    level: (level) => {
-      if (!level) {
-        setErrors({
-          ...errors,
-          level: "Poziom jest wymagany",
-        });
-        return false;
-      }
-
-      setErrors({
-        ...errors,
-        level: "",
-      });
-      return true;
-    },
-    day: (day) => {
-      if (!day) {
-        setErrors({
-          ...errors,
-          day: "Dzień tygodnia jest wymagany",
-        });
-        return false;
-      }
-
-      setErrors({
-        ...errors,
-        day: "",
-      });
-      return true;
-    },
-    time: (name, value) => {
-      if (!value) {
-        setErrors({
-          ...errors,
-          time: "Godzina rozpoczęcia i zakończenia są wymagane",
-        });
-        return false;
-      }
-
-      const startTime = name === "startTime" ? value : formData.startTime;
-      const endTime = name === "endTime" ? value : formData.endTime;
-
-      if (startTime >= endTime) {
-        setErrors({
-          ...errors,
-          time: "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia",
-        });
-        return false;
-      } else if (endTime <= startTime) {
-        setErrors({
-          ...errors,
-          time: "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia",
-        });
-        return false;
-      } else {
-        setErrors({
-          ...errors,
-          time: "",
-        });
-        return true;
-      }
-    },
-  };
-
   // Obsługa zmiany wartości w formularzu
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "startTime" || name === "endTime") {
-      validators.time(name, value);
-    } else {
-      validators[name](value);
+    if (name === "startTime") {
+      setErrors({
+        ...errors,
+        time: validateGroupTime(value, formData.endTime),
+      });
+    } else if (name === "endTime") {
+      setErrors({
+        ...errors,
+        time: validateGroupTime(formData.startTime, value),
+      });
+    } else if (name === "places") {
+      setErrors({
+        ...errors,
+        places: validateGroupPlaces(value),
+      });
+    } else if (name === "description") {
+      setErrors({
+        ...errors,
+        description: validateGroupDescription(value),
+      });
+    } else if (name === "price") {
+      setErrors({
+        ...errors,
+        price: validateGroupPrice(value),
+      });
+    } else if (name === "teacher") {
+      setErrors({
+        ...errors,
+        teacher: validateGroupTeacher(value),
+      });
+    } else if (name === "language") {
+      setErrors({
+        ...errors,
+        language: validateGroupLanguage(value),
+      });
+    } else if (name === "level") {
+      setErrors({
+        ...errors,
+        level: validateGroupLevel(value),
+      });
+    } else if (name === "day") {
+      setErrors({
+        ...errors,
+        day: validateGroupDayOfWeek(value),
+      });
     }
 
     if (name === "teacher") {
@@ -386,14 +238,14 @@ function CourseForm() {
 
     // Walidacja formularza
     if (
-      !validators.places(formData.places) ||
-      !validators.description(formData.description) ||
-      !validators.price(formData.price) ||
-      !validators.teacher(formData.teacher) ||
-      !validators.language(formData.language) ||
-      !validators.level(formData.level) ||
-      !validators.day(formData.day) ||
-      !validators.time("startTime", formData.startTime)
+      validateGroupPlaces(formData.places) ||
+      validateGroupDescription(formData.description) ||
+      validateGroupPrice(formData.price) ||
+      validateGroupTeacher(formData.teacher) ||
+      validateGroupLanguage(formData.language) ||
+      validateGroupLevel(formData.level) ||
+      validateGroupDayOfWeek(formData.day) ||
+      validateGroupTime(formData.startTime, formData.endTime)
     ) {
       toast.error("Formularz zawiera błędy!");
       return;

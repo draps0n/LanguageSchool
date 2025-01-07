@@ -4,6 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUserPlus } from "react-icons/fa";
 import BackButton from "./BackButton";
+import {
+  validateApplicationComment,
+  validateApplicationStartDate,
+} from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 
@@ -22,73 +26,14 @@ function CourseApply() {
     comment: "",
   });
 
-  const validateStartDate = (startDate) => {
-    if (!startDate) {
-      setErrors((prev) => ({
-        ...prev,
-        startDate: "Data rozpoczęcia jest wymagana",
-      }));
-      return false;
-    }
-
-    const today = new Date();
-    const nextMonth = new Date();
-    const nextWeek = new Date();
-
-    nextMonth.setMonth(today.getMonth() + 1);
-    nextWeek.setDate(today.getDate() + 7);
-
-    const startDateDate = new Date(startDate);
-    if (startDateDate > nextMonth || startDateDate < nextWeek) {
-      setErrors((prev) => ({
-        ...prev,
-        startDate:
-          "Data rozpoczęcia musi być w ciągu najbliższego miesiąca i nie wcześniej niż za tydzień",
-      }));
-      return false;
-    }
-
-    setErrors((prev) => ({
-      ...prev,
-      startDate: "",
-    }));
-
-    return true;
-  };
-
-  const validateComment = (message) => {
-    if (!message) {
-      setErrors((prev) => ({
-        ...prev,
-        comment: "",
-      }));
-      return true;
-    }
-
-    if (message.length < 10 || message.length > 300) {
-      setErrors((prev) => ({
-        ...prev,
-        comment: "Wiadomość zwrotna musi mieć od 10 do 300 znaków",
-      }));
-      return false;
-    }
-
-    setErrors((prev) => ({
-      ...prev,
-      comment: "",
-    }));
-
-    return "";
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
-      !validateStartDate(formData.startDate) ||
-      !validateComment(formData.comment)
+      validateApplicationStartDate(formData.startDate) ||
+      validateApplicationComment(formData.comment)
     ) {
-      console.log("Validation failed");
+      toast.error("Formularz zawiera błędy");
       return;
     }
 
@@ -138,9 +83,15 @@ function CourseApply() {
     }));
 
     if (name === "startDate") {
-      validateStartDate(value);
+      setErrors((prev) => ({
+        ...prev,
+        [name]: validateApplicationStartDate(value),
+      }));
     } else if (name === "comment") {
-      validateComment(value);
+      setErrors((prev) => ({
+        ...prev,
+        [name]: validateApplicationComment(value),
+      }));
     }
   };
 

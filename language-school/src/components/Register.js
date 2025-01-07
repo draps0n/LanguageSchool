@@ -2,6 +2,15 @@ import React, { useState } from "react";
 import axios from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  validateName,
+  validateLastName,
+  validateEmail,
+  validatePassword,
+  validateIfPasswordsMatch,
+  validateDateOfBirth,
+  validateDescription,
+} from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 
@@ -28,170 +37,19 @@ function Register() {
     description: "",
   });
 
-  const validateEmail = (email) => {
-    if (!email) {
-      setErrors((prev) => ({ ...prev, email: "Adres email jest wymagany" }));
-      return false;
-    }
-
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regex.test(email)) {
-      setErrors((prev) => ({
-        ...prev,
-        email: "Proszę podać prawidłowy adres email",
-      }));
-      return false;
-    }
-    setErrors((prev) => ({ ...prev, email: "" }));
-    return true;
-  };
-
-  const validatePassword = (password) => {
-    if (!password) {
-      setErrors((prev) => ({ ...prev, password: "Hasło nie może być puste" }));
-      return false;
-    }
-
-    const regex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    if (!regex.test(password)) {
-      setErrors((prev) => ({
-        ...prev,
-        password:
-          "Hasło musi zawierać co najmniej 8 znaków, w tym jedną wielką literę, jedną małą literę, jedną cyfrę i jeden znak specjalny",
-      }));
-      return false;
-    }
-
-    setErrors((prev) => ({ ...prev, password: "" }));
-    return true;
-  };
-
-  const validateIfPasswordsMatch = (password, confirmPassword) => {
-    if (password !== confirmPassword) {
-      setErrors((prev) => ({
-        ...prev,
-        confirmPassword: "Hasła muszą być identyczne",
-      }));
-      return false;
-    }
-    setErrors((prev) => ({ ...prev, confirmPassword: "" }));
-    return true;
-  };
-
-  const validateName = (name) => {
-    if (!name) {
-      setErrors((prev) => ({ ...prev, name: "Imię nie może być puste" }));
-      return false;
-    }
-
-    if (name.length < 3) {
-      setErrors((prev) => ({
-        ...prev,
-        name: "Imię musi zawierać co najmniej 3 znaki",
-      }));
-      return false;
-    }
-
-    setErrors((prev) => ({ ...prev, name: "" }));
-    return true;
-  };
-
-  const validateLastName = (lastName) => {
-    if (!lastName) {
-      setErrors((prev) => ({
-        ...prev,
-        lastName: "Naziwsko nie może być puste",
-      }));
-      return false;
-    }
-
-    if (lastName.length < 3) {
-      setErrors((prev) => ({
-        ...prev,
-        lastName: "Imię musi zawierać co najmniej 3 znaki",
-      }));
-      return false;
-    }
-
-    setErrors((prev) => ({ ...prev, lastName: "" }));
-    return true;
-  };
-
-  const validateDateOfBirth = (dateOfBirth) => {
-    if (!dateOfBirth) {
-      setErrors((prev) => ({
-        ...prev,
-        dateOfBirth: "Data urodzenia jest wymagana",
-      }));
-      return false;
-    }
-
-    if (new Date(dateOfBirth) > new Date()) {
-      setErrors((prev) => ({
-        ...prev,
-        dateOfBirth: "Data urodzenia nie może być z przyszłości",
-      }));
-      return false;
-    }
-
-    const today = new Date();
-    if (
-      new Date(dateOfBirth) >
-      new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
-    ) {
-      setErrors((prev) => ({
-        ...prev,
-        dateOfBirth: "Musisz mieć ukończone 18 lat",
-      }));
-      return false;
-    }
-
-    setErrors((prev) => ({ ...prev, dateOfBirth: "" }));
-    return true;
-  };
-
-  const validateDescription = (description) => {
-    if (!description) {
-      setErrors((prev) => ({
-        ...prev,
-        description: "Opis nie może być pusty",
-      }));
-      return false;
-    }
-
-    if (description.length < 10) {
-      setErrors((prev) => ({
-        ...prev,
-        description: "Opis musi zawierać co najmniej 10 znaków",
-      }));
-      return false;
-    }
-
-    if (description.length > 200) {
-      setErrors((prev) => ({
-        ...prev,
-        description: "Opis nie może zawierać więcej niż 200 znaków",
-      }));
-      return false;
-    }
-
-    setErrors((prev) => ({ ...prev, description: "" }));
-    return true;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
-      !validateEmail(formData.email) ||
-      !validatePassword(formData.password) ||
-      !validateIfPasswordsMatch(formData.password, formData.confirmPassword) ||
-      !validateName(formData.name) ||
-      !validateLastName(formData.lastName) ||
-      !validateDateOfBirth(formData.dateOfBirth) ||
-      !validateDescription(formData.description)
+      validateEmail(formData.email) ||
+      validatePassword(formData.password) ||
+      validateIfPasswordsMatch(formData.password, formData.confirmPassword) ||
+      validateName(formData.name) ||
+      validateLastName(formData.lastName) ||
+      validateDateOfBirth(formData.dateOfBirth) ||
+      validateDescription(formData.description)
     ) {
+      toast.error("Formularz zawiera błędy");
       return;
     }
 
@@ -247,36 +105,60 @@ function Register() {
       [name]: value,
     }));
 
-    if (name === "email") {
-      validateEmail(value);
-    }
+    switch (name) {
+      case "name":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateName(value),
+        }));
+        break;
+      case "lastName":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateLastName(value),
+        }));
+        break;
+      case "email":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateEmail(value),
+        }));
+        break;
+      case "password":
+      case "confirmPassword":
+        const newPassword = name === "password" ? value : formData.password;
+        const newConfirmPassword =
+          name === "confirmPassword" ? value : formData.confirmPassword;
 
-    if (name === "password" || name === "confirmPassword") {
-      const newPassword = name === "password" ? value : formData.password;
-      const newConfirmPassword =
-        name === "confirmPassword" ? value : formData.confirmPassword;
+        if (name === "password") {
+          setErrors((prev) => ({
+            ...prev,
+            password: validatePassword(value),
+          }));
+        }
 
-      if (name === "password") {
-        validatePassword(value);
-      }
-
-      validateIfPasswordsMatch(newPassword, newConfirmPassword);
-    }
-
-    if (name === "name") {
-      validateName(value);
-    }
-
-    if (name === "lastName") {
-      validateLastName(value);
-    }
-
-    if (name === "dateOfBirth") {
-      validateDateOfBirth(value);
-    }
-
-    if (name === "description") {
-      validateDescription(value);
+        setErrors((prev) => ({
+          ...prev,
+          confirmPassword: validateIfPasswordsMatch(
+            newPassword,
+            newConfirmPassword
+          ),
+        }));
+        break;
+      case "dateOfBirth":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateDateOfBirth(value),
+        }));
+        break;
+      case "description":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateDescription(value),
+        }));
+        break;
+      default:
+        break;
     }
   };
 
