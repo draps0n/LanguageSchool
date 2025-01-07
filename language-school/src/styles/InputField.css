@@ -1,0 +1,41 @@
+.input-field {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.input-field[readonly] {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #999;
+    cursor: not-allowed;
+    outline: none;
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.input-field-error {
+    width: 100%;
+    max-width: 300px;
+    color: #da3838;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.placeholder-option {
+    color: #999;
+}

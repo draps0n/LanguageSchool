@@ -14,32 +14,6 @@
     color: #333;
 }
 
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.login-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-    color: #333;
-}
-
-.login-input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.error {
-    color: #da3838;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    word-wrap: break-word;
-}
-
 .login-button {
     width: 100%;
     padding: 0.75rem;

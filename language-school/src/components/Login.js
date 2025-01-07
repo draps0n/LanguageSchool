@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { validateEmail } from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
+import InputField from "./InputField";
 
 function Login() {
   // Hook do przechowywania danych użytkownika
@@ -82,37 +83,28 @@ function Login() {
     <div className="login-container">
       <h1 className="login-text">Logowanie</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="login-label" htmlFor="email">
-            Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            autoComplete="email"
-            className="login-input"
-          />
-          {emailError && <p className="error">{emailError}</p>}
-        </div>
-        <div className="form-group">
-          <label className="login-label" htmlFor="password">
-            Hasło:
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            autoComplete="current-password"
-            className="login-input"
-          />
-        </div>
+        <InputField
+          label="Email"
+          type="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          error={emailError}
+          required={true}
+          autoComplete={"email"}
+          placeholder="Wpisz email"
+        />
+
+        <InputField
+          label="Hasło"
+          type="password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          required={true}
+          autoComplete={"current-password"}
+          placeholder="Wpisz hasło"
+        />
         {error && <p className="error">{error}</p>}
         <div className="form-group">
           <Link to="/register">Zarejestruj się</Link>

@@ -11,8 +11,10 @@ import {
   validateDateOfBirth,
   validateDescription,
 } from "../util/validators";
+import InputField from "./InputField";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
+import InputTextArea from "./InputTextArea";
 
 function Register() {
   const navigate = useNavigate();
@@ -166,130 +168,86 @@ function Register() {
     <div className="login-container">
       <h1>Rejestracja</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="login-label" htmlFor="name">
-            Imię:
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            autoComplete="given-name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="login-input"
-          />
-          {errors.name && <p className="error">{errors.name}</p>}
-        </div>
+        <InputField
+          label="Imię"
+          name="name"
+          type="text"
+          value={formData.name}
+          onChange={handleChange}
+          required={true}
+          error={errors.name}
+          autoComplete={"given-name"}
+          placeholder={"Wpisz imię"}
+        />
 
-        <div className="form-group">
-          <label className="login-label" htmlFor="lastName">
-            Nazwisko:
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            autoComplete="family-name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-            className="login-input"
-          />
-          {errors.lastName && <p className="error">{errors.lastName}</p>}
-        </div>
+        <InputField
+          label="Nazwisko"
+          name="lastName"
+          type="text"
+          value={formData.lastName}
+          onChange={handleChange}
+          required={true}
+          error={errors.lastName}
+          autoComplete={"family-name"}
+          placeholder={"Wpisz nazwisko"}
+        />
 
-        <div className="form-group">
-          <label className="login-label" htmlFor="email">
-            Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            autoComplete="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="login-input"
-          />
-          {errors.email && <p className="error">{errors.email}</p>}
-        </div>
+        <InputField
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          required={true}
+          error={errors.email}
+          autoComplete={"email"}
+          placeholder={"Wpisz email"}
+        />
 
-        <div className="form-group">
-          <label className="login-label" htmlFor="dateOfBirth">
-            Data urodzenia:
-          </label>
-          <input
-            type="date"
-            id="dateOfBirth"
-            name="dateOfBirth"
-            autoComplete="bday"
-            value={formData.dateOfBirth}
-            onChange={handleChange}
-            required
-            className="login-input"
-          />
-          {errors.dateOfBirth && <p className="error">{errors.dateOfBirth}</p>}
-        </div>
+        <InputField
+          label="Data urodzenia"
+          name="dateOfBirth"
+          type="date"
+          value={formData.dateOfBirth}
+          onChange={handleChange}
+          required={true}
+          error={errors.dateOfBirth}
+          autoComplete={"bday"}
+        />
 
-        <div className="form-group">
-          <label className="login-label" htmlFor="password">
-            Hasło:
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            password="new-password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className="login-input"
-          />
-          {errors.password && <p className="error">{errors.password}</p>}
-        </div>
+        <InputField
+          label="Hasło"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          required={true}
+          error={errors.password}
+          autoComplete={"new-password"}
+          placeholder={"Wpisz hasło"}
+        />
 
-        <div className="form-group">
-          <label className="login-label" htmlFor="confirmPassword">
-            Powtórz hasło:
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            password="new-password"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-            className="login-input"
-          />
-          {errors.confirmPassword && (
-            <p className="error">{errors.confirmPassword}</p>
-          )}
-        </div>
+        <InputField
+          label="Powtórz hasło"
+          name="confirmPassword"
+          type="password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required={true}
+          error={errors.confirmPassword}
+          autoComplete={"new-password"}
+          placeholder={"Powtórz hasło"}
+        />
 
-        <div className="form-group">
-          <label className="login-label" htmlFor="description">
-            Opis:
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            rows="7"
-            style={{
-              width: "100%",
-              padding: "0.5rem",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              resize: "none",
-            }}
-          />
-          {errors.description && <p className="error">{errors.description}</p>}
-        </div>
+        <InputTextArea
+          label="Opis"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          error={errors.description}
+          placeholder={"Wpisz opis"}
+          rows="7"
+        />
 
         <div className="form-group">
           <Link to="/login">Masz już konto? Zaloguj się</Link>

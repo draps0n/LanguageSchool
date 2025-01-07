@@ -15,6 +15,8 @@ import {
   validateEmployeeSalary,
 } from "../util/validators";
 import "../styles/Profile.css";
+import InputField from "./InputField";
+import InputTextArea from "./InputTextArea";
 
 function Profile() {
   const navigate = useNavigate();
@@ -321,93 +323,84 @@ function Profile() {
             <p className="profile-role-name">
               <strong>{}</strong>
             </p>
-            <label htmlFor="name">Imię:</label>
-            <input
-              id="name"
+
+            <InputField
+              label="Imię"
               name="name"
               value={formData.name}
               onChange={handleChange}
-              readOnly={!editMode}
+              error={errors.name}
+              required={true}
               autoComplete="given-name"
-            ></input>
-            {errors.name && <p className="error">{errors.name}</p>}
+              readOnly={!editMode}
+            />
 
-            <label htmlFor="lastName">Nazwisko:</label>
-            <input
-              id="lastName"
+            <InputField
+              label="Nazwisko"
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
-              readOnly={!editMode}
+              error={errors.lastName}
+              required={true}
               autoComplete="family-name"
-            ></input>
-            {errors.lastName && <p className="error">{errors.lastName}</p>}
+              readOnly={!editMode}
+            />
 
-            <label htmlFor="email">E-mail:</label>
-            <input
-              id="email"
+            <InputField
+              label="E-mail"
+              type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              readOnly={!editMode}
+              error={errors.email}
+              required={true}
               autoComplete="email"
-            ></input>
-            {errors.email && <p className="error">{errors.email}</p>}
-
-            <label htmlFor="dateOfBirth">Data urodzenia:</label>
-            <input
-              id="dateOfBirth"
-              name="dateOfBirth"
-              type="date"
-              value={formData.dateOfBirth || ""}
-              onChange={handleChange}
               readOnly={!editMode}
-              autoComplete="bday"
-            ></input>
-            {errors.dateOfBirth && (
-              <p className="error">{errors.dateOfBirth}</p>
-            )}
+            />
 
-            <label htmlFor="password">Hasło:</label>
-            <input
-              id="password"
+            <InputField
+              label="Data urodzenia"
+              type="date"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+              error={errors.dateOfBirth}
+              required={true}
+              autoComplete="bday"
+              readOnly={!editMode}
+            />
+
+            <InputField
+              label="Hasło"
               type="password"
               name="password"
               value={editMode ? formData.password : "********"}
               onChange={handleChange}
               readOnly={!editMode}
-              autoComplete="email"
-            ></input>
+              autoComplete="current-password"
+            />
 
             {editMode && (
               <>
-                <label htmlFor="newPassword">Nowe hasło:</label>
-                <input
-                  id="newPassword"
+                <InputField
+                  label="Nowe hasło"
                   type="password"
                   name="newPassword"
                   value={formData.newPassword}
-                  autoComplete="new-password"
                   onChange={handleChange}
-                ></input>
-                {errors.newPassword && (
-                  <p className="error">{errors.newPassword}</p>
-                )}
+                  error={errors.newPassword}
+                  autoComplete="new-password"
+                />
 
-                <label htmlFor="passwordConfirmation">
-                  Powtórz nowe hasło:
-                </label>
-                <input
-                  id="passwordConfirmation"
+                <InputField
+                  label="Powtórz nowe hasło"
                   type="password"
                   name="passwordConfirmation"
                   value={formData.passwordConfirmation}
-                  autoComplete="new-password"
                   onChange={handleChange}
-                ></input>
-                {errors.passwordConfirmation && (
-                  <p className="error">{errors.passwordConfirmation}</p>
-                )}
+                  error={errors.passwordConfirmation}
+                  autoComplete="new-password"
+                />
               </>
             )}
           </div>
@@ -419,55 +412,55 @@ function Profile() {
             />
             {userData.roleId === roles.STUDENT && (
               <div className="student-info">
-                <label htmlFor="description">Opis:</label>
-                <textarea
-                  value={formData.description}
-                  readOnly={!editMode}
-                  id="description"
+                <InputTextArea
+                  label="Opis"
                   name="description"
+                  value={formData.description}
                   onChange={handleChange}
-                ></textarea>
-                {errors.description && (
-                  <p className="error">{errors.description}</p>
-                )}
+                  error={errors.description}
+                  placeholder={"Wpisz opis"}
+                  rows="7"
+                  readOnly={!editMode}
+                />
 
-                <label htmlFor="discount">Czy przysługuje zniżka:</label>
-                <input
-                  id="discount"
-                  name="discount"
+                <InputField
+                  label={"Czy przysługuje zniżka"}
                   type="checkbox"
+                  name="discount"
                   value={formData.discount}
-                  disabled
-                ></input>
+                  onChange={handleChange}
+                  disabled={true}
+                />
               </div>
             )}
             {userData.roleId === roles.TEACHER && (
               <div className="teacher-info">
-                <label htmlFor="hourlyRate">Stawka godzinowa:</label>
-                <input
-                  id="hourlyRate"
+                <InputField
+                  label="Stawka godzinowa (PLN)"
+                  name="hourlyRate"
+                  type="number"
                   value={formData.hourlyRate || ""}
                   readOnly
-                ></input>
-                <label htmlFor="hoursWorked">Przepracowane godziny:</label>
-                <input
-                  id="hoursWorked"
+                />
+
+                <InputField
+                  label="Przepracowane godziny"
+                  name="hoursWorked"
                   type="number"
                   value={formData.hoursWorked || ""}
                   readOnly
-                ></input>
+                />
               </div>
             )}
             {userData.roleId === roles.EMPLOYEE && (
               <div className="employee-info">
-                <label htmlFor="salary">Pensja:</label>
-                <input
-                  id="salary"
+                <InputField
+                  label="Pensja"
                   name="salary"
+                  type="number"
                   value={formData.salary || ""}
                   readOnly={!editMode}
-                ></input>
-                {errors.salary && <p className="error">{errors.salary}</p>}
+                />
               </div>
             )}
           </div>

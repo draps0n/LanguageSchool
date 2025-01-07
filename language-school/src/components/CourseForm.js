@@ -16,6 +16,10 @@ import {
 import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa";
 import "../styles/Login.css";
+import InputField from "./InputField";
+import InputTextArea from "./InputTextArea";
+import FormSelect from "./FormSelect";
+import Loading from "./Loading";
 
 function CourseForm() {
   // Hook do pobrania axios'a z autoryzacją
@@ -297,160 +301,106 @@ function CourseForm() {
 
   // Sprawdzenie czy dane zostały już pobrane, jeśli podczas edycji
   if (id && !group.places) {
-    return <div>Ładowanie...</div>;
+    return <Loading />;
   }
 
   return (
     <div className="login-container">
       <h1 className="login-text">
-        Edycja grupy językowej: {group.code}-{id}
+        {id
+          ? `Edycja grupy językowej: ${group.code}-${id}`
+          : "Dodaj nową grupę językową"}
       </h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="login-label">Liczba miejsc:</label>
-          <input
-            className="login-input"
-            type="number"
-            name="places"
-            value={formData.places || ""}
-            onChange={handleChange}
-            required
-            placeholder="6-20"
-          />
-          {errors.places && <p className="error">{errors.places}</p>}
-        </div>
-        <div className="form-group">
-          <label className="login-label">Opis:</label>
-          <input
-            className="login-input"
-            type="text"
-            name="description"
-            value={formData.description || ""}
-            onChange={handleChange}
-            required
-            placeholder="Opis grupy (5-250 znaków)"
-          />
-          {errors.description && <p className="error">{errors.description}</p>}
-        </div>
-        <div className="form-group">
-          <label className="login-label">Cena zajęć:</label>
-          <input
-            className="login-input"
-            type="number"
-            step="0.01"
-            name="price"
-            value={formData.price || ""}
-            placeholder="0.00"
-            onChange={handleChange}
-            required
-          />
-          {errors.price && <p className="error">{errors.price}</p>}
-        </div>
+        <InputField
+          label="Liczba miejsc"
+          name="places"
+          type="number"
+          value={formData.places}
+          onChange={handleChange}
+          required={true}
+          error={errors.places}
+          placeholder="6-20"
+        />
 
-        <div className="form-group">
-          <label className="login-label">Nauczyciel:</label>
-          <select
-            className="login-input"
-            name="teacher"
-            onChange={handleChange}
-            value={formData.teacher.id || ""}
-          >
-            <option value="" disabled hidden>
-              Wybierz nauczyciela
-            </option>
-            {teachers.map((teacher) => (
-              <option key={teacher.id} value={teacher.id}>
-                {teacher.name + " " + teacher.lastName}
-              </option>
-            ))}
-          </select>
-          {errors.teacher && <p className="error">{errors.teacher}</p>}
-        </div>
+        <InputTextArea
+          label="Opis"
+          name="description"
+          value={formData.description || ""}
+          onChange={handleChange}
+          required={true}
+          error={errors.description}
+          placeholder="Opis grupy (5-250 znaków)"
+          rows={5}
+        />
 
-        <div className="form-group">
-          <label className="login-label">Język:</label>
-          <select
-            className="login-input"
-            name="language"
-            value={formData.language.id || ""}
-            onChange={handleChange}
-          >
-            <option value="" disabled hidden>
-              Wybierz język
-            </option>
-            {languages.map((language) => (
-              <option key={language.id} value={language.id}>
-                {language.name}
-              </option>
-            ))}
-          </select>
-          {errors.language && <p className="error">{errors.language}</p>}
-        </div>
+        <InputField
+          label="Cena zajęć"
+          name="price"
+          type="number"
+          step="0.01"
+          value={formData.price}
+          onChange={handleChange}
+          required={true}
+          error={errors.price}
+          placeholder="0.00"
+        />
 
-        <div className="form-group">
-          <label className="login-label">Poziom:</label>
-          <select
-            className="login-input"
-            name="level"
-            onChange={handleChange}
-            value={formData.level.id || ""}
-          >
-            <option value="" disabled hidden>
-              Wybierz poziom
-            </option>
-            {levels.map((level) => (
-              <option key={level.id} value={level.id}>
-                {level.name}
-              </option>
-            ))}
-          </select>
-          {errors.level && <p className="error">{errors.level}</p>}
-        </div>
+        <FormSelect
+          label="Nauczyciel"
+          name="teacher"
+          value={formData.teacher.id || ""}
+          onChange={handleChange}
+          options={teachers}
+          error={errors.teacher}
+        />
 
-        <div className="form-group">
-          <label className="login-label">Dzień tygodnia:</label>
-          <select
-            className="login-input"
-            name="day"
-            onChange={handleChange}
-            value={formData.day || ""}
-          >
-            <option value="" disabled hidden>
-              Wybierz dzień tygodnia
-            </option>
-            {daysOfWeek.map((day) => (
-              <option key={day} value={day}>
-                {day}
-              </option>
-            ))}
-          </select>
-          {errors.day && <p className="error">{errors.day}</p>}
-        </div>
+        <FormSelect
+          label="Język"
+          name="language"
+          value={formData.language.id || ""}
+          onChange={handleChange}
+          options={languages}
+          error={errors.language}
+        />
 
-        <div className="form-group">
-          <label className="login-label">Godzina rozpoczęcia:</label>
-          <input
-            className="login-input"
-            type="time"
-            name="startTime"
-            value={formData.startTime || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <FormSelect
+          label="Poziom"
+          name="level"
+          value={formData.level.id || ""}
+          onChange={handleChange}
+          options={levels}
+          error={errors.level}
+        />
 
-        <div className="form-group">
-          <label className="login-label">Godzina zakończenia:</label>
-          <input
-            className="login-input"
-            type="time"
-            name="endTime"
-            value={formData.endTime || ""}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        {errors.time && <p className="error">{errors.time}</p>}
+        <FormSelect
+          label="Dzień tygodnia"
+          name="day"
+          value={formData.day || ""}
+          onChange={handleChange}
+          options={daysOfWeek}
+          error={errors.day}
+        />
+
+        <InputField
+          label="Godzina rozpoczęcia"
+          name="startTime"
+          type="time"
+          value={formData.startTime}
+          onChange={handleChange}
+          required={true}
+        />
+
+        <InputField
+          label="Godzina zakończenia"
+          name="endTime"
+          type="time"
+          value={formData.endTime}
+          onChange={handleChange}
+          required={true}
+          error={errors.time}
+        />
+
         <div className="form-buttons">
           <BackButton />
           <button

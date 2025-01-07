@@ -10,6 +10,8 @@ import {
 } from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
+import InputField from "./InputField";
+import InputTextArea from "./InputTextArea";
 
 function CourseApply() {
   const axios = useAxiosAuth();
@@ -99,42 +101,24 @@ function CourseApply() {
     <div className="login-container">
       <h1>Zgłoszenie do grupy językowej</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label className="login-label" htmlFor="startDate">
-            Preferowana data rozpoczęcia:
-          </label>
-          <input
-            type="date"
-            id="startDate"
-            name="startDate"
-            value={formData.startDate}
-            onChange={handleChange}
-            required
-            className="login-input"
-          />
-          {errors.startDate && <p className="error">{errors.startDate}</p>}
-        </div>
+        <InputField
+          label="Preferowana data rozpoczęcia"
+          name="startDate"
+          type="date"
+          value={formData.startDate}
+          onChange={handleChange}
+          required={true}
+          error={errors.startDate}
+        />
 
-        <div className="form-group">
-          <label className="login-label" htmlFor="comment">
-            Uwagi: (opcjonalnie)
-          </label>
-          <textarea
-            id="comment"
-            name="comment"
-            value={formData.comment}
-            onChange={handleChange}
-            rows="6"
-            style={{
-              width: "100%",
-              padding: "0.5rem",
-              borderRadius: "4px",
-              border: "1px solid #ccc",
-              resize: "none",
-            }}
-          />
-          {errors.comment && <p className="error">{errors.comment}</p>}
-        </div>
+        <InputTextArea
+          label="Uwagi: (opcjonalnie)"
+          name="comment"
+          value={formData.comment}
+          onChange={handleChange}
+          error={errors.comment}
+        />
+
         <div className="form-buttons">
           <BackButton />
           <button
