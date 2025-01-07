@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
 import useAxiosAuth from "../hooks/useAxiosAuth";
+import { toast } from "react-toastify";
 import "../styles/Profile.css";
 
 function Profile() {
@@ -11,16 +12,23 @@ function Profile() {
   const { userData } = useAuth();
   const axios = useAxiosAuth();
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const month = `0${d.getMonth() + 1}`.slice(-2);
+    const day = `0${d.getDate()}`.slice(-2);
+    const year = d.getFullYear();
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState({
     name: userData.name,
     lastName: userData.lastName,
     email: userData.email,
-    description: userData.description,
+    dateOfBirth: userData.dateOfBirth ? formatDate(userData.dateOfBirth) : "",
     password: "",
     newPassword: "",
     passwordConfirmation: "",
-    hourlyRate: userData.hourlyRate,
-    hoursWorked: userData.hoursWorked,
+    description: userData.description,
     salary: userData.salary,
   });
 
@@ -28,12 +36,11 @@ function Profile() {
     name: userData.name,
     lastName: userData.lastName,
     email: userData.email,
-    description: userData.description,
+    dateOfBirth: "",
     password: "",
     newPassword: "",
     passwordConfirmation: "",
-    hourlyRate: userData.hourlyRate,
-    hoursWorked: userData.hoursWorked,
+    description: userData.description,
     salary: userData.salary,
   });
 
@@ -49,10 +56,10 @@ function Profile() {
       }
     };
 
-    if (userData.role.id === roles.TEACHER) {
+    if (userData.role.id === roles.TEACHER && userData.id) {
       getTeacherLanguages();
     }
-  }, [userData]);
+  }, [userData, axios]);
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
@@ -67,7 +74,6 @@ function Profile() {
   };
 
   const handleChange = (e) => {
-    // TODO: chyba nie działa
     const { name, value } = e.target;
     console.log(name, value);
     setFormData((prev) => ({
@@ -79,6 +85,8 @@ function Profile() {
   const handleFormSubmit = async (e) => {
     // TODO: edycja profilu
     e.preventDefault();
+
+    toast.error("Funkcjonalność w przygotowaniu");
   };
 
   return (
@@ -94,29 +102,50 @@ function Profile() {
             <label htmlFor="name">Imię:</label>
             <input
               id="name"
+              name="name"
               value={formData.name}
+              onChange={handleChange}
               readOnly={!editMode}
               autoComplete="given-name"
             ></input>
             <label htmlFor="lastName">Nazwisko:</label>
             <input
               id="lastName"
+              name="lastName"
               value={formData.lastName}
+              onChange={handleChange}
               readOnly={!editMode}
               autoComplete="family-name"
             ></input>
+
             <label htmlFor="email">E-mail:</label>
             <input
               id="email"
+              name="email"
               value={formData.email}
+              onChange={handleChange}
               readOnly={!editMode}
               autoComplete="email"
             ></input>
+
+            <label htmlFor="dateOfBirth">Data urodzenia:</label>
+            <input
+              id="dateOfBirth"
+              name="dateOfBirth"
+              type="date"
+              value={formData.dateOfBirth || ""}
+              onChange={handleChange}
+              readOnly={!editMode}
+              autoComplete="bday"
+            ></input>
+
             <label htmlFor="password">Hasło:</label>
             <input
               id="password"
               type="password"
+              name="password"
               value={editMode ? formData.password : "********"}
+              onChange={handleChange}
               readOnly={!editMode}
               autoComplete="email"
             ></input>
@@ -126,6 +155,7 @@ function Profile() {
                 <input
                   id="newPassword"
                   type="password"
+                  name="newPassword"
                   value={formData.newPassword}
                   autoComplete="new-password"
                   onChange={handleChange}
@@ -136,6 +166,7 @@ function Profile() {
                 <input
                   id="passwordConfirmation"
                   type="password"
+                  name="passwordConfirmation"
                   value={formData.passwordConfirmation}
                   autoComplete="new-password"
                   onChange={handleChange}
@@ -156,7 +187,17 @@ function Profile() {
                   value={formData.description}
                   readOnly={!editMode}
                   id="description"
+                  name="description"
+                  onChange={handleChange}
                 ></textarea>
+                <label htmlFor="discount">Czy przysługuje zniżka:</label>
+                <input
+                  id="discount"
+                  name="discount"
+                  type="checkbox"
+                  value={formData.discount}
+                  disabled
+                ></input>
               </div>
             )}
             {userData.role.id === roles.TEACHER && (
@@ -164,14 +205,15 @@ function Profile() {
                 <label htmlFor="hourlyRate">Stawka godzinowa:</label>
                 <input
                   id="hourlyRate"
-                  value={formData.hourlyRate || ""}
-                  readOnly={!editMode}
+                  value={userData.hourlyRate || ""}
+                  readOnly
                 ></input>
                 <label htmlFor="hoursWorked">Przepracowane godziny:</label>
                 <input
                   id="hoursWorked"
-                  value={formData.hoursWorked || ""}
-                  readOnly={!editMode}
+                  type="number"
+                  value={userData.hoursWorked || ""}
+                  readOnly
                 ></input>
               </div>
             )}
@@ -180,6 +222,7 @@ function Profile() {
                 <label htmlFor="salary">Pensja:</label>
                 <input
                   id="salary"
+                  name="salary"
                   value={formData.salary || ""}
                   readOnly={!editMode}
                 ></input>

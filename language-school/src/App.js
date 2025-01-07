@@ -55,6 +55,15 @@ function App() {
             <Route path="courses/add" element={<CourseForm />} />
           </Route>
 
+          {/* Ścieżki dostępne dla nauczycieli i studentów */}
+          <Route
+            element={
+              <RequireAuth allowedRoles={[roles.TEACHER, roles.STUDENT]} />
+            }
+          >
+            <Route path="my-courses" element={<CoursesList />} />
+          </Route>
+
           {/* Ścieżki do błędów */}
           <Route path="forbidden" element={<Forbidden />} />
           <Route path="*" element={<NotFound />} />

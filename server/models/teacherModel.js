@@ -56,10 +56,28 @@ const deleteTeacher = async (id) => {
   return results;
 };
 
+const getTeacherLanguages = async (id) => {
+  const [results] = await pool.query(
+    `SELECT j.id, j.nazwa, j.skrot
+    FROM jezyk j
+    INNER JOIN nauczyciel_jezyk nj ON j.id = nj.id_jezyk
+    WHERE nj.id_nauczyciel = ?`,
+    [id]
+  );
+  return results.map((language) => {
+    return {
+      id: language.id,
+      name: language.nazwa,
+      code: language.skrot,
+    };
+  });
+};
+
 module.exports = {
   getAllTeachers,
   getTeacherById,
   createTeacher,
   updateTeacher,
   deleteTeacher,
+  getTeacherLanguages,
 };
