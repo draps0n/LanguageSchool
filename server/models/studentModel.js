@@ -30,8 +30,8 @@ const createStudent = async (userId, student, connection) => {
   return results;
 };
 
-const updateStudent = async (id, student) => {
-  const [results] = await pool.query(
+const updateStudent = async (id, student, connection) => {
+  const [results] = await pool.connection(
     "UPDATE kursant SET czy_rabat = ?, opis = ? WHERE id = ?",
     [student.discount, student.description, id]
   );

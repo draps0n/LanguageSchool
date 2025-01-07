@@ -30,16 +30,21 @@ function Profile() {
     return `${year}-${month}-${day}`;
   };
 
+  const [user, setUser] = useState(null);
+
   const [formData, setFormData] = useState({
-    name: userData.name,
-    lastName: userData.lastName,
-    email: userData.email,
-    dateOfBirth: userData.dateOfBirth ? formatDate(userData.dateOfBirth) : "",
+    name: "",
+    lastName: "",
+    email: "",
+    dateOfBirth: "",
     password: "",
     newPassword: "",
     passwordConfirmation: "",
-    description: userData.description,
-    salary: userData.salary,
+    description: "",
+    hoursWorked: "",
+    hourlyRate: "",
+    discount: false,
+    salary: 0,
   });
 
   const [errors, setErrors] = useState({
@@ -56,6 +61,48 @@ function Profile() {
   const [languages, setLanguages] = useState([]);
 
   useEffect(() => {
+    const getProfileData = async () => {
+      try {
+        const response = await axios.get(`/users/user`);
+        const {
+          name,
+          lastName,
+          email,
+          dateOfBirth,
+          description,
+          salary,
+          hoursWorked,
+          hourlyRate,
+          discount,
+        } = response.data;
+        setFormData({
+          name,
+          lastName,
+          email,
+          dateOfBirth: formatDate(dateOfBirth),
+          password: "",
+          newPassword: "",
+          passwordConfirmation: "",
+          description,
+          hoursWorked,
+          hourlyRate,
+          discount,
+          salary,
+        });
+
+        setUser({
+          name,
+          lastName,
+          email,
+          dateOfBirth: formatDate(dateOfBirth),
+          description,
+          salary,
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
     const getTeacherLanguages = async () => {
       try {
         const response = await axios.get(`/teachers/${userData.id}/languages`);
@@ -65,13 +112,23 @@ function Profile() {
       }
     };
 
-    if (userData.role.id === roles.TEACHER && userData.id) {
+    getProfileData();
+    if (userData.roleId === roles.TEACHER && userData.id) {
       getTeacherLanguages();
     }
   }, [userData, axios]);
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
+    setFormData((prev) => ({
+      ...prev,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+      description: user.description,
+      salary: user.salary,
+    }));
   };
 
   const viewMyCourses = () => {
@@ -115,7 +172,7 @@ function Profile() {
       case "newPassword":
         setErrors((prev) => ({
           ...prev,
-          newPassword: validatePassword(value),
+          newPassword: validatePassword(value, false),
         }));
         break;
       case "passwordConfirmation":
@@ -145,15 +202,114 @@ function Profile() {
           [name]: validateEmployeeSalary(value),
         }));
         break;
+      default:
+        break;
     }
   };
 
   const handleFormSubmit = async (e) => {
-    // TODO: edycja profilu
     e.preventDefault();
 
-    toast.error("Funkcjonalność w przygotowaniu");
+    if (
+      validateName(formData.name) ||
+      validateLastName(formData.lastName) ||
+      validateEmail(formData.email) ||
+      validateDateOfBirth(formData.dateOfBirth) ||
+      validatePassword(formData.newPassword) ||
+      (formData.newPassword &&
+        validateIfPasswordsMatch(
+          formData.newPassword,
+          formData.passwordConfirmation
+        )) ||
+      (userData.roleId === roles.STUDENT &&
+        validateDescription(formData.description)) ||
+      (userData.roleId === roles.EMPLOYEE &&
+        validateEmployeeSalary(formData.salary))
+    ) {
+      // console.log(validateName(formData.name));
+      // console.log(validateLastName(formData.lastName));
+      // console.log(validateEmail(formData.email));
+      // console.log(validateDateOfBirth(formData.dateOfBirth));
+      // console.log(validatePassword(formData.password));
+
+      toast.error("Niepoprawnie wypełniony formularz");
+      return;
+    }
+
+    const {
+      name,
+      lastName,
+      email,
+      dateOfBirth,
+      password,
+      newPassword,
+      description,
+      salary,
+    } = formData;
+
+    try {
+      await axios.put("/users/user", {
+        name,
+        lastName,
+        email,
+        dateOfBirth,
+        password,
+        newPassword,
+        description,
+        salary,
+      });
+
+      setUser({
+        name,
+        lastName,
+        email,
+        dateOfBirth,
+        description,
+        salary,
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        password: "",
+        newPassword: "",
+        passwordConfirmation: "",
+      }));
+
+      toast.success("Zaktualizowano dane");
+      setEditMode(false);
+    } catch (error) {
+      if (error.response.status === 409) {
+        toast.error("Podany adres email jest już zajęty");
+      } else if (
+        error.response.status === 401 &&
+        error?.response?.data?.message
+      ) {
+        toast.error("Niepoprawne hasło");
+      } else {
+        toast.error("Wystąpił błąd podczas aktualizacji danych");
+      }
+
+      // Resetuj dane w formularzy gdy błąd
+      setFormData((prev) => ({
+        ...prev,
+        name: user.name,
+        lastName: user.lastName,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+        password: "",
+        newPassword: "",
+        passwordConfirmation: "",
+        description: user.description,
+        salary: user.salary,
+      }));
+      console.error("Error updating user data:", error);
+      setEditMode(false);
+    }
   };
+
+  if (!user) {
+    return <div>Ładowanie...</div>;
+  }
 
   return (
     <div className="profile-page">
@@ -163,7 +319,7 @@ function Profile() {
             <h1>Profil użytkownika</h1>
             <p>Witaj! Zalogowano Cię w roli:</p>
             <p className="profile-role-name">
-              <strong>{userData.role.name}</strong>
+              <strong>{}</strong>
             </p>
             <label htmlFor="name">Imię:</label>
             <input
@@ -261,7 +417,7 @@ function Profile() {
               alt="user-picture"
               className="user-photo"
             />
-            {userData.role.id === roles.STUDENT && (
+            {userData.roleId === roles.STUDENT && (
               <div className="student-info">
                 <label htmlFor="description">Opis:</label>
                 <textarea
@@ -285,24 +441,24 @@ function Profile() {
                 ></input>
               </div>
             )}
-            {userData.role.id === roles.TEACHER && (
+            {userData.roleId === roles.TEACHER && (
               <div className="teacher-info">
                 <label htmlFor="hourlyRate">Stawka godzinowa:</label>
                 <input
                   id="hourlyRate"
-                  value={userData.hourlyRate || ""}
+                  value={formData.hourlyRate || ""}
                   readOnly
                 ></input>
                 <label htmlFor="hoursWorked">Przepracowane godziny:</label>
                 <input
                   id="hoursWorked"
                   type="number"
-                  value={userData.hoursWorked || ""}
+                  value={formData.hoursWorked || ""}
                   readOnly
                 ></input>
               </div>
             )}
-            {userData.role.id === roles.EMPLOYEE && (
+            {userData.roleId === roles.EMPLOYEE && (
               <div className="employee-info">
                 <label htmlFor="salary">Pensja:</label>
                 <input
@@ -327,13 +483,13 @@ function Profile() {
             </button>
           )}
           {!editMode &&
-            (userData.role.id === roles.STUDENT ||
-              userData.role.id === roles.TEACHER) && (
+            (userData.roleId === roles.STUDENT ||
+              userData.roleId === roles.TEACHER) && (
               <button onClick={viewMyCourses} type="button">
                 Moje kursy
               </button>
             )}
-          {!editMode && userData.role.id === roles.STUDENT && (
+          {!editMode && userData.roleId === roles.STUDENT && (
             <button onClick={viewMyApplications} type="button">
               Moje zgłoszenia
             </button>

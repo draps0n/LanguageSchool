@@ -27,6 +27,7 @@ const startServer = async () => {
     const groupRoutes = require("./routes/groupRoutes");
     const applicationRoutes = require("./routes/applicationRoutes");
     const teacherRoutes = require("./routes/teacherRoutes");
+    const userRoutes = require("./routes/userRoutes");
 
     // Ustaw middleware do obsługi formularzy
     app.use(express.urlencoded({ extended: true }));
@@ -45,7 +46,7 @@ const startServer = async () => {
     // Ustaw middleware do obsługi cookie
     app.use(cookieParser());
 
-    // Ustaw routy prezed weryfikacją JWT
+    // Ustaw routy przed weryfikacją JWT
     app.use("/auth", authRoutes);
 
     // Ustaw middleware do weryfikacji JWT
@@ -59,6 +60,7 @@ const startServer = async () => {
     app.use("/groups", groupRoutes);
     app.use("/applications", applicationRoutes);
     app.use("/teachers", teacherRoutes);
+    app.use("/users", userRoutes);
 
     // Nasłuchuj na porcie
     app.listen(port, () => {

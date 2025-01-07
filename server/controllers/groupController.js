@@ -73,6 +73,7 @@ const deleteGroup = async (req, res) => {
     return res.status(400).json({ message: "Group id is required" });
   }
 
+  // TODO : dodać sprawdzenie czy grupa istnieje i transakcję
   try {
     // Usunięcie zgłoszeń na grupę
     await applicationModel.deleteApplicationByGroupId(id);

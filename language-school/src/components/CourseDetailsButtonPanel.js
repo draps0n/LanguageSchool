@@ -26,13 +26,13 @@ const CourseDetailsButtonPanel = () => {
   return (
     <div className="button-panel">
       <BackButton />
-      {userData.role.id === roles.STUDENT && (
+      {userData.roleId === roles.STUDENT && (
         <button onClick={joinGroup} className="small-button">
           <FaUserPlus className="icon" />
           Dołącz
         </button>
       )}
-      {userData.role.id === roles.EMPLOYEE && (
+      {userData.roleId === roles.EMPLOYEE && (
         <div>
           <button onClick={editGroup} className="small-button">
             <FaPen className="icon" />

@@ -58,7 +58,7 @@ const CoursesList = () => {
   return (
     <div className="group-list-container">
       <h1 className="text-center">Lista grup</h1>
-      {userData.role.id === roles.EMPLOYEE && (
+      {userData.roleId === roles.EMPLOYEE && (
         <button className="group-add-button" onClick={addGroup}>
           Dodaj
         </button>

@@ -28,8 +28,8 @@ const createEmployee = async (userId, employee) => {
   return results;
 };
 
-const updateEmployee = async (id, employee) => {
-  const [results] = await pool.query(
+const updateEmployee = async (id, salary, connection) => {
+  const [results] = await connection.query(
     "UPDATE pracownik_administracyjny SET pensja = ? WHERE id = ?",
     [employee.salary, id]
   );

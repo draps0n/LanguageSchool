@@ -9,7 +9,6 @@ const initializeRoles = async () => {
     results.forEach((role) => {
       roles[role.nazwa.replace(/\s+/g, "_").toUpperCase()] = role.id;
     });
-    console.log("Roles initialized:", roles);
   } catch (error) {
     console.error("Error initializing roles:", error);
   }

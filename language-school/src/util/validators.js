@@ -35,8 +35,12 @@ const validateEmail = (email) => {
   return "";
 };
 
-const validatePassword = (password) => {
-  if (!password) {
+const validatePassword = (password, isObligatory = false) => {
+  if (!isObligatory && !password) {
+    return "";
+  }
+
+  if (isObligatory && !password) {
     return "Hasło nie może być puste";
   }
 

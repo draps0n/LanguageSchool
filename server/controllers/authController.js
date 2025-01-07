@@ -64,19 +64,7 @@ const login = async (req, res) => {
     res.status(200).send({
       accessToken,
       userId: user.id,
-      name: user.name,
-      lastName: user.lastName,
-      email: user.email,
-      dateOfBirth: user.dateOfBirth,
-      role: {
-        id: user.roleId,
-        name: user.role,
-      },
-      hoursWorked: user.hoursWorked,
-      hourlyRate: user.hourlyRate,
-      discount: user.discount,
-      description: user.description,
-      salary: user.salary,
+      roleId: user.roleId,
     });
   } catch (error) {
     console.error(error);
