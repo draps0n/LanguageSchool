@@ -11,7 +11,7 @@ function RequireAuth({ allowedRoles = [] }) {
 
   if (
     allowedRoles.length === 0 ||
-    (userData?.roleId && allowedRoles?.includes(userData.roleId))
+    (userData?.role.id && allowedRoles?.includes(userData.role.id))
   ) {
     return <Outlet />;
   }

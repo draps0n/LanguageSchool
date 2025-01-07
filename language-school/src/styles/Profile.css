@@ -17,7 +17,10 @@
     justify-content: center;
 }
 
-.profile-right {
+.profile-right,
+.teacher-info,
+.student-info,
+.employee-info {
     display: flex;
     flex-direction: column;
     align-items: center;
