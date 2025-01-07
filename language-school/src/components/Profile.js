@@ -69,6 +69,10 @@ function Profile() {
     navigate("/my-courses");
   };
 
+  const viewMyApplications = () => {
+    navigate("/my-applications");
+  };
+
   const viewDeleteAccountConfirmation = async () => {
     navigate("profile/delete");
   };
@@ -247,6 +251,11 @@ function Profile() {
                 Moje kursy
               </button>
             )}
+          {!editMode && userData.role.id === roles.STUDENT && (
+            <button onClick={viewMyApplications} type="button">
+              Moje zgłoszenia
+            </button>
+          )}
         </div>
       </form>
     </div>
