@@ -27,8 +27,6 @@ const updateUser = async (req, res) => {
     salary,
   } = req.body;
 
-  console.log(password, newPassword);
-
   if (!req.userId) {
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -46,15 +44,64 @@ const updateUser = async (req, res) => {
     return res.status(404).json({ message: "Employee not found" });
   }
 
+  if (user.name.length < 3 || user.name.length > 50) {
+    return res
+      .status(400)
+      .json({ message: "Name must be between 3 and 50 characters" });
+  }
+
+  if (user.lastName.length < 3 || user.lastName.length > 50) {
+    return res
+      .status(400)
+      .json({ message: "Last name must be between 3 and 50 characters" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).send("Invalid email format");
+  }
+
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(dateOfBirth)) {
+    return res.status(400).send("Date must be in YYYY-MM-DD format");
+  }
+
+  const birthDate = new Date(dateOfBirth);
+  const today = new Date();
+  if (birthDate > today) {
+    return res.status(400).send("Date of birth cannot be in the future");
+  }
+
+  if (
+    birthDate >
+    new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+  ) {
+    return res.status(400).send("User must be at least 18 years old");
+  }
+
+  if (
+    req.roleId === getRoles.STUDENT &&
+    (description.length < 10 || description.length > 200)
+  ) {
+    return res
+      .status(400)
+      .send("Description must be between 10 and 200 characters");
+  }
+
+  if (
+    req.roleId === getRoles.EMPLOYEE &&
+    (salary < 0 || salary > 100000 || isNaN(salary))
+  ) {
+    return res.status(400).send("Salary must be a number between 0 and 100000");
+  }
+
   const isEmailTaken = await userModel.getUserByEmail(email);
   if (isEmailTaken && isEmailTaken.id !== req.userId) {
     return res.status(409).json({ message: "Email already taken" });
   }
 
-  console.log("user.password", user.password);
   if (newPassword) {
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(isPasswordValid);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid password" });
     }
