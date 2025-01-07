@@ -4,6 +4,16 @@ import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
+import {
+  validateName,
+  validateLastName,
+  validateEmail,
+  validateDateOfBirth,
+  validatePassword,
+  validateIfPasswordsMatch,
+  validateDescription,
+  validateEmployeeSalary,
+} from "../util/validators";
 import "../styles/Profile.css";
 
 function Profile() {
@@ -33,15 +43,14 @@ function Profile() {
   });
 
   const [errors, setErrors] = useState({
-    name: userData.name,
-    lastName: userData.lastName,
-    email: userData.email,
+    name: "",
+    lastName: "",
+    email: "",
     dateOfBirth: "",
-    password: "",
     newPassword: "",
     passwordConfirmation: "",
-    description: userData.description,
-    salary: userData.salary,
+    description: "",
+    salary: "",
   });
 
   const [languages, setLanguages] = useState([]);
@@ -79,11 +88,64 @@ function Profile() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    switch (name) {
+      case "name":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateName(value),
+        }));
+        break;
+      case "lastName":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateLastName(value),
+        }));
+        break;
+      case "email":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateEmail(value),
+        }));
+        break;
+      case "newPassword":
+        setErrors((prev) => ({
+          ...prev,
+          newPassword: validatePassword(value),
+        }));
+        break;
+      case "passwordConfirmation":
+        setErrors((prev) => ({
+          ...prev,
+          passwordConfirmation: validateIfPasswordsMatch(
+            formData.newPassword,
+            value
+          ),
+        }));
+        break;
+      case "dateOfBirth":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateDateOfBirth(value),
+        }));
+        break;
+      case "description":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateDescription(value),
+        }));
+        break;
+      case "salary":
+        setErrors((prev) => ({
+          ...prev,
+          [name]: validateEmployeeSalary(value),
+        }));
+        break;
+    }
   };
 
   const handleFormSubmit = async (e) => {
@@ -112,6 +174,8 @@ function Profile() {
               readOnly={!editMode}
               autoComplete="given-name"
             ></input>
+            {errors.name && <p className="error">{errors.name}</p>}
+
             <label htmlFor="lastName">Nazwisko:</label>
             <input
               id="lastName"
@@ -121,6 +185,7 @@ function Profile() {
               readOnly={!editMode}
               autoComplete="family-name"
             ></input>
+            {errors.lastName && <p className="error">{errors.lastName}</p>}
 
             <label htmlFor="email">E-mail:</label>
             <input
@@ -131,6 +196,7 @@ function Profile() {
               readOnly={!editMode}
               autoComplete="email"
             ></input>
+            {errors.email && <p className="error">{errors.email}</p>}
 
             <label htmlFor="dateOfBirth">Data urodzenia:</label>
             <input
@@ -142,6 +208,9 @@ function Profile() {
               readOnly={!editMode}
               autoComplete="bday"
             ></input>
+            {errors.dateOfBirth && (
+              <p className="error">{errors.dateOfBirth}</p>
+            )}
 
             <label htmlFor="password">Hasło:</label>
             <input
@@ -153,6 +222,7 @@ function Profile() {
               readOnly={!editMode}
               autoComplete="email"
             ></input>
+
             {editMode && (
               <>
                 <label htmlFor="newPassword">Nowe hasło:</label>
@@ -164,6 +234,10 @@ function Profile() {
                   autoComplete="new-password"
                   onChange={handleChange}
                 ></input>
+                {errors.newPassword && (
+                  <p className="error">{errors.newPassword}</p>
+                )}
+
                 <label htmlFor="passwordConfirmation">
                   Powtórz nowe hasło:
                 </label>
@@ -175,6 +249,9 @@ function Profile() {
                   autoComplete="new-password"
                   onChange={handleChange}
                 ></input>
+                {errors.passwordConfirmation && (
+                  <p className="error">{errors.passwordConfirmation}</p>
+                )}
               </>
             )}
           </div>
@@ -194,6 +271,10 @@ function Profile() {
                   name="description"
                   onChange={handleChange}
                 ></textarea>
+                {errors.description && (
+                  <p className="error">{errors.description}</p>
+                )}
+
                 <label htmlFor="discount">Czy przysługuje zniżka:</label>
                 <input
                   id="discount"
@@ -230,6 +311,7 @@ function Profile() {
                   value={formData.salary || ""}
                   readOnly={!editMode}
                 ></input>
+                {errors.salary && <p className="error">{errors.salary}</p>}
               </div>
             )}
           </div>

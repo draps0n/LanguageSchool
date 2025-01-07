@@ -222,6 +222,26 @@ const validateGroupTime = (startTime, endTime) => {
   }
 };
 
+const validateEmployeeSalary = (salary) => {
+  if (!salary) {
+    return "Wynagrodzenie jest wymagane";
+  }
+
+  if (isNaN(salary)) {
+    return "Wynagrodzenie musi być liczbą";
+  }
+
+  if (salary < 0) {
+    return "Wynagrodzenie nie może być ujemne";
+  }
+
+  if (salary > 100000) {
+    return "Wynagrodzenie nie może przekraczać 100 000";
+  }
+
+  return "";
+};
+
 export {
   validateName,
   validateLastName,
@@ -240,4 +260,5 @@ export {
   validateGroupLevel,
   validateGroupDayOfWeek,
   validateGroupTime,
+  validateEmployeeSalary,
 };
