@@ -30,7 +30,7 @@ function InputTextArea({
           resize: "none",
         }}
       ></textarea>
-      {error && <p className="error">{error}</p>}
+      {error && <p className="input-field-error">{error}</p>}
     </div>
   );
 }

@@ -185,7 +185,7 @@ const validateGroupTeacher = (teacher) => {
     return "Nauczyciel jest wymagany";
   }
 
-  return true;
+  return "";
 };
 
 const validateGroupLanguage = (language) => {

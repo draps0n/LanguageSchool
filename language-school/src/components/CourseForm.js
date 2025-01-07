@@ -50,7 +50,10 @@ function CourseForm() {
       id: "",
       name: "",
     },
-    day: "",
+    day: {
+      id: "",
+      name: "",
+    },
     startTime: "",
     endTime: "",
   });
@@ -115,7 +118,7 @@ function CourseForm() {
           teacherId: response.data.group.teacher.id,
           languageId: response.data.group.language.id,
           levelId: response.data.group.level.id,
-          day: response.data.group.day,
+          day: response.data.group.day.name,
           startTime: response.data.group.startTime,
           endTime: response.data.group.endTime,
           code: response.data.group.language.code,
@@ -139,7 +142,10 @@ function CourseForm() {
             id: response.data.group.level.id,
             name: response.data.group.level.name,
           },
-          day: response.data.group.day,
+          day: {
+            id: daysOfWeek.find((d) => d.name === response.data.group.day).id,
+            name: response.data.group.day.name,
+          },
           startTime: response.data.group.startTime,
           endTime: response.data.group.endTime,
         });
@@ -228,6 +234,13 @@ function CourseForm() {
         ...formData,
         level,
       });
+    } else if (name === "day") {
+      const day = daysOfWeek.find((day) => day.id === parseInt(value));
+      setFormData({
+        ...formData,
+        day,
+      });
+      console.log(day);
     } else {
       setFormData({
         ...formData,
@@ -239,6 +252,15 @@ function CourseForm() {
   // Obsługa wysłania formularza
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log(validateGroupPlaces(formData.places));
+    console.log(validateGroupDescription(formData.description));
+    console.log(validateGroupPrice(formData.price));
+    console.log(validateGroupTeacher(formData.teacher));
+    console.log(validateGroupLanguage(formData.language));
+    console.log(validateGroupLevel(formData.level));
+    console.log(validateGroupDayOfWeek(formData.day));
+    console.log(validateGroupTime(formData.startTime, formData.endTime));
 
     // Walidacja formularza
     if (
@@ -263,7 +285,7 @@ function CourseForm() {
       teacherId: formData.teacher.id,
       languageId: formData.language.id,
       levelId: formData.level.id,
-      day: formData.day,
+      day: formData.day.name,
       startTime: formData.startTime,
       endTime: formData.endTime,
     };
@@ -295,6 +317,7 @@ function CourseForm() {
       }
       navigate(`/courses/${id}`);
     } catch (error) {
+      toast.error("Nie udało się zapisać danych");
       console.error(error);
     }
   };
@@ -376,7 +399,7 @@ function CourseForm() {
         <FormSelect
           label="Dzień tygodnia"
           name="day"
-          value={formData.day || ""}
+          value={formData.day.id || ""}
           onChange={handleChange}
           options={daysOfWeek}
           error={errors.day}

@@ -8,6 +8,7 @@ function FormSelect({ label, name, value, onChange, options, error }) {
         {label}:
       </label>
       <select
+        id={name}
         className="input-field"
         name={name}
         value={value || ""}

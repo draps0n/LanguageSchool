@@ -228,12 +228,6 @@ function Profile() {
       (userData.roleId === roles.EMPLOYEE &&
         validateEmployeeSalary(formData.salary))
     ) {
-      // console.log(validateName(formData.name));
-      // console.log(validateLastName(formData.lastName));
-      // console.log(validateEmail(formData.email));
-      // console.log(validateDateOfBirth(formData.dateOfBirth));
-      // console.log(validatePassword(formData.password));
-
       toast.error("Niepoprawnie wypełniony formularz");
       return;
     }
@@ -458,6 +452,7 @@ function Profile() {
                   label="Pensja"
                   name="salary"
                   type="number"
+                  onChange={handleChange}
                   value={formData.salary || ""}
                   readOnly={!editMode}
                 />
