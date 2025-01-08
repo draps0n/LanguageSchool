@@ -20,6 +20,7 @@ import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
 import Profile from "./components/Profile";
 import ApplicationsList from "./components/ApplicationsList";
+import ApplicationEdit from "./components/ApplicationEdit";
 
 function App() {
   return (
@@ -47,6 +48,10 @@ function App() {
             <Route
               path="my-applications"
               element={<ApplicationsList isUserSpecific={true} />}
+            />
+            <Route
+              path="my-applications/:id/edit"
+              element={<ApplicationEdit />}
             />
           </Route>
 

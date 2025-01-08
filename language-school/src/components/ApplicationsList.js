@@ -4,6 +4,7 @@ import BackButton from "./BackButton";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
 import ApplicationListItem from "./ApplicationListItem";
+import { toast } from "react-toastify";
 
 function ApplicationsList({ isUserSpecific }) {
   const navigate = useNavigate();
@@ -32,7 +33,6 @@ function ApplicationsList({ isUserSpecific }) {
         const response = await axios.get(
           `/applications?page=${currentPage}&limit=${applicationsPerPage}`
         );
-        console.log("Applications:", response.data);
         setApplications(response.data.applications);
         setTotalPages(response.data.totalPages);
       } catch (error) {
@@ -46,6 +46,20 @@ function ApplicationsList({ isUserSpecific }) {
       getAllApplications();
     }
   }, [axios, currentPage, isUserSpecific]);
+
+  const refreshApplications = async () => {
+    try {
+      const response = await axios.get(
+        isUserSpecific
+          ? `/applications/user?page=${currentPage}&limit=${applicationsPerPage}`
+          : `/applications?page=${currentPage}&limit=${applicationsPerPage}`
+      );
+      setApplications(response.data.applications);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      toast.error("Wystąpił błąd podczas odświeżania zgłoszeń.");
+    }
+  };
 
   // Funkcja do obsługi przycisku "Następna"
   const nextPage = () => {
@@ -75,7 +89,10 @@ function ApplicationsList({ isUserSpecific }) {
       <div>
         {applications.map((application) => (
           <div key={application.id}>
-            <ApplicationListItem application={application} />
+            <ApplicationListItem
+              application={application}
+              refreshApplications={refreshApplications}
+            />
           </div>
         ))}
       </div>

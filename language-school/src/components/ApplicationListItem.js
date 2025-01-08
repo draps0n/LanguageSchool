@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import roles from "../constants/roles";
 import useAuth from "../hooks/useAuth";
 import InputTextArea from "./InputTextArea";
+import useAxiosAuth from "../hooks/useAxiosAuth";
 import { useNavigate } from "react-router-dom";
 import applicationStates from "../constants/applicationStates";
+import { toast } from "react-toastify";
 import {
   FaCheckCircle,
   FaEye,
@@ -13,10 +15,11 @@ import {
 } from "react-icons/fa";
 import "../styles/ApplicationListItem.css";
 
-const ApplicationListItem = ({ application }) => {
+const ApplicationListItem = ({ application, refreshApplications }) => {
   const { userData } = useAuth();
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
+  const axios = useAxiosAuth();
 
   const toggleDetails = () => {
     setShowDetails(!showDetails);
@@ -25,6 +28,21 @@ const ApplicationListItem = ({ application }) => {
   // Funkcja do obsługi kliknięcia na grupę
   const viewGroup = (id) => {
     navigate(`/courses/${id}`);
+  };
+
+  const viewEditApplication = () => {
+    navigate(`/my-applications/${application.id}/edit`);
+  };
+
+  const cancelApplication = async (applicationId) => {
+    try {
+      await axios.delete(`/applications/${applicationId}`);
+      await refreshApplications();
+      toast.success("Zgłoszenie zostało wycofane.");
+    } catch (error) {
+      console.error("Error while cancelling application: ", error);
+      toast.error("Wystąpił błąd podczas wycofywania zgłoszenia.");
+    }
   };
 
   return (
@@ -53,11 +71,9 @@ const ApplicationListItem = ({ application }) => {
           <strong>Data przesłania:</strong>{" "}
           {new Date(application.sentDate).toLocaleDateString()}
         </p>
-        {application.comment && (
-          <p>
-            <strong>Uwagi:</strong> {application.comment}
-          </p>
-        )}
+        <p>
+          <strong>Uwagi:</strong> {application.comment || "-"}
+        </p>
         {application.feedbackMessage && (
           <InputTextArea
             label="Wiadomość zwrotna"
@@ -79,12 +95,14 @@ const ApplicationListItem = ({ application }) => {
                 <button
                   className="application-details-button edit-button"
                   title="Edytuj"
+                  onClick={viewEditApplication}
                 >
                   <FaEdit className="icon" />
                 </button>
                 <button
                   className="application-details-button delete-button"
                   title="Wycofaj"
+                  onClick={() => cancelApplication(application.id)}
                 >
                   <FaTimesCircle className="icon" />
                 </button>
