@@ -120,6 +120,11 @@ const getApplicationById = async (id) => {
   const [results] = await pool.query(`SELECT * FROM zgloszenie WHERE id = ?`, [
     id,
   ]);
+
+  if (results.length === 0) {
+    return null;
+  }
+
   return {
     id: results[0].id,
     studentId: results[0].kursant,

@@ -254,6 +254,22 @@ const validateApplicationGroup = (groupId) => {
   return "";
 };
 
+const validateFeedbackMessage = (message) => {
+  if (!message) {
+    return "";
+  }
+
+  if (message.length < 10) {
+    return "Wiadomość zwrotna musi zawierać co najmniej 10 znaków";
+  }
+
+  if (message.length > 200) {
+    return "Wiadomość zwrotna nie może przekraczać 200 znaków";
+  }
+
+  return "";
+};
+
 export {
   validateName,
   validateLastName,
@@ -274,4 +290,5 @@ export {
   validateGroupTime,
   validateEmployeeSalary,
   validateApplicationGroup,
+  validateFeedbackMessage,
 };
