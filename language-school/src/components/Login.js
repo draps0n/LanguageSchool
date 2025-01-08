@@ -105,7 +105,6 @@ function Login() {
           autoComplete={"current-password"}
           placeholder="Wpisz hasło"
         />
-        {error && <p className="error">{error}</p>}
         <div className="form-group">
           <Link to="/register">Zarejestruj się</Link>
         </div>
@@ -116,6 +115,7 @@ function Login() {
         >
           Zaloguj się
         </button>
+        {error && <p className="error">{error}</p>}
       </form>
     </div>
   );

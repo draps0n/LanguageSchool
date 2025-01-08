@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
 import ApplicationListItem from "./ApplicationListItem";
+import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 
 function ApplicationsList({ isUserSpecific }) {
@@ -94,14 +95,11 @@ function ApplicationsList({ isUserSpecific }) {
           </div>
         ))}
       </div>
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 1}>
-          Poprzednia
-        </button>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>
-          Następna
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 }

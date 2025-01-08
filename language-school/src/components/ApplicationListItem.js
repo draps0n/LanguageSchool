@@ -24,7 +24,18 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
   };
 
   return (
-    <div className="application-list-item">
+    <div
+      className={
+        "application-list-item " +
+        (application.status.id === applicationStates.REJECTED
+          ? "rejected-application"
+          : application.status.id === applicationStates.ACCEPTED
+          ? "accepted-application"
+          : application.status.id === applicationStates.PENDING
+          ? "pending-application"
+          : "")
+      }
+    >
       <div className="application-summary">
         <p>
           <strong>Kod grupy:</strong> {application.language.code}-

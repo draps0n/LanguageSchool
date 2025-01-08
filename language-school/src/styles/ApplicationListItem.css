@@ -65,6 +65,18 @@
     transition: background-color 0.3s ease;
 }
 
+.pending-application {
+    border-left: 4px solid #59a1f3;
+}
+
+.accepted-application {
+    border-left: 4px solid #4caf50;
+}
+
+.rejected-application {
+    border-left: 4px solid #eb3b3b;
+}
+
 .standard-button {
     background-color: #313a4c;
 }

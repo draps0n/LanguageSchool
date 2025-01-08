@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/UserListItem.css";
 import { useNavigate } from "react-router-dom";
+import roles from "../constants/roles";
 
 function UserListItem({ user }) {
   const navigate = useNavigate();
@@ -10,7 +11,22 @@ function UserListItem({ user }) {
   };
 
   return (
-    <div className="user-card" onClick={viewUserDetails}>
+    <div
+      className={
+        "user-card " +
+        (user.role.id === roles.EMPLOYEE
+          ? "employee-card"
+          : user.role.id === roles.TEACHER
+          ? "teacher-card"
+          : "student-card")
+      }
+      onClick={viewUserDetails}
+    >
+      <img
+        src={`/assets/images/user.svg`}
+        alt="user-picture"
+        className="user-photo"
+      />
       <div className="user-info">
         <p className="info-item">
           <span className="label">Imię:</span> {user.name}

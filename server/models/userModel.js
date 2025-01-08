@@ -1,13 +1,21 @@
 const { pool } = require("../db/database");
 
-const getAllUsers = async () => {
-  const [results] = await pool.query(
-    `
-    SELECT u.id, u.imie, u.nazwisko, u.email, u.haslo, u.data_urodzenia, u.rola as rolaId, r.nazwa as rola
+const getAllUsers = async (limit, offset) => {
+  let query = `
+    SELECT u.id, u.imie, u.nazwisko, u.email, u.data_urodzenia, u.rola as rolaId, r.nazwa as rola
     FROM uzytkownik u
     INNER JOIN rola r ON u.rola = r.id
-    `
-  );
+    ORDER BY u.id
+    `;
+  const params = [];
+
+  if (limit !== undefined && offset !== undefined) {
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(limit, offset);
+  }
+
+  const [results] = await pool.query(query, params);
+
   return results.map((user) => ({
     id: user.id,
     name: user.imie,
@@ -19,6 +27,13 @@ const getAllUsers = async () => {
       name: user.rola,
     },
   }));
+};
+
+const getTotalUsers = async () => {
+  const [results] = await pool.query(
+    "SELECT COUNT(*) as totalUsers FROM uzytkownik"
+  );
+  return results[0].totalUsers;
 };
 
 const getUserByEmail = async (email) => {
@@ -185,4 +200,5 @@ module.exports = {
   updateUserRefreshToken,
   findUserById,
   updateUser,
+  getTotalUsers,
 };

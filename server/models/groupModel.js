@@ -9,8 +9,8 @@ const getAllGroups = async (limit, offset) => {
     `;
   const params = [];
 
-  if (limit && offset) {
-    query += ` LIMIT $1 OFFSET $2`;
+  if (limit !== undefined && offset !== undefined) {
+    query += ` LIMIT ? OFFSET ?`;
     params.push(limit, offset);
   }
 
@@ -43,8 +43,8 @@ const getUserGroups = async (userId, limit, offset) => {
     `;
   const params = [userId];
 
-  if (limit && offset) {
-    query += ` LIMIT $1 OFFSET $2`;
+  if (limit !== undefined && offset !== undefined) {
+    query += ` LIMIT ? OFFSET ?`;
     params.push(limit, offset);
   }
 

@@ -6,6 +6,7 @@ import roles from "../constants/roles";
 import Loading from "./Loading";
 import CourseListItem from "./CourseListItem";
 import "../styles/CoursesList.css";
+import Pagination from "./Pagination";
 
 const CoursesList = ({ isUserSpecific }) => {
   const { userData } = useAuth();
@@ -35,20 +36,6 @@ const CoursesList = ({ isUserSpecific }) => {
 
     fetchGroups();
   }, [currentPage, axios, isUserSpecific]);
-
-  // Funkcja do obsługi przycisku "Następna"
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  // Funkcja do obsługi przycisku "Poprzednia"
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
 
   const addGroup = () => {
     navigate("/courses/add");
@@ -85,14 +72,11 @@ const CoursesList = ({ isUserSpecific }) => {
           <CourseListItem key={index} group={group} />
         ))}
       </ul>
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 1}>
-          Poprzednia
-        </button>
-        <button onClick={nextPage} disabled={currentPage === totalPages}>
-          Następna
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+      />
     </div>
   );
 };

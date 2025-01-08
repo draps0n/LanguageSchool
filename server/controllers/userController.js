@@ -20,9 +20,22 @@ const getUserById = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
+  if (!req.query.page || isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (!req.query.limit || isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = (page - 1) * limit;
+
   try {
-    const users = await userModel.getAllUsers();
-    res.status(200).json(users);
+    const users = await userModel.getAllUsers(limit, offset);
+    const totalUsers = await userModel.getTotalUsers();
+    res.status(200).send({ users, totalPages: Math.ceil(totalUsers / limit) });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

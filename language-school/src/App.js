@@ -21,6 +21,7 @@ import { ToastContainer } from "react-toastify";
 import Profile from "./components/Profile";
 import ApplicationsList from "./components/ApplicationsList";
 import UsersList from "./components/UsersList";
+import UserDetails from "./components/UserDetails";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
             <Route path="courses/add" element={<CourseForm />} />
             <Route path="admin/applications" element={<ApplicationsList />} />
             <Route path="admin/users" element={<UsersList />} />
+            <Route path="admin/users/:userId" element={<UserDetails />} />
           </Route>
 
           {/* Ścieżki dostępne dla nauczycieli i studentów */}
@@ -90,7 +92,7 @@ function App() {
         hideProgressBar={false}
         newestOnTop={false}
         stacked
-        closeOnClick={false}
+        closeOnClick={true}
         rtl={false}
         draggable
         toastStyle={{ marginRight: "1rem", marginTop: "6rem" }}
