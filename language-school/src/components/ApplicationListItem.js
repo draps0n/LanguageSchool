@@ -73,22 +73,23 @@ const ApplicationListItem = ({ application }) => {
           >
             <FaUsers className="icon" />
           </button>
-          {userData.roleId === roles.STUDENT && (
-            <>
-              <button
-                className="application-details-button edit-button"
-                title="Edytuj"
-              >
-                <FaEdit className="icon" />
-              </button>
-              <button
-                className="application-details-button delete-button"
-                title="Wycofaj"
-              >
-                <FaTimesCircle className="icon" />
-              </button>
-            </>
-          )}
+          {userData.roleId === roles.STUDENT &&
+            application.status.id === applicationStates.PENDING && (
+              <>
+                <button
+                  className="application-details-button edit-button"
+                  title="Edytuj"
+                >
+                  <FaEdit className="icon" />
+                </button>
+                <button
+                  className="application-details-button delete-button"
+                  title="Wycofaj"
+                >
+                  <FaTimesCircle className="icon" />
+                </button>
+              </>
+            )}
           {userData.roleId === roles.EMPLOYEE &&
             application.status.id === applicationStates.PENDING && (
               <>
