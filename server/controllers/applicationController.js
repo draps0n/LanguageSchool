@@ -2,6 +2,8 @@ const applicationModel = require("../models/applicationModel");
 const groupModel = require("../models/groupModel");
 const applicationStateModel = require("../models/applicationStateModel");
 const studentModel = require("../models/studentModel");
+const employeeModel = require("../models/employeeModel");
+const applicationStates = require("../constants/applicationStates");
 
 const addNewApplication = async (req, res) => {
   const { startDate, comment } = req.body;
@@ -106,7 +108,7 @@ const deleteApplication = async (req, res) => {
       return;
     }
 
-    if (fetchedApplication.status !== 1) {
+    if (fetchedApplication.status !== applicationStates.PENDING) {
       res
         .status(403)
         .json({ message: "You can only delete pending applications" });
@@ -261,7 +263,7 @@ const updateApplicationByUser = async (req, res) => {
 
     console.log(fetchedApplication);
     // Sprawdzenie czy aplikacja jest w odpowiednim stanie
-    if (fetchedApplication.status !== 1) {
+    if (fetchedApplication.status !== applicationStates.PENDING) {
       res
         .status(403)
         .json({ message: "You can only edit pending applications" });
@@ -301,14 +303,88 @@ const updateApplicationByUser = async (req, res) => {
   }
 };
 
-const acceptApplication = async (req, res) => {
-  console.log("acceptApplication");
-  res.status(501).json({ message: "acceptApplication not implemented" });
-};
+const reviewApplication = async (req, res) => {
+  const userId = req.userId;
+  const applicationId = req.params.id;
+  const { feedbackMessage, newStatus } = req.body;
 
-const rejectApplication = async (req, res) => {
-  console.log("rejectApplication");
-  res.status(501).json({ message: "rejectApplication not implemented" });
+  if (!userId || isNaN(userId)) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  const fetchedEmployee = await employeeModel.getEmployeeById(userId);
+  if (!fetchedEmployee) {
+    res.status(404).json({ message: "Employee not found" });
+    return;
+  }
+
+  if (!applicationId && isNaN(applicationId)) {
+    res
+      .status(400)
+      .json({ message: "Application ID is required and must be a number" });
+    return;
+  }
+
+  const fetchedApplication = await applicationModel.getApplicationById(
+    applicationId
+  );
+  if (!fetchedApplication) {
+    res.status(404).json({ message: "Application not found" });
+    return;
+  }
+
+  if (fetchedApplication.status !== applicationStates.PENDING) {
+    res
+      .status(403)
+      .json({ message: "You can only review pending applications" });
+    return;
+  }
+
+  if (!newStatus || isNaN(newStatus)) {
+    res
+      .status(400)
+      .json({ message: "New status is required and must be a number" });
+    return;
+  }
+
+  const fetchedState = await applicationStateModel.getStateById(newStatus);
+  if (!fetchedState) {
+    res.status(404).json({ message: "State not found" });
+    return;
+  }
+
+  if (newStatus === applicationStates.PENDING) {
+    res.status(400).json({ message: "New status cannot be pending" });
+    return;
+  }
+
+  if (
+    feedbackMessage &&
+    (feedbackMessage.length > 200 || feedbackMessage.length < 10)
+  ) {
+    res
+      .status(400)
+      .json({
+        message: "Feedback message must be between 10-200 characters long",
+      });
+    return;
+  }
+
+  try {
+    const applicationUpdate = {
+      id: applicationId,
+      status: newStatus,
+      feedbackMessage: feedbackMessage || null,
+      employeeId: userId,
+    };
+
+    await applicationModel.updateApplicationByEmployee(applicationUpdate);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 module.exports = {
@@ -317,6 +393,5 @@ module.exports = {
   getApplicationsForUser,
   getAllApplications,
   updateApplicationByUser,
-  acceptApplication,
-  rejectApplication,
+  reviewApplication,
 };

@@ -31,14 +31,9 @@ router
     applicationController.updateApplicationByUser
   )
   .put(
-    "/:id/accept",
+    "/:id/review",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
-    applicationController.acceptApplication
-  )
-  .put(
-    "/:id/reject",
-    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
-    applicationController.rejectApplication
+    applicationController.reviewApplication
   );
 
 module.exports = router;

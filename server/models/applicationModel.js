@@ -149,6 +149,22 @@ const updateApplicationByUser = async (application) => {
   );
 };
 
+const updateApplicationByEmployee = async (application) => {
+  await pool.query(
+    `
+    UPDATE zgloszenie
+    SET status = ?, wiadomosc_zwrotna = ?, pracownik_rozpatrujacy = ?
+    WHERE id = ?
+    `,
+    [
+      application.status,
+      application.feedbackMessage,
+      application.employeeId,
+      application.id,
+    ]
+  );
+};
+
 module.exports = {
   addNewApplication,
   deleteApplication,
@@ -159,4 +175,5 @@ module.exports = {
   getTotalUserApplications,
   getApplicationById,
   updateApplicationByUser,
+  updateApplicationByEmployee,
 };
