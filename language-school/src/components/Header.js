@@ -35,7 +35,7 @@ function Header() {
       // Przekierowanie na stronę główną
       navigate("/");
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error("Wystąpił błąd podczas wylogowywania. Spróbuj ponownie.");
     }
   };

@@ -7,13 +7,23 @@ const { getRoles } = require("../config/roles");
 router
   .post(
     "/",
-    verifyRole(getRoles().STUDENT),
+    verifyRole(getRoles().KURSANT),
     applicationController.addNewApplication
   )
   .delete(
     "/:id",
-    verifyRole(getRoles().STUDENT, getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    verifyRole(getRoles().KURSANT, getRoles().PRACOWNIK_ADMINISTRACYJNY),
     applicationController.deleteApplication
+  )
+  .get(
+    "/",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    applicationController.getAllApplications
+  )
+  .get(
+    "/user",
+    verifyRole(getRoles().KURSANT),
+    applicationController.getApplicationsForUser
   );
 
 module.exports = router;

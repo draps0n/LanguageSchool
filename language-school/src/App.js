@@ -19,6 +19,7 @@ import "./App.css";
 import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
 import Profile from "./components/Profile";
+import ApplicationsList from "./components/ApplicationsList";
 
 function App() {
   return (
@@ -43,6 +44,10 @@ function App() {
           {/* Ścieżki dostępne dla studentów */}
           <Route element={<RequireAuth allowedRoles={[roles.STUDENT]} />}>
             <Route path="courses/:id/apply" element={<CourseApply />} />
+            <Route
+              path="my-applications"
+              element={<ApplicationsList isUserSpecific={true} />}
+            />
           </Route>
 
           {/* Ścieżki dostępne dla pracowników */}
@@ -53,6 +58,7 @@ function App() {
               element={<CourseDeleteConfirmation />}
             />
             <Route path="courses/add" element={<CourseForm />} />
+            <Route path="applications" element={<ApplicationsList />} />
           </Route>
 
           {/* Ścieżki dostępne dla nauczycieli i studentów */}

@@ -60,7 +60,6 @@ const login = async (req, res) => {
     });
 
     // Wysłanie access tokenu  i danych użytkownika
-    console.log(user);
     res.status(200).send({
       accessToken,
       userId: user.id,

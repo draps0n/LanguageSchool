@@ -1,8 +1,11 @@
 const applicationModel = require("../models/applicationModel");
 const groupModel = require("../models/groupModel");
 const applicationStateModel = require("../models/applicationStateModel");
+const studentModel = require("../models/studentModel");
 
 const addNewApplication = async (req, res) => {
+  const { startDate, comment } = req.body;
+
   // Sprawdzenie czy użytkownik podał datę rozpoczęcia i id grupy
   if (!req.body.startDate || !req.body.groupId) {
     res.status(400).json({
@@ -45,7 +48,7 @@ const addNewApplication = async (req, res) => {
     }
 
     // Sprawdzenie czy grupa nie jest pełna
-    const takenPlaces = await applicationModel.getTakenPlaces(req.body.groupId);
+    const takenPlaces = await groupModel.getTakenPlaces(req.body.groupId);
     if (takenPlaces >= fetchedGroup.places) {
       res.status(400).json({ message: "Group is full" });
       return;
@@ -57,7 +60,7 @@ const addNewApplication = async (req, res) => {
     );
 
     if (!state) {
-      console.log("State not found");
+      console.error("State not found");
       res.status(500).json({ message: "Internal server error" });
       return;
     }
@@ -99,7 +102,94 @@ const deleteApplication = async (req, res) => {
   }
 };
 
+const getApplicationsForUser = async (req, res) => {
+  const userId = req.userId;
+
+  if (!userId) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  if (isNaN(userId)) {
+    res.status(400).json({ message: "User ID must be a number" });
+    return;
+  }
+
+  const fetchedStudent = await studentModel.getStudentById(userId);
+  if (!fetchedStudent) {
+    res.status(404).json({ message: "Student not found" });
+    return;
+  }
+
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  // Pobranie parametrów paginacji
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const offset = (page - 1) * limit;
+
+  try {
+    const applications = await applicationModel.getUserApplications(
+      userId,
+      limit,
+      offset
+    );
+
+    const totalApplications = await applicationModel.getTotalUserApplications(
+      userId
+    );
+
+    res.status(200).json({
+      applications,
+      totalPages: Math.ceil(totalApplications / limit),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getAllApplications = async (req, res) => {
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  // Pobranie parametrów paginacji
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const offset = (page - 1) * limit;
+
+  try {
+    const applications = await applicationModel.getAllApplications(
+      limit,
+      offset
+    );
+
+    const totalApplications = await applicationModel.getTotalApplications();
+
+    res.status(200).json({
+      applications,
+      totalPages: Math.ceil(totalApplications / limit),
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   addNewApplication,
   deleteApplication,
+  getApplicationsForUser,
+  getAllApplications,
 };

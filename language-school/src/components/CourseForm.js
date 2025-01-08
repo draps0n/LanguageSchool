@@ -253,15 +253,6 @@ function CourseForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(validateGroupPlaces(formData.places));
-    console.log(validateGroupDescription(formData.description));
-    console.log(validateGroupPrice(formData.price));
-    console.log(validateGroupTeacher(formData.teacher));
-    console.log(validateGroupLanguage(formData.language));
-    console.log(validateGroupLevel(formData.level));
-    console.log(validateGroupDayOfWeek(formData.day));
-    console.log(validateGroupTime(formData.startTime, formData.endTime));
-
     // Walidacja formularza
     if (
       validateGroupPlaces(formData.places) ||
