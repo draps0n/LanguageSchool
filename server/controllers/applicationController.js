@@ -4,7 +4,7 @@ const applicationStateModel = require("../models/applicationStateModel");
 const studentModel = require("../models/studentModel");
 const employeeModel = require("../models/employeeModel");
 const applicationStates = require("../constants/applicationStates");
-const { getRoles } = require("../config/roles");
+const { pool } = require("../db/database");
 
 const addNewApplication = async (req, res) => {
   const { startDate, comment } = req.body;
@@ -371,19 +371,37 @@ const reviewApplication = async (req, res) => {
     return;
   }
 
-  try {
-    const applicationUpdate = {
-      id: applicationId,
-      status: newStatus,
-      feedbackMessage: feedbackMessage || null,
-      employeeId: userId,
-    };
+  const applicationUpdate = {
+    id: applicationId,
+    status: newStatus,
+    feedbackMessage: feedbackMessage || null,
+    employeeId: userId,
+  };
 
-    await applicationModel.updateApplicationByEmployee(applicationUpdate);
+  const connection = await pool.getConnection();
+  try {
+    await connection.beginTransaction();
+    await applicationModel.updateApplicationByEmployee(
+      applicationUpdate,
+      connection
+    );
+
+    if (newStatus === applicationStates.ACCEPTED) {
+      await groupModel.addStudentToGroup(
+        fetchedApplication.studentId,
+        fetchedApplication.groupId,
+        connection
+      );
+    }
+
+    await connection.commit();
     res.sendStatus(204);
   } catch (error) {
+    await connection.rollback();
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
+  } finally {
+    connection.release();
   }
 };
 

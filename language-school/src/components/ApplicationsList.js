@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import BackButton from "./BackButton";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
 import ApplicationListItem from "./ApplicationListItem";
 import { toast } from "react-toastify";
 
 function ApplicationsList({ isUserSpecific }) {
-  const navigate = useNavigate();
   const axios = useAxiosAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(-1);

@@ -6,6 +6,7 @@ const { getRoles } = require("../config/roles");
 
 router
   .get("/", groupController.getAllGroups)
+  .get("/user", verifyRole(getRoles().KURSANT), groupController.getUserGroups)
   .get("/:id", groupController.getGroupById)
   .delete(
     "/:id",

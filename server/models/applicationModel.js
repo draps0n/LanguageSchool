@@ -154,8 +154,8 @@ const updateApplicationByUser = async (application) => {
   );
 };
 
-const updateApplicationByEmployee = async (application) => {
-  await pool.query(
+const updateApplicationByEmployee = async (application, connection) => {
+  await connection.query(
     `
     UPDATE zgloszenie
     SET status = ?, wiadomosc_zwrotna = ?, pracownik_rozpatrujacy = ?

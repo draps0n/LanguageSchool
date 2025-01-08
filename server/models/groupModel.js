@@ -32,9 +32,57 @@ const getAllGroups = async (limit, offset) => {
   });
 };
 
+const getUserGroups = async (userId, limit, offset) => {
+  let query = `
+    SELECT g.id, g.liczba_miejsc, g.cena_zajec, g.opis, j.nazwa as jezyk, j.skrot as skrot, pj.nazwa as poziom, g.dzien_tygodnia, g.godzina_rozpoczecia, g.godzina_zakonczenia, u.liczba_nieobecnosci
+    FROM grupa g
+    INNER JOIN jezyk j ON j.id = g.jezyk
+    INNER JOIN poziom_jezyka pj ON pj.id = g.poziom
+    INNER JOIN uczestnictwo u ON u.grupa = g.id
+    WHERE u.kursant = ?
+    `;
+  const params = [userId];
+
+  if (limit && offset) {
+    query += ` LIMIT $1 OFFSET $2`;
+    params.push(limit, offset);
+  }
+
+  const [results] = await pool.query(query, params);
+
+  return results.map((group) => {
+    return {
+      id: group.id,
+      places: group.liczba_miejsc,
+      price: group.cena_zajec,
+      description: group.opis,
+      language: group.jezyk,
+      languageCode: group.skrot,
+      level: group.poziom,
+      day: group.dzien_tygodnia,
+      startTime: group.godzina_rozpoczecia,
+      endTime: group.godzina_zakonczenia,
+      absencesNumber: group.liczba_nieobecnosci,
+    };
+  });
+};
+
 const getTotalGroups = async () => {
   const [results] = await pool.query(
     `SELECT COUNT(*) as totalGroups FROM grupa`
+  );
+
+  return results[0].totalGroups;
+};
+
+const getTotalUserGroups = async (userId) => {
+  const [results] = await pool.query(
+    `
+    SELECT COUNT(*) as totalGroups
+    FROM uczestnictwo u
+    WHERE u.kursant = ?
+    `,
+    [userId]
   );
 
   return results[0].totalGroups;
@@ -161,6 +209,16 @@ const deleteStudentGroupAssignments = async (groupId, connection) => {
   );
 };
 
+const addStudentToGroup = async (studentId, groupId, connection) => {
+  await connection.query(
+    `
+    INSERT INTO uczestnictwo (kursant, grupa, liczba_nieobecnosci)
+    VALUES (?, ?, 0)
+    `,
+    [studentId, groupId]
+  );
+};
+
 module.exports = {
   getAllGroups,
   getTotalGroups,
@@ -170,4 +228,7 @@ module.exports = {
   addNewGroup,
   updateGroup,
   deleteStudentGroupAssignments,
+  getUserGroups,
+  getTotalUserGroups,
+  addStudentToGroup,
 };

@@ -72,7 +72,10 @@ function App() {
               <RequireAuth allowedRoles={[roles.TEACHER, roles.STUDENT]} />
             }
           >
-            <Route path="my-courses" element={<CoursesList />} />
+            <Route
+              path="my-courses"
+              element={<CoursesList isUserSpecific={true} />}
+            />
           </Route>
 
           {/* Ścieżki do błędów */}

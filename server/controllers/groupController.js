@@ -48,6 +48,55 @@ const getAllGroups = async (req, res) => {
   }
 };
 
+const getUserGroups = async (req, res) => {
+  const userId = req.userId;
+
+  if (!userId || isNaN(userId)) {
+    return res.status(400).json({ message: "User id is required" });
+  }
+
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  // Pobranie parametrów paginacji
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+  const offset = (page - 1) * limit;
+
+  try {
+    let groups;
+    let totalGroups;
+
+    if (page && limit) {
+      // Pobranie grup
+      groups = await groupModel.getUserGroups(userId, limit, offset);
+
+      // Pobranie liczby wszystkich grup
+      totalGroups = await groupModel.getTotalUserGroups();
+    } else {
+      // Pobranie wszystkich grup
+      groups = await groupModel.getUserGroups(userId);
+
+      // Pobranie liczby wszystkich grup
+      totalGroups = groups.length;
+    }
+
+    // Zwrócenie grup
+    res.status(200).json({
+      groups,
+      totalPages: Math.ceil(totalGroups / limit),
+    });
+  } catch (error) {
+    console.error("Error fetching groups:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const getGroupById = async (req, res) => {
   const id = req.params.id;
 
@@ -258,4 +307,5 @@ module.exports = {
   deleteGroup,
   createGroup,
   updateGroup,
+  getUserGroups,
 };
