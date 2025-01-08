@@ -4,6 +4,7 @@ const applicationStateModel = require("../models/applicationStateModel");
 const studentModel = require("../models/studentModel");
 const employeeModel = require("../models/employeeModel");
 const applicationStates = require("../constants/applicationStates");
+const { getRoles } = require("../config/roles");
 
 const addNewApplication = async (req, res) => {
   const { startDate, comment } = req.body;
@@ -209,10 +210,11 @@ const getAllApplications = async (req, res) => {
 };
 
 const updateApplicationByUser = async (req, res) => {
-  const { startDate, comment } = req.body;
+  const { startDate, groupId, comment } = req.body;
+  const applicationId = req.params.id;
 
   // Sprawdzenie czy użytkownik podał datę rozpoczęcia i id grupy
-  if (!req.body.startDate || !req.body.groupId) {
+  if (!startDate || !groupId) {
     res.status(400).json({
       message: "Start date and group id are required",
     });
@@ -246,7 +248,7 @@ const updateApplicationByUser = async (req, res) => {
 
   try {
     const fetchedApplication = await applicationModel.getApplicationById(
-      req.params.id
+      applicationId
     );
 
     // Sprawdzenie czy aplikacja istnieje
@@ -278,7 +280,7 @@ const updateApplicationByUser = async (req, res) => {
     }
 
     // Sprawdzenie, jeśli grupa jest zmieniana, czy nowa grupa nie jest pełna
-    const takenPlaces = await groupModel.getTakenPlaces(req.body.groupId);
+    const takenPlaces = await groupModel.getTakenPlaces(groupId);
     if (
       fetchedApplication.groupId !== req.body.groupId &&
       takenPlaces >= fetchedGroup.places
@@ -363,11 +365,9 @@ const reviewApplication = async (req, res) => {
     feedbackMessage &&
     (feedbackMessage.length > 200 || feedbackMessage.length < 10)
   ) {
-    res
-      .status(400)
-      .json({
-        message: "Feedback message must be between 10-200 characters long",
-      });
+    res.status(400).json({
+      message: "Feedback message must be between 10-200 characters long",
+    });
     return;
   }
 
@@ -387,6 +387,47 @@ const reviewApplication = async (req, res) => {
   }
 };
 
+const getApplicationEditableData = async (req, res) => {
+  const userId = req.userId;
+  const applicationId = req.params.id;
+
+  if (!userId || isNaN(userId)) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  if (!applicationId || isNaN(applicationId)) {
+    res
+      .status(400)
+      .json({ message: "Application ID is required and must be a number" });
+    return;
+  }
+
+  try {
+    const fetchApplication = await applicationModel.getApplicationById(
+      applicationId
+    );
+
+    if (!fetchApplication) {
+      res.status(404).json({ message: "Application not found" });
+      return;
+    }
+
+    if (fetchApplication.studentId !== userId) {
+      res.status(403).json({ message: "Forbidden" });
+      return;
+    }
+
+    const application = await applicationModel.getApplicationEditableDataById(
+      applicationId
+    );
+    res.status(200).json(application);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   addNewApplication,
   deleteApplication,
@@ -394,4 +435,5 @@ module.exports = {
   getAllApplications,
   updateApplicationByUser,
   reviewApplication,
+  getApplicationEditableData,
 };

@@ -165,6 +165,19 @@ const updateApplicationByEmployee = async (application) => {
   );
 };
 
+const getApplicationEditableDataById = async (id) => {
+  const [results] = await pool.query(
+    `SELECT grupa, data_rozpoczecia, uwagi FROM zgloszenie WHERE id = ?`,
+    [id]
+  );
+
+  return {
+    groupId: results[0].grupa,
+    startDate: results[0].data_rozpoczecia,
+    comment: results[0].uwagi,
+  };
+};
+
 module.exports = {
   addNewApplication,
   deleteApplication,
@@ -176,4 +189,5 @@ module.exports = {
   getApplicationById,
   updateApplicationByUser,
   updateApplicationByEmployee,
+  getApplicationEditableDataById,
 };

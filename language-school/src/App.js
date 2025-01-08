@@ -13,7 +13,7 @@ import CourseDetails from "./components/CourseDetails";
 import Body from "./components/Body";
 import Forbidden from "./components/Forbidden";
 import CourseForm from "./components/CourseForm";
-import CourseApply from "./components/CourseApply";
+import ApplicationForm from "./components/ApplicationForm";
 import CourseDeleteConfirmation from "./components/CourseDeleteConfirmation";
 import "./App.css";
 import NotFound from "./components/NotFound";
@@ -44,14 +44,14 @@ function App() {
 
           {/* Ścieżki dostępne dla studentów */}
           <Route element={<RequireAuth allowedRoles={[roles.STUDENT]} />}>
-            <Route path="courses/:id/apply" element={<CourseApply />} />
+            <Route path="courses/:id/apply" element={<ApplicationForm />} />
             <Route
               path="my-applications"
               element={<ApplicationsList isUserSpecific={true} />}
             />
             <Route
-              path="my-applications/:id/edit"
-              element={<ApplicationEdit />}
+              path="my-applications/:applicationId/edit"
+              element={<ApplicationForm />}
             />
           </Route>
 

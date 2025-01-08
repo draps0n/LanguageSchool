@@ -246,6 +246,14 @@ const validateEmployeeSalary = (salary) => {
   return "";
 };
 
+const validateApplicationGroup = (groupId) => {
+  if (!groupId) {
+    return "Grupa jest wymagana";
+  }
+
+  return "";
+};
+
 export {
   validateName,
   validateLastName,
@@ -265,4 +273,5 @@ export {
   validateGroupDayOfWeek,
   validateGroupTime,
   validateEmployeeSalary,
+  validateApplicationGroup,
 };

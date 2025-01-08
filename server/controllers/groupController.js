@@ -16,16 +16,26 @@ const getAllGroups = async (req, res) => {
   }
 
   // Pobranie parametrów paginacji
-  const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 5;
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
   const offset = (page - 1) * limit;
 
   try {
-    // Pobranie grup
-    const groups = await groupModel.getAllGroups(limit, offset);
+    let groups;
+    let totalGroups;
+    if (page && limit) {
+      // Pobranie grup
+      groups = await groupModel.getAllGroups(limit, offset);
 
-    // Pobranie liczby wszystkich grup
-    const totalGroups = await groupModel.getTotalGroups();
+      // Pobranie liczby wszystkich grup
+      totalGroups = await groupModel.getTotalGroups();
+    } else {
+      // Pobranie wszystkich grup
+      groups = await groupModel.getAllGroups();
+
+      // Pobranie liczby wszystkich grup
+      totalGroups = groups.length;
+    }
 
     // Zwrócenie grup
     res.status(200).json({

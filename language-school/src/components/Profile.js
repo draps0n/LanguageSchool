@@ -4,6 +4,7 @@ import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
+import { formatDate } from "../util/helpers";
 import {
   validateName,
   validateLastName,
@@ -23,14 +24,6 @@ function Profile() {
   const [editMode, setEditMode] = useState(false);
   const { userData } = useAuth();
   const axios = useAxiosAuth();
-
-  const formatDate = (date) => {
-    const d = new Date(date);
-    const month = `0${d.getMonth() + 1}`.slice(-2);
-    const day = `0${d.getDate()}`.slice(-2);
-    const year = d.getFullYear();
-    return `${year}-${month}-${day}`;
-  };
 
   const [user, setUser] = useState(null);
 

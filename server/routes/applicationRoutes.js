@@ -34,6 +34,11 @@ router
     "/:id/review",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     applicationController.reviewApplication
+  )
+  .get(
+    "/:id",
+    verifyRole(getRoles().KURSANT),
+    applicationController.getApplicationEditableData
   );
 
 module.exports = router;

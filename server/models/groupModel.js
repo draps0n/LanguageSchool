@@ -1,17 +1,20 @@
 const { pool } = require("../db/database");
 
 const getAllGroups = async (limit, offset) => {
-  const [results] = await pool.query(
-    `
-    SELECT g.id, g.liczba_miejsc, g.cena_zajec, g.opis, j.nazwa as jezyk, pj.nazwa as poziom, g.dzien_tygodnia, g.godzina_rozpoczecia, g.godzina_zakonczenia
+  let query = `
+    SELECT g.id, g.liczba_miejsc, g.cena_zajec, g.opis, j.nazwa as jezyk, j.skrot as skrot, pj.nazwa as poziom, g.dzien_tygodnia, g.godzina_rozpoczecia, g.godzina_zakonczenia
     FROM grupa g
     INNER JOIN jezyk j ON j.id = g.jezyk
     INNER JOIN poziom_jezyka pj ON pj.id = g.poziom
-    LIMIT ?
-    OFFSET ?
-    `,
-    [limit, offset]
-  );
+    `;
+  const params = [];
+
+  if (limit && offset) {
+    query += ` LIMIT $1 OFFSET $2`;
+    params.push(limit, offset);
+  }
+
+  const [results] = await pool.query(query, params);
 
   return results.map((group) => {
     return {
@@ -20,6 +23,7 @@ const getAllGroups = async (limit, offset) => {
       price: group.cena_zajec,
       description: group.opis,
       language: group.jezyk,
+      languageCode: group.skrot,
       level: group.poziom,
       day: group.dzien_tygodnia,
       startTime: group.godzina_rozpoczecia,
