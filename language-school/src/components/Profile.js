@@ -58,7 +58,7 @@ function Profile() {
   useEffect(() => {
     const getProfileData = async () => {
       try {
-        const response = await axios.get(`/users/user`);
+        const response = await axios.get(`/users/profile`);
         const {
           name,
           lastName,
@@ -237,7 +237,7 @@ function Profile() {
     } = formData;
 
     try {
-      await axios.put("/users/user", {
+      await axios.put("/users/profile", {
         name,
         lastName,
         email,

@@ -1,8 +1,24 @@
 const { pool } = require("../db/database");
 
 const getAllUsers = async () => {
-  const [results] = await pool.query("SELECT * FROM uzytkownik");
-  return results;
+  const [results] = await pool.query(
+    `
+    SELECT u.id, u.imie, u.nazwisko, u.email, u.haslo, u.data_urodzenia, u.rola as rolaId, r.nazwa as rola
+    FROM uzytkownik u
+    INNER JOIN rola r ON u.rola = r.id
+    `
+  );
+  return results.map((user) => ({
+    id: user.id,
+    name: user.imie,
+    lastName: user.nazwisko,
+    email: user.email,
+    dateOfBirth: user.data_urodzenia,
+    role: {
+      id: user.rolaId,
+      name: user.rola,
+    },
+  }));
 };
 
 const getUserByEmail = async (email) => {

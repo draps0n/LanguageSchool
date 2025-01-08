@@ -10,9 +10,23 @@ const getUserById = async (req, res) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const user = await userModel.findUserById(req.userId);
+  try {
+    const user = await userModel.findUserById(req.userId);
+    return res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
 
-  return res.status(200).json(user);
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await userModel.getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 const updateUser = async (req, res) => {
@@ -151,4 +165,5 @@ const updateUser = async (req, res) => {
 module.exports = {
   getUserById,
   updateUser,
+  getAllUsers,
 };

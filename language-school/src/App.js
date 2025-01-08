@@ -20,7 +20,7 @@ import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
 import Profile from "./components/Profile";
 import ApplicationsList from "./components/ApplicationsList";
-import ApplicationEdit from "./components/ApplicationEdit";
+import UsersList from "./components/UsersList";
 
 function App() {
   return (
@@ -63,7 +63,8 @@ function App() {
               element={<CourseDeleteConfirmation />}
             />
             <Route path="courses/add" element={<CourseForm />} />
-            <Route path="applications" element={<ApplicationsList />} />
+            <Route path="admin/applications" element={<ApplicationsList />} />
+            <Route path="admin/users" element={<UsersList />} />
           </Route>
 
           {/* Ścieżki dostępne dla nauczycieli i studentów */}

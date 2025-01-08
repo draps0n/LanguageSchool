@@ -3,12 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "../api/axios";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
+import roles from "../constants/roles";
 import {
   FaCircleInfo,
   FaSquarePhone,
   FaSchool,
   FaHouseUser,
   FaBook,
+  FaUsers,
+  FaClipboardList,
 } from "react-icons/fa6";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Header.css";
@@ -43,70 +46,98 @@ function Header() {
   // Stan do przechowywania informacji o menu w mniejszych rozdzielczościach
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Stan do przechowywania informacji o otwarciu menu dla administratora
+  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
+
   // Funkcja do otwierania/zamykania menu
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
+  // Funkcja do otwierania/zamykania menu dla administratora
+  const toggleAdminMenu = () => {
+    setAdminMenuOpen(!adminMenuOpen);
+  };
+
   return (
-    <header className="App-header">
-      <nav>
-        <div className="logo-container">
-          <img src="/favicon.ico" alt="Logo" className="logo" />
-          <span className="logo-text">Szkoła Inglisz</span>
-        </div>
-        <div className="menu-toggle" onClick={toggleMenu}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
-          <li>
-            <Link to="/" className="link-with-icon">
-              Szkoła <FaSchool className="icon" />
-            </Link>
-          </li>
-          <li>
-            <Link to="/about" className="link-with-icon">
-              O nas <FaCircleInfo className="icon" />
-            </Link>
-          </li>
-          <li>
-            <Link to="/contact" className="link-with-icon">
-              Kontakt <FaSquarePhone className="icon" />
-            </Link>
-          </li>
-          {userData && (
-            <li>
-              <Link to="/courses" className="link-with-icon">
-                Kursy <FaBook className="icon" />
-              </Link>
-            </li>
-          )}
-          {userData && (
-            <li>
-              <Link to="/profile" className="link-with-icon">
-                Profil <FaHouseUser className="icon" />
-              </Link>
-            </li>
-          )}
-          <li>
-            {userData ? (
-              <button className="header-button" onClick={handleLogout}>
-                Wyloguj się
-              </button>
-            ) : (
-              <button
-                className="header-button"
-                onClick={() => navigate("/login")}
-              >
-                Zaloguj się
-              </button>
+    <div>
+      <header className="App-header">
+        <nav>
+          <div className="logo-container">
+            <img src="/favicon.ico" alt="Logo" className="logo" />
+            <span className="logo-text">Szkoła Inglisz</span>
+          </div>
+          <div className="menu-toggle" onClick={toggleMenu}>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
+            {(!userData || userData?.roleId !== roles.EMPLOYEE) && (
+              <>
+                <li>
+                  <Link to="/" className="link-with-icon">
+                    Szkoła <FaSchool className="icon" />
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/about" className="link-with-icon">
+                    O nas <FaCircleInfo className="icon" />
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contact" className="link-with-icon">
+                    Kontakt <FaSquarePhone className="icon" />
+                  </Link>
+                </li>
+              </>
             )}
-          </li>
-        </ul>
-      </nav>
-    </header>
+            {userData && userData.roleId === roles.EMPLOYEE && (
+              <>
+                <li>
+                  <Link to="/admin/applications" className="link-with-icon">
+                    Zgłoszenia <FaClipboardList className="icon" />
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/admin/users" className="link-with-icon">
+                    Użytkownicy <FaUsers className="icon" />
+                  </Link>
+                </li>
+              </>
+            )}
+            {userData && (
+              <li>
+                <Link to="/courses" className="link-with-icon">
+                  Kursy <FaBook className="icon" />
+                </Link>
+              </li>
+            )}
+            {userData && (
+              <li>
+                <Link to="/profile" className="link-with-icon">
+                  Profil <FaHouseUser className="icon" />
+                </Link>
+              </li>
+            )}
+            <li>
+              {userData ? (
+                <button className="header-button" onClick={handleLogout}>
+                  Wyloguj się
+                </button>
+              ) : (
+                <button
+                  className="header-button"
+                  onClick={() => navigate("/login")}
+                >
+                  Zaloguj się
+                </button>
+              )}
+            </li>
+          </ul>
+        </nav>
+      </header>
+    </div>
   );
 }
 
