@@ -5,13 +5,43 @@ const employeeModel = require("../models/employeeModel");
 const { pool } = require("../db/database");
 const { getRoles } = require("../config/roles");
 
-const getUserById = async (req, res) => {
+const getUserProfileDetails = async (req, res) => {
+  console.log("getUserProfileDetails");
   if (!req.userId || !req.roleId) {
-    return res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "Unauthorized" });
+    return;
   }
 
   try {
     const user = await userModel.findUserById(req.userId);
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getUserDetails = async (req, res) => {
+  console.log("getUserDetails");
+  const userId = req.params.id;
+
+  if (!userId || isNaN(userId)) {
+    return res.status(400).json({ message: "User ID must be a number" });
+  }
+
+  try {
+    const user = await userModel.findUserById(req.userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     return res.status(200).json(user);
   } catch (error) {
     console.error(error);
@@ -176,7 +206,8 @@ const updateUser = async (req, res) => {
 };
 
 module.exports = {
-  getUserById,
+  getUserDetails,
+  getUserProfileDetails,
   updateUser,
   getAllUsers,
 };

@@ -10,7 +10,12 @@ router
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     userController.getAllUsers
   )
-  .get("/profile", userController.getUserById)
+  .get("/profile", userController.getUserProfileDetails)
+  .get(
+    "/:id",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    userController.getUserDetails
+  )
   .put("/profile", userController.updateUser);
 
 module.exports = router;
