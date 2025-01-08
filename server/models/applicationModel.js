@@ -116,6 +116,39 @@ const getTotalUserApplications = async (userId) => {
   return results[0].totalApplications;
 };
 
+const getApplicationById = async (id) => {
+  const [results] = await pool.query(`SELECT * FROM zgloszenie WHERE id = ?`, [
+    id,
+  ]);
+  return {
+    id: results[0].id,
+    studentId: results[0].kursant,
+    groupId: results[0].grupa,
+    startDate: results[0].data_rozpoczecia,
+    comment: results[0].uwagi,
+    sentDate: results[0].data_przeslania,
+    feedbackMessage: results[0].wiadomosc_zwrotna,
+    employeeId: results[0].pracownik_rozpatrujacy,
+    status: results[0].status,
+  };
+};
+
+const updateApplicationByUser = async (application) => {
+  await pool.query(
+    `
+    UPDATE zgloszenie
+    SET data_rozpoczecia = ?, uwagi = ?, grupa = ?
+    WHERE id = ?
+    `,
+    [
+      application.startDate,
+      application.comment,
+      application.groupId,
+      application.id,
+    ]
+  );
+};
+
 module.exports = {
   addNewApplication,
   deleteApplication,
@@ -124,4 +157,6 @@ module.exports = {
   getUserApplications,
   getTotalApplications,
   getTotalUserApplications,
+  getApplicationById,
+  updateApplicationByUser,
 };

@@ -84,13 +84,32 @@ const addNewApplication = async (req, res) => {
 
 const deleteApplication = async (req, res) => {
   const applicationId = req.params.id;
+  const userId = req.userId;
+
+  if (!userId || isNaN(userId)) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
 
   try {
     const fetchedApplication = await applicationModel.getApplicationById(
       applicationId
     );
+
     if (!fetchedApplication) {
       res.status(404).json({ message: "Application not found" });
+      return;
+    }
+
+    if (fetchedApplication.studentId !== userId) {
+      res.status(403).json({ message: "Forbidden" });
+      return;
+    }
+
+    if (fetchedApplication.status !== 1) {
+      res
+        .status(403)
+        .json({ message: "You can only delete pending applications" });
       return;
     }
 
@@ -187,9 +206,117 @@ const getAllApplications = async (req, res) => {
   }
 };
 
+const updateApplicationByUser = async (req, res) => {
+  const { startDate, comment } = req.body;
+
+  // Sprawdzenie czy użytkownik podał datę rozpoczęcia i id grupy
+  if (!req.body.startDate || !req.body.groupId) {
+    res.status(400).json({
+      message: "Start date and group id are required",
+    });
+    return;
+  }
+
+  // Sprawdzenie czy opis jest w odpowiednim zakresie
+  if (comment && (comment.length < 10 || comment.length > 300)) {
+    res.status(400).json({
+      message: "Comment must be between 10 and 300 characters",
+    });
+    return;
+  }
+
+  // Sprawdzenie czy data rozpoczęcia jest w odpowiednim zakresie
+  const today = new Date();
+  const nextMonth = new Date();
+  const nextWeek = new Date();
+  const startDateDate = new Date(startDate);
+
+  nextMonth.setMonth(today.getMonth() + 1);
+  nextWeek.setDate(today.getDate() + 7);
+
+  if (startDateDate > nextMonth || startDateDate < nextWeek) {
+    res.status(400).json({
+      message:
+        "Start date must be within the next month and not earlier than a week from now",
+    });
+    return;
+  }
+
+  try {
+    const fetchedApplication = await applicationModel.getApplicationById(
+      req.params.id
+    );
+
+    // Sprawdzenie czy aplikacja istnieje
+    if (!fetchedApplication) {
+      res.status(404).json({ message: "Application not found" });
+      return;
+    }
+
+    // Sprawdzenie czy aplikacja należy do użytkownika
+    if (fetchedApplication.studentId !== req.userId) {
+      res.status(403).json({ message: "Forbidden" });
+      return;
+    }
+
+    console.log(fetchedApplication);
+    // Sprawdzenie czy aplikacja jest w odpowiednim stanie
+    if (fetchedApplication.status !== 1) {
+      res
+        .status(403)
+        .json({ message: "You can only edit pending applications" });
+      return;
+    }
+
+    // Sprawdzenie czy grupa istnieje
+    const fetchedGroup = await groupModel.getGroupById(req.body.groupId);
+    if (!fetchedGroup) {
+      res.status(404).json({ message: "Group not found" });
+      return;
+    }
+
+    // Sprawdzenie, jeśli grupa jest zmieniana, czy nowa grupa nie jest pełna
+    const takenPlaces = await groupModel.getTakenPlaces(req.body.groupId);
+    if (
+      fetchedApplication.groupId !== req.body.groupId &&
+      takenPlaces >= fetchedGroup.places
+    ) {
+      res.status(400).json({ message: "Group is full" });
+      return;
+    }
+
+    const application = {
+      id: req.params.id,
+      startDate: req.body.startDate,
+      groupId: req.body.groupId,
+      comment: req.body.comment || null,
+    };
+
+    // Edytowanie zgłoszenia w bazie danych
+    await applicationModel.updateApplicationByUser(application);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const acceptApplication = async (req, res) => {
+  console.log("acceptApplication");
+  res.status(501).json({ message: "acceptApplication not implemented" });
+};
+
+const rejectApplication = async (req, res) => {
+  console.log("rejectApplication");
+  res.status(501).json({ message: "rejectApplication not implemented" });
+};
+
 module.exports = {
   addNewApplication,
   deleteApplication,
   getApplicationsForUser,
   getAllApplications,
+  updateApplicationByUser,
+  acceptApplication,
+  rejectApplication,
 };

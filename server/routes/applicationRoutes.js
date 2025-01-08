@@ -12,7 +12,7 @@ router
   )
   .delete(
     "/:id",
-    verifyRole(getRoles().KURSANT, getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    verifyRole(getRoles().KURSANT),
     applicationController.deleteApplication
   )
   .get(
@@ -24,6 +24,21 @@ router
     "/user",
     verifyRole(getRoles().KURSANT),
     applicationController.getApplicationsForUser
+  )
+  .put(
+    "/:id",
+    verifyRole(getRoles().KURSANT),
+    applicationController.updateApplicationByUser
+  )
+  .put(
+    "/:id/accept",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    applicationController.acceptApplication
+  )
+  .put(
+    "/:id/reject",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    applicationController.rejectApplication
   );
 
 module.exports = router;
