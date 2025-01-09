@@ -61,8 +61,8 @@ const getTeacherLanguages = async (id) => {
   const [results] = await pool.query(
     `SELECT j.id, j.nazwa, j.skrot
     FROM jezyk j
-    INNER JOIN nauczyciel_jezyk nj ON j.id = nj.id_jezyk
-    WHERE nj.id_nauczyciel = ?`,
+    INNER JOIN znajomosc_jezyka zj ON j.id = zj.jezyk
+    WHERE zj.nauczyciel = ?`,
     [id]
   );
   return results.map((language) => {

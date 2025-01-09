@@ -19,6 +19,7 @@ import "../styles/Profile.css";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import Loading from "./Loading";
+import KnownLanguages from "./KnownLanguages";
 
 function Profile() {
   const navigate = useNavigate();
@@ -53,8 +54,6 @@ function Profile() {
     description: "",
     salary: "",
   });
-
-  const [languages, setLanguages] = useState([]);
 
   useEffect(() => {
     const getProfileData = async () => {
@@ -99,19 +98,7 @@ function Profile() {
       }
     };
 
-    const getTeacherLanguages = async () => {
-      try {
-        const response = await axios.get(`/teachers/${userData.id}/languages`);
-        setLanguages(response.data.languages);
-      } catch (error) {
-        console.error("Error fetching teacher languages:", error);
-      }
-    };
-
     getProfileData();
-    if (userData.roleId === roles.TEACHER && userData.id) {
-      getTeacherLanguages();
-    }
   }, [userData, axios]);
 
   const toggleEditMode = () => {
@@ -302,14 +289,28 @@ function Profile() {
   }
 
   return (
-    <div className="profile-page">
+    <div
+      className={`profile-page ${
+        userData.roleId === roles.EMPLOYEE
+          ? "employee-card"
+          : userData.roleId === roles.TEACHER
+          ? "teacher-card"
+          : "student-card"
+      }`}
+    >
       <form onSubmit={handleFormSubmit}>
         <div className="profile-container">
           <div className="profile-left">
             <h1>Profil użytkownika</h1>
             <p>Witaj! Zalogowano Cię w roli:</p>
             <p className="profile-role-name">
-              <strong>{}</strong>
+              <strong>
+                {userData.roleId === roles.EMPLOYEE
+                  ? "Pracownik Administracyjny"
+                  : userData.roleId === roles.TEACHER
+                  ? "Nauczyciel"
+                  : "Student"}
+              </strong>
             </p>
 
             <InputField
@@ -438,6 +439,8 @@ function Profile() {
                   value={formData.hoursWorked || ""}
                   readOnly
                 />
+
+                <KnownLanguages teacherId={userData.userId} />
               </div>
             )}
             {userData.roleId === roles.EMPLOYEE && (

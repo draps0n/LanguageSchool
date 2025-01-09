@@ -8,7 +8,7 @@ router
   .get("/", teacherController.getAllTeachers)
   .get(
     "/:id/languages",
-    verifyRole(getRoles.NAUCZYCIEL, getRoles.PRACOWNIK_ADMINISTRACYJNY),
+    verifyRole(getRoles().NAUCZYCIEL, getRoles().PRACOWNIK_ADMINISTRACYJNY),
     teacherController.getTeacherLanguages
   );
 
