@@ -12,11 +12,12 @@ router
   )
   .get("/profile", userController.getUserProfileDetails)
   .delete("/profile", userController.deleteUserProfile)
+  .put("/profile", userController.updateUser)
   .get(
     "/:id",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     userController.getUserDetails
   )
-  .put("/profile", userController.updateUser);
+  .delete("/:id", userController.deleteUserById);
 
 module.exports = router;

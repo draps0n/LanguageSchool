@@ -210,79 +210,87 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUserProfile = async (req, res) => {
-  if (!req.userId || !req.roleId) {
+  if (!req.userId) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
+  const result = await deleteUser(req.userId);
+  res.status(result.status).json({ message: result.message });
+};
+
+const deleteUserById = async (req, res) => {
+  const userId = req.params.id;
+
+  if (!userId || isNaN(userId)) {
+    return res.status(400).json({ message: "User ID must be a number" });
+  }
+
+  const result = await deleteUser(userId);
+  res.status(result.status).json({ message: result.message });
+};
+
+const deleteUser = async (userId) => {
   const connection = await pool.getConnection();
   try {
-    const user = await userModel.findUserById(req.userId);
+    const user = await userModel.findUserById(userId);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return { status: 404, message: "User not found" };
     }
 
-    switch (req.roleId) {
+    switch (user.roleId) {
       case getRoles().KURSANT:
         connection.beginTransaction();
+
         // Usunięcie zgłoszeń kursanta
         await applicationModel.deleteApplicationsByStudentId(
-          req.userId,
+          userId,
           connection
         );
 
         // Usunięcie przypisania kursanta do grup
-        await groupModel.deleteGroupsMembershipsByStudentId(
-          req.userId,
-          connection
-        );
+        await groupModel.deleteGroupsMembershipsByStudentId(userId, connection);
 
         // Usunięcie kursanta
-        await studentModel.deleteStudent(req.userId, connection);
+        await studentModel.deleteStudent(userId, connection);
         break;
       case getRoles().PRACOWNIK_ADMINISTRACYJNY:
         connection.beginTransaction();
+
         // Usunięcie pracownika z rozpatrzonych zgłoszeń
         await applicationModel.updateApplicationsByEmployeeId(
-          req.userId,
+          userId,
           connection
         );
 
         // Usunięcie pracownika
-        await employeeModel.deleteEmployee(req.userId, connection);
+        await employeeModel.deleteEmployee(userId, connection);
         break;
       case getRoles().NAUCZYCIEL:
         // Sprawdzenie czy nauczyciel prowadzi jakieś grupy
-        const teacherGroups = await groupModel.getTotalTeacherGroups(
-          req.userId
-        );
+        const teacherGroups = await groupModel.getTotalTeacherGroups(userId);
         if (teacherGroups > 0) {
-          return res.status(409).json({
-            message: "Cannot delete teacher with groups assigned",
-          });
+          return { status: 409, message: "Cannot delete teacher with groups" };
         }
 
         // Usunięcie języków nauczyciela
         connection.beginTransaction();
-        await teacherModel.deleteAllTeacherKnownLanguages(
-          req.userId,
-          connection
-        );
+        await teacherModel.deleteAllTeacherKnownLanguages(userId, connection);
 
         // Usunięcie nauczyciela
-        await teacherModel.deleteTeacher(req.userId, connection);
+        await teacherModel.deleteTeacher(userId, connection);
         break;
       default:
-        return res.status(400).json({ message: "Invalid role" });
+        return { status: 400, message: "Invalid role" };
     }
 
     // Usunięcie użytkownika
-    await userModel.deleteUser(req.userId, connection);
+    await userModel.deleteUser(userId, connection);
     connection.commit();
-    res.status(200).send("User deleted");
+    return { status: 200, message: "User deleted" };
   } catch (error) {
     connection.rollback();
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    return { status: 500, message: "Internal server error" };
   } finally {
     connection.release();
   }
@@ -294,4 +302,5 @@ module.exports = {
   updateUser,
   getAllUsers,
   deleteUserProfile,
+  deleteUserById,
 };
