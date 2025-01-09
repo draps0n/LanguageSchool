@@ -44,7 +44,7 @@ const createTeacher = async (userId, teacher) => {
 const updateTeacher = async (id, teacher) => {
   const [results] = await pool.query(
     "UPDATE nauczyciel SET przepracowane_godziny = ?, stawka_godzinowa = ? WHERE id = ?",
-    [teacher.workedHours, teacher.hourRate, id]
+    [teacher.hoursWorked, teacher.hourlyRate, id]
   );
   return results;
 };

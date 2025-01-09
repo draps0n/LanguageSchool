@@ -18,6 +18,15 @@ router
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     userController.getUserDetails
   )
-  .delete("/:id", userController.deleteUserById);
+  .delete(
+    "/:id",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    userController.deleteUserById
+  )
+  .put(
+    "/:id",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    userController.updateUserById
+  );
 
 module.exports = router;

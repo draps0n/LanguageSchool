@@ -296,6 +296,79 @@ const deleteUser = async (userId) => {
   }
 };
 
+const updateUserById = async (req, res) => {
+  const userId = req.params.id;
+
+  if (!userId || isNaN(userId)) {
+    return res.status(400).json({ message: "User ID must be a number" });
+  }
+
+  const user = await userModel.findUserById(userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  try {
+    switch (user.roleId) {
+      case getRoles().STUDENT:
+        const { discount } = req.body;
+        if (typeof discount !== "boolean") {
+          return res
+            .status(400)
+            .json({ message: "Discount is required and need to be boolean" });
+        }
+
+        await studentModel.updateStudent(userId, discount);
+        break;
+      case getRoles().EMPLOYEE:
+        const { salary } = req.body;
+
+        if (isNaN(salary) || salary < 0 || salary > 100000) {
+          return res
+            .status(400)
+            .send("Salary must be a number between 0 and 100000");
+        }
+
+        await employeeModel.updateEmployee(userId, salary);
+      case getRoles().TEACHER:
+        const { hoursWorked, hourlyRate } = req.body;
+
+        if (!hourlyRate || isNaN(hourlyRate)) {
+          return res.status(400).json({
+            message: "Hourly rate is required and has to be a number",
+          });
+        }
+
+        if (hourlyRate < 0 || hourlyRate > 1000) {
+          return res.status(400).json({
+            message: "Hourly rate must be a number between 0 and 1000",
+          });
+        }
+
+        if (!hoursWorked || isNaN(hoursWorked)) {
+          return res.status(400).json({
+            message: "Hours worked is required and has to be a number",
+          });
+        }
+
+        if (hoursWorked < 0 || hoursWorked > 1000) {
+          return res.status(400).json({
+            message: "Hours worked must be a number between 0 and 1000",
+          });
+        }
+
+        await teacherModel.updateTeacher(userId, { hoursWorked, hourlyRate });
+      default:
+        return res.status(400).json({ message: "Invalid role" });
+    }
+
+    res.status(200).send("User updated");
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getUserDetails,
   getUserProfileDetails,
@@ -303,4 +376,5 @@ module.exports = {
   getAllUsers,
   deleteUserProfile,
   deleteUserById,
+  updateUserById,
 };

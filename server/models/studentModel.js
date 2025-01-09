@@ -45,6 +45,14 @@ const deleteStudent = async (id, connection) => {
   return results;
 };
 
+const updateStudentDiscount = async (id, discount) => {
+  const [results] = await pool.query(
+    "UPDATE kursant SET czy_rabat = ? WHERE id = ?",
+    [discount, id]
+  );
+  return results;
+};
+
 module.exports = {
   getAllStudents,
   getStudentById,
