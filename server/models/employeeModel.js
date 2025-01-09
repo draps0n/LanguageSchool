@@ -20,8 +20,8 @@ const getEmployeeById = async (id) => {
   return results[0];
 };
 
-const createEmployee = async (userId, employee) => {
-  const [results] = await pool.query(
+const createEmployee = async (userId, employee, connection) => {
+  const [results] = await connection.query(
     "INSERT INTO pracownik_administracyjny (id, pensja) VALUES(?, ?)",
     [userId, employee.salary]
   );

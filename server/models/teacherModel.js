@@ -33,10 +33,10 @@ const getTeacherById = async (id) => {
   return results[0];
 };
 
-const createTeacher = async (userId, teacher) => {
-  const [results] = await pool.query(
+const createTeacher = async (userId, teacher, connection) => {
+  const [results] = await connection.query(
     "INSERT INTO nauczyciel (id, przepracowane_godziny, stawka_godzinowa) VALUES(?, ?, ?)",
-    [userId, teacher.workedHours, teacher.hourRate]
+    [userId, teacher.hoursWorked, teacher.hourlyRate]
   );
   return results;
 };

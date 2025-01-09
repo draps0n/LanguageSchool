@@ -60,6 +60,7 @@ function UserForm({ isRegistration }) {
     hoursWorked: "",
     hourlyRate: "",
     salary: "",
+    role: "",
   });
 
   useEffect(() => {
@@ -235,7 +236,74 @@ function UserForm({ isRegistration }) {
         toast.error("Nie udało się zaktualizować danych użytkownika");
       }
     } else {
-      toast.error("Rejestracja użytkownika nie jest jeszcze obsługiwana");
+      let toSend = {
+        name: formData.name,
+        lastName: formData.lastName,
+        email: formData.email,
+        dateOfBirth: formData.dateOfBirth,
+        password: formData.password,
+        roleId: chosenRole,
+      };
+
+      if (
+        validateName(formData.name) ||
+        validateLastName(formData.lastName) ||
+        validateEmail(formData.email) ||
+        validateDateOfBirth(formData.dateOfBirth) ||
+        validatePassword(formData.password, true) ||
+        validateIfPasswordsMatch(
+          formData.password,
+          formData.passwordConfirmation
+        )
+      ) {
+        toast.error("Niepoprawne dane");
+        return;
+      }
+
+      if (chosenRole === roles.EMPLOYEE) {
+        if (validateEmployeeSalary(formData.salary)) {
+          toast.error("Niepoprawna wartość pensji");
+          return;
+        }
+
+        toSend = {
+          ...toSend,
+          salary: formData.salary,
+        };
+      } else if (chosenRole === roles.TEACHER) {
+        if (validateTeacherHoursWorked(formData.hoursWorked)) {
+          toast.error("Niepoprawna wartość godzin przepracowanych");
+          return;
+        }
+
+        if (validateTeacherHourlyRate(formData.hourlyRate)) {
+          toast.error("Niepoprawna wartość stawki godzinowej");
+          return;
+        }
+
+        toSend = {
+          ...toSend,
+          hoursWorked: formData.hoursWorked,
+          hourlyRate: formData.hourlyRate,
+        };
+      } else {
+        toast.error("Nie wybrano roli");
+        setErrors({
+          ...errors,
+          role: "Musisz wybrać rolę nowego użytkownika",
+        });
+        return;
+      }
+
+      try {
+        const response = await axios.post("/users", toSend);
+        toast.success("Użytkownik został zarejestrowany");
+        console.log(response.data);
+        navigate(`/admin/users/${response.data.userId}`);
+      } catch (error) {
+        console.error(error);
+        toast.error("Nie udało się zarejestrować użytkownika");
+      }
     }
   };
 
@@ -324,8 +392,10 @@ function UserForm({ isRegistration }) {
             value={chosenRole}
             onChange={(e) => {
               setChosenRole(parseInt(e.target.value));
+              setErrors({ ...errors, role: "" });
             }}
             options={rolesFromDb}
+            error={errors.role}
           />
         )}
 

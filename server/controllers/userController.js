@@ -374,6 +374,113 @@ const updateUserById = async (req, res) => {
   }
 };
 
+const registerUserByAdmin = async (req, res) => {
+  const user = req.body;
+
+  // Sprawdzenie czy wszystkie pola zostały przesłane
+  if (
+    !user.name ||
+    !user.lastName ||
+    !user.email ||
+    !user.dateOfBirth ||
+    !user.password ||
+    !user.roleId
+  ) {
+    return res.status(400).send("All fields are required");
+  }
+
+  // Sprawdzenie poprawności danych
+  if (user.name.length < 2 || user.name.length > 50) {
+    return res.status(400).send("Name must be between 2 and 50 characters");
+  }
+
+  if (user.lastName.length < 2 || user.lastName.length > 50) {
+    return res
+      .status(400)
+      .send("Last name must be between 2 and 50 characters");
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(user.email)) {
+    return res.status(400).send("Invalid email format");
+  }
+
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!dateRegex.test(user.dateOfBirth)) {
+    return res.status(400).send("Date must be in YYYY-MM-DD format");
+  }
+
+  const birthDate = new Date(user.dateOfBirth);
+  const today = new Date();
+  if (birthDate > today) {
+    return res.status(400).send("Date of birth cannot be in the future");
+  }
+
+  if (
+    birthDate >
+    new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+  ) {
+    return res.status(400).send("User must be at least 18 years old");
+  }
+
+  if (
+    user.roleId !== getRoles().PRACOWNIK_ADMINISTRACYJNY &&
+    user.roleId !== getRoles().NAUCZYCIEL
+  ) {
+    return res.status(400).send("Invalid role");
+  }
+
+  // Sprawdzenie czy użytkownik o podanym emailu już istnieje
+  try {
+    const userExists = await userModel.getUserByEmail(user.email);
+    if (userExists) {
+      return res.status(409).send("User with this email already exists");
+    }
+
+    // Zahasowanie hasła
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
+
+    // Stworzenie nowego użytkownika i studenta
+    const connection = await pool.getConnection();
+    try {
+      // Rozpoczęcie transakcji
+      await connection.beginTransaction();
+
+      const userId = await userModel.createUser(user, user.roleId, connection);
+
+      if (user.roleId === getRoles().PRACOWNIK_ADMINISTRACYJNY) {
+        await employeeModel.createEmployee(
+          userId,
+          { salary: user.salary },
+          connection
+        );
+      } else if (user.roleId === getRoles().NAUCZYCIEL) {
+        await teacherModel.createTeacher(
+          userId,
+          { hourlyRate: user.hourlyRate, hoursWorked: user.hoursWorked },
+          connection
+        );
+      } else {
+        await connection.rollback();
+        return res.status(400).send("Invalid role");
+      }
+
+      // Zakończenie transakcji
+      await connection.commit();
+      res.status(201).json({ userId });
+    } catch (error) {
+      await connection.rollback();
+      console.error(error);
+      return res.status(500).send("Internal server error");
+    } finally {
+      connection.release();
+    }
+  } catch (error) {
+    return res.status(500).send("Internal server error");
+  }
+};
+
 module.exports = {
   getUserDetails,
   getUserProfileDetails,
@@ -382,4 +489,5 @@ module.exports = {
   deleteUserProfile,
   deleteUserById,
   updateUserById,
+  registerUserByAdmin,
 };

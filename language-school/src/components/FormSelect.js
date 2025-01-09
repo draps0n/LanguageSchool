@@ -23,7 +23,7 @@ function FormSelect({ label, name, value, onChange, options, error }) {
           </option>
         ))}
       </select>
-      {error && <p className="error">{error}</p>}
+      {error && <p className="input-field-error">{error}</p>}
     </div>
   );
 }

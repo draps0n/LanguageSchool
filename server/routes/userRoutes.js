@@ -5,11 +5,6 @@ const verifyRole = require("../middlewares/verifyRoleMiddleware.js");
 const { getRoles } = require("../config/roles.js");
 
 router
-  .get(
-    "/",
-    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
-    userController.getAllUsers
-  )
   .get("/profile", userController.getUserProfileDetails)
   .delete("/profile", userController.deleteUserProfile)
   .put("/profile", userController.updateUser)
@@ -27,6 +22,16 @@ router
     "/:id",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     userController.updateUserById
+  )
+  .get(
+    "/",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    userController.getAllUsers
+  )
+  .post(
+    "/",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    userController.registerUserByAdmin
   );
 
 module.exports = router;
