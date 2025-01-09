@@ -14,6 +14,7 @@ function InputField({
   autoComplete,
   readOnly = false,
   disabled = false,
+  checked = false,
 }) {
   return (
     <div className="form-group">
@@ -33,6 +34,7 @@ function InputField({
         className="input-field"
         readOnly={readOnly}
         disabled={disabled}
+        checked={checked}
       />
       {error && <p className="input-field-error">{error}</p>}
     </div>

@@ -10,7 +10,7 @@ function UserDetailsButtons({ userId }) {
   const axios = useAxiosAuth();
 
   const goBack = () => {
-    navigate(-1);
+    navigate("/admin/users");
   };
 
   const handleEdit = () => {

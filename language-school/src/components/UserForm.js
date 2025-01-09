@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import FormSelect from "./FormSelect";
 import roles from "../constants/roles";
+import { useNavigate } from "react-router-dom";
 import {
   validateName,
   validateLastName,
@@ -26,6 +27,7 @@ import "../styles/UserForm.css";
 
 function UserForm({ isRegistration }) {
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const axios = useAxiosAuth();
   const { userId } = useParams();
@@ -72,7 +74,7 @@ function UserForm({ isRegistration }) {
           email: response.data.email,
           dateOfBirth: formatDate(response.data.dateOfBirth),
           description: response.data.description,
-          discount: response.data.discount,
+          discount: response.data.discount ? true : false,
           hoursWorked: response.data.hoursWorked,
           hourlyRate: response.data.hourlyRate,
           salary: response.data.salary,
@@ -104,7 +106,11 @@ function UserForm({ isRegistration }) {
   }, [axios]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.type === "checkbox") {
+      setFormData({ ...formData, [e.target.name]: e.target.checked });
+    } else {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    }
 
     switch (e.target.name) {
       case "name":
@@ -179,7 +185,58 @@ function UserForm({ isRegistration }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Walidacej i przesłanie danych na serwer
+    if (!isRegistration) {
+      let toSend = {};
+
+      if (user.roleId === roles.STUDENT) {
+        if (validateStudentDiscount(formData.discount)) {
+          toast.error("Niepoprawna wartość zniżki");
+          return;
+        }
+
+        toSend = {
+          discount: formData.discount,
+        };
+      } else if (user.roleId === roles.EMPLOYEE) {
+        if (validateEmployeeSalary(formData.salary)) {
+          toast.error("Niepoprawna wartość pensji");
+          return;
+        }
+
+        toSend = {
+          salary: formData.salary,
+        };
+      } else if (user.roleId === roles.TEACHER) {
+        if (validateTeacherHoursWorked(formData.hoursWorked)) {
+          toast.error("Niepoprawna wartość godzin przepracowanych");
+          return;
+        }
+
+        if (validateTeacherHourlyRate(formData.hourlyRate)) {
+          toast.error("Niepoprawna wartość stawki godzinowej");
+          return;
+        }
+
+        toSend = {
+          hoursWorked: formData.hoursWorked,
+          hourlyRate: formData.hourlyRate,
+        };
+      } else {
+        toast.error("Nieznana rola użytkownika");
+        return;
+      }
+
+      try {
+        await axios.put(`/users/${userId}`, toSend);
+        toast.success("Dane użytkownika zostały zaktualizowane");
+        navigate(`/admin/users/${userId}`);
+      } catch (error) {
+        console.error(error);
+        toast.error("Nie udało się zaktualizować danych użytkownika");
+      }
+    } else {
+      toast.error("Rejestracja użytkownika nie jest jeszcze obsługiwana");
+    }
   };
 
   if ((!isRegistration && !user) || (isRegistration && !rolesFromDb)) {
@@ -286,9 +343,9 @@ function UserForm({ isRegistration }) {
               label="Czy zniżka"
               name="discount"
               type="checkbox"
-              value={formData.discount}
               onChange={handleChange}
               error={errors.discount}
+              checked={formData.discount}
             />
           </>
         )}

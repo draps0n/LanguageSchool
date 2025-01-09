@@ -31,7 +31,7 @@ const createStudent = async (userId, student, connection) => {
 };
 
 const updateStudent = async (id, student, connection) => {
-  const [results] = await connection.connection(
+  const [results] = await connection.query(
     "UPDATE kursant SET czy_rabat = ?, opis = ? WHERE id = ?",
     [student.discount, student.description, id]
   );
@@ -59,4 +59,5 @@ module.exports = {
   createStudent,
   updateStudent,
   deleteStudent,
+  updateStudentDiscount,
 };

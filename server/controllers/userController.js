@@ -99,9 +99,12 @@ const updateUser = async (req, res) => {
 
   const fetchedStudent = await studentModel.getStudentById(req.userId);
   const fetchedEmployee = await employeeModel.getEmployeeById(req.userId);
-  if (req.roleId === getRoles().STUDENT && !fetchedStudent) {
+  if (req.roleId === getRoles().KURSANT && !fetchedStudent) {
     return res.status(404).json({ message: "Student not found" });
-  } else if (req.roleId === getRoles().EMPLOYEE && !fetchedEmployee) {
+  } else if (
+    req.roleId === getRoles().PRACOWNIK_ADMINISTRACYJNY &&
+    !fetchedEmployee
+  ) {
     return res.status(404).json({ message: "Employee not found" });
   }
 
@@ -186,7 +189,7 @@ const updateUser = async (req, res) => {
     await connection.beginTransaction();
     await userModel.updateUser(updatedUser, connection);
 
-    if (user.role === getRoles().STUDENT && description) {
+    if (user.role === getRoles().KURSANT && description) {
       await studentModel.updateStudent(
         req.userId,
         {
@@ -195,7 +198,7 @@ const updateUser = async (req, res) => {
         },
         connection
       );
-    } else if (user.role === getRoles().EMPLOYEE && salary) {
+    } else if (user.role === getRoles().PRACOWNIK_ADMINISTRACYJNY && salary) {
       await employeeModel.updateEmployee(req.userId, salary, connection);
     }
 
@@ -310,7 +313,7 @@ const updateUserById = async (req, res) => {
 
   try {
     switch (user.roleId) {
-      case getRoles().STUDENT:
+      case getRoles().KURSANT:
         const { discount } = req.body;
         if (typeof discount !== "boolean") {
           return res
@@ -318,9 +321,9 @@ const updateUserById = async (req, res) => {
             .json({ message: "Discount is required and need to be boolean" });
         }
 
-        await studentModel.updateStudent(userId, discount);
+        await studentModel.updateStudentDiscount(userId, discount ? "t" : "n");
         break;
-      case getRoles().EMPLOYEE:
+      case getRoles().PRACOWNIK_ADMINISTRACYJNY:
         const { salary } = req.body;
 
         if (isNaN(salary) || salary < 0 || salary > 100000) {
@@ -330,7 +333,8 @@ const updateUserById = async (req, res) => {
         }
 
         await employeeModel.updateEmployee(userId, salary);
-      case getRoles().TEACHER:
+        break;
+      case getRoles().NAUCZYCIEL:
         const { hoursWorked, hourlyRate } = req.body;
 
         if (!hourlyRate || isNaN(hourlyRate)) {
@@ -358,6 +362,7 @@ const updateUserById = async (req, res) => {
         }
 
         await teacherModel.updateTeacher(userId, { hoursWorked, hourlyRate });
+        break;
       default:
         return res.status(400).json({ message: "Invalid role" });
     }
