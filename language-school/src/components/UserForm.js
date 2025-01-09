@@ -23,7 +23,6 @@ import Loading from "./Loading";
 import { toast } from "react-toastify";
 import BackButton from "./BackButton";
 import { FaSave } from "react-icons/fa";
-import "../styles/UserForm.css";
 
 function UserForm({ isRegistration }) {
   const [user, setUser] = useState(null);

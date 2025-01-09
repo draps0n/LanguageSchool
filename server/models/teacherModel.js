@@ -82,6 +82,39 @@ const deleteAllTeacherKnownLanguages = async (id, connection) => {
   return results;
 };
 
+const deleteTeacherKnownLanguage = async (teacherId, languageId) => {
+  const [results] = await pool.query(
+    "DELETE FROM znajomosc_jezyka WHERE nauczyciel = ? AND jezyk = ?",
+    [teacherId, languageId]
+  );
+  return results;
+};
+
+const getTeacherLanguage = async (teacherId, languageId) => {
+  const [results] = await pool.query(
+    "SELECT * FROM znajomosc_jezyka WHERE nauczyciel = ? AND jezyk = ?",
+    [teacherId, languageId]
+  );
+
+  if (results.length === 0) {
+    return null;
+  }
+
+  return results[0];
+};
+
+const getTeacherGroupsCountWithLanguage = async (teacherId, languageId) => {
+  const [results] = await pool.query(
+    `SELECT COUNT(*) AS groupsCount
+    FROM grupa g
+    WHERE g.nauczyciel = ? AND g.jezyk = ?
+    `,
+    [teacherId, languageId]
+  );
+
+  return results[0].groupsCount;
+};
+
 module.exports = {
   getAllTeachers,
   getTeacherById,
@@ -90,4 +123,7 @@ module.exports = {
   deleteTeacher,
   getTeacherLanguages,
   deleteAllTeacherKnownLanguages,
+  deleteTeacherKnownLanguage,
+  getTeacherLanguage,
+  getTeacherGroupsCountWithLanguage,
 };

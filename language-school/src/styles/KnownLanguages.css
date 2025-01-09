@@ -1,0 +1,46 @@
+.known-languages-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.icon-button {
+    margin-top: 0.25rem;
+    margin-left: -0.7rem;
+    padding: 5px;
+    border: none;
+    border-radius: 25%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+    background-color: inherit;
+}
+
+.known-languages-container .add-button {
+    color: #4cdb58;
+}
+
+.known-languages-container .add-button:hover {
+    color: #309130;
+}
+
+.known-languages-container .remove-button {
+    color: #db4c4c;
+}
+
+.known-languages-container .remove-button:hover {
+    color: #913030;
+}
+
+.known-languages-container .known-language {
+    white-space: nowrap;
+}
+
+.known-languages-container .known-language-item {
+    display: inline-block;
+    margin-right: 10px;
+}

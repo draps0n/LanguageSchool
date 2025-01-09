@@ -144,7 +144,7 @@ const updateUser = async (req, res) => {
   }
 
   if (
-    req.roleId === getRoles.STUDENT &&
+    req.roleId === getRoles().STUDENT &&
     (description.length < 10 || description.length > 200)
   ) {
     return res
@@ -153,7 +153,7 @@ const updateUser = async (req, res) => {
   }
 
   if (
-    req.roleId === getRoles.EMPLOYEE &&
+    req.roleId === getRoles().EMPLOYEE &&
     (salary < 0 || salary > 100000 || isNaN(salary))
   ) {
     return res.status(400).send("Salary must be a number between 0 and 100000");

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
 import roles from "../constants/roles";
 import { formatDate } from "../util/helpers";
 import UserDetailsButtons from "./UserDetailsButtons";
+import KnownLanguages from "./KnownLanguages";
 import "../styles/UserDetails.css";
 
 function UserDetails() {
@@ -94,6 +94,7 @@ function UserDetails() {
                 <span className="label">Przepracowane godziny:</span>{" "}
                 {user.hoursWorked}
               </p>
+              <KnownLanguages teacherId={user.id} shouldShowButtons={true} />
             </>
           )}
         </div>

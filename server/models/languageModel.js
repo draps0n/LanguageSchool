@@ -12,6 +12,10 @@ const getAllLanguages = async () => {
 const getLanguageById = async (id) => {
   const [results] = await pool.query("SELECT * FROM jezyk WHERE id = ?", [id]);
 
+  if (results.length === 0) {
+    return null;
+  }
+
   const language = {
     id: results[0].id,
     name: results[0].nazwa,
