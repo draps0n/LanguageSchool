@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import CourseDetailsButtonPanel from "./CourseDetailsButtonPanel";
+import CourseStudentsList from "./CourseStudentsList";
 import "../styles/CourseDetails.css";
 
 const CourseDetails = () => {

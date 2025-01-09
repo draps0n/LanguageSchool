@@ -24,7 +24,9 @@ const CoursesList = ({ isUserSpecific }) => {
       try {
         const response = await axios.get(
           isUserSpecific
-            ? `/groups/user?page=${currentPage}&limit=${groupsPerPage}`
+            ? userData.roleId === roles.TEACHER
+              ? `/groups/teacher?page=${currentPage}&limit=${groupsPerPage}`
+              : `/groups/user?page=${currentPage}&limit=${groupsPerPage}`
             : `/groups?page=${currentPage}&limit=${groupsPerPage}`
         );
         setGroups(response.data.groups);
@@ -35,7 +37,7 @@ const CoursesList = ({ isUserSpecific }) => {
     };
 
     fetchGroups();
-  }, [currentPage, axios, isUserSpecific]);
+  }, [currentPage, axios, isUserSpecific, userData.roleId]);
 
   const addGroup = () => {
     navigate("/courses/add");

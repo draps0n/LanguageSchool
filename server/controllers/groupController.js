@@ -105,10 +105,65 @@ const getUserGroups = async (req, res) => {
       groups = await groupModel.getUserGroups(userId, limit, offset);
 
       // Pobranie liczby wszystkich grup
-      totalGroups = await groupModel.getTotalUserGroups();
+      totalGroups = await groupModel.getTotalUserGroups(userId);
     } else {
       // Pobranie wszystkich grup
       groups = await groupModel.getUserGroups(userId);
+
+      // Pobranie liczby wszystkich grup
+      totalGroups = groups.length;
+    }
+
+    // Zwrócenie grup
+    const totalPages = Math.ceil(totalGroups / limit);
+    res.status(200).json({
+      groups,
+      totalPages: totalPages > 0 ? totalPages : 1,
+    });
+  } catch (error) {
+    console.error("Error fetching groups:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getTeacherGroups = async (req, res) => {
+  const userId = req.userId;
+
+  if (!userId || isNaN(userId)) {
+    return res.status(400).json({ message: "User id is required" });
+  }
+
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  // Pobranie parametrów paginacji
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+  const offset = (page - 1) * limit;
+
+  try {
+    const fetchedTeacher = await teacherModel.getTeacherById(userId);
+    if (!fetchedTeacher) {
+      return res.status(404).json({ message: "Teacher not found" });
+    }
+
+    let groups;
+    let totalGroups;
+
+    if (page && limit) {
+      // Pobranie grup
+      groups = await groupModel.getTeacherGroups(userId, limit, offset);
+
+      // Pobranie liczby wszystkich grup
+      totalGroups = await groupModel.getTotalTeacherGroups(userId);
+    } else {
+      // Pobranie wszystkich grup
+      groups = await groupModel.getTeacherGroups(userId);
 
       // Pobranie liczby wszystkich grup
       totalGroups = groups.length;
@@ -345,4 +400,5 @@ module.exports = {
   updateGroup,
   getUserGroups,
   getAvailableGroupsForUser,
+  getTeacherGroups,
 };

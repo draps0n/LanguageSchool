@@ -8,6 +8,11 @@ router
   .get("/available", groupController.getAvailableGroupsForUser)
   .get("/", groupController.getAllGroups)
   .get("/user", verifyRole(getRoles().KURSANT), groupController.getUserGroups)
+  .get(
+    "/teacher",
+    verifyRole(getRoles().NAUCZYCIEL),
+    groupController.getTeacherGroups
+  )
   .get("/:id", groupController.getGroupById)
   .delete(
     "/:id",

@@ -263,6 +263,53 @@ const addStudentToGroup = async (studentId, groupId, connection) => {
   );
 };
 
+const getTeacherGroups = async (userId, limit, offset) => {
+  let query = `
+    SELECT g.id, g.liczba_miejsc, g.cena_zajec, g.opis, j.nazwa as jezyk, j.skrot as skrot, pj.nazwa as poziom, g.dzien_tygodnia, g.godzina_rozpoczecia, g.godzina_zakonczenia
+    FROM grupa g
+    INNER JOIN jezyk j ON j.id = g.jezyk
+    INNER JOIN poziom_jezyka pj ON pj.id = g.poziom
+    WHERE g.nauczyciel = ?
+    `;
+  const params = [userId];
+
+  if (limit !== undefined && offset !== undefined) {
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(limit, offset);
+  }
+
+  const [results] = await pool.query(query, params);
+
+  return results.map((group) => {
+    return {
+      id: group.id,
+      places: group.liczba_miejsc,
+      price: group.cena_zajec,
+      description: group.opis,
+      language: group.jezyk,
+      languageCode: group.skrot,
+      level: group.poziom,
+      day: group.dzien_tygodnia,
+      startTime: group.godzina_rozpoczecia,
+      endTime: group.godzina_zakonczenia,
+      absencesNumber: group.liczba_nieobecnosci,
+    };
+  });
+};
+
+const getTotalTeacherGroups = async (userId) => {
+  const [results] = await pool.query(
+    `
+    SELECT COUNT(*) as totalGroups
+    FROM grupa g
+    WHERE g.nauczyciel = ?
+    `,
+    [userId]
+  );
+
+  return results[0].totalGroups;
+};
+
 module.exports = {
   getAllGroups,
   getTotalGroups,
@@ -277,4 +324,6 @@ module.exports = {
   addStudentToGroup,
   getUserAbsences,
   getAvailableGroupsForUser,
+  getTeacherGroups,
+  getTotalTeacherGroups,
 };
