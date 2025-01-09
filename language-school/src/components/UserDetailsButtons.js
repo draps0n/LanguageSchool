@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash, FaAngleLeft } from "react-icons/fa";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
+import useAuth from "../hooks/useAuth";
 import "../styles/UserDetailsButtons.css";
 
 function UserDetailsButtons({ userId }) {
   const navigate = useNavigate();
   const axios = useAxiosAuth();
+  const { userData } = useAuth();
 
   const goBack = () => {
     navigate("/admin/users");
@@ -19,6 +21,13 @@ function UserDetailsButtons({ userId }) {
 
   const handleDelete = async () => {
     try {
+      if (userId === userData.userId) {
+        toast.error(
+          "Nie możesz tu usunąć swojego konta. Aby to zrobić przejdź do swojego profilu."
+        );
+        return;
+      }
+
       await axios.delete(`/users/${userId}`);
       toast.success("Użytkownik został usunięty");
       navigate("/admin/users");
@@ -43,6 +52,12 @@ function UserDetailsButtons({ userId }) {
       <button
         className="user-details-button delete-button"
         onClick={handleDelete}
+        disabled={userId === userData.userId}
+        title={
+          userId === userData.userId
+            ? "Nie możesz tu usunąć swojego konta, aby to zrobić przejdź do swojego profilu"
+            : ""
+        }
       >
         Usuń <FaTrash className="icon" />
       </button>

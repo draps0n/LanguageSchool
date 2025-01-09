@@ -16,3 +16,8 @@
     margin-right: 1rem;
     transition: background-color 0.3s ease;
 }
+
+.user-details-button:disabled {
+    cursor: not-allowed;
+    background-color: #ccc;
+}

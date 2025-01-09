@@ -5,6 +5,7 @@ import useAxiosAuth from "../hooks/useAxiosAuth";
 import CourseDetailsButtonPanel from "./CourseDetailsButtonPanel";
 import CourseStudentsList from "./CourseStudentsList";
 import "../styles/CourseDetails.css";
+import roles from "../constants/roles";
 
 const CourseDetails = () => {
   const { userData } = useAuth();
@@ -68,7 +69,8 @@ const CourseDetails = () => {
             <strong>Liczba nieobecności:</strong> {absences}
           </p>
         )}
-        {group.teacher.id === userData.userId && (
+        {(group.teacher.id === userData.userId ||
+          userData.roleId === roles.EMPLOYEE) && (
           <CourseStudentsList groupId={group.id} />
         )}
       </div>
