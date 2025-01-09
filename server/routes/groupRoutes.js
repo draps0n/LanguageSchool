@@ -14,6 +14,7 @@ router
     groupController.getTeacherGroups
   )
   .get("/:id", groupController.getGroupById)
+  .get("/:id/students", groupController.getGroupStudents)
   .delete(
     "/:id",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),

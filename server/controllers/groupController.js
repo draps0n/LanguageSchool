@@ -392,6 +392,66 @@ const updateGroup = async (req, res) => {
   }
 };
 
+const getGroupStudents = async (req, res) => {
+  const groupId = req.params.id;
+
+  if (!groupId) {
+    return res.status(400).json({ message: "Group id is required" });
+  }
+
+  if (isNaN(groupId)) {
+    return res.status(400).json({ message: "Group id must be a number" });
+  }
+
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  // Pobranie parametrów paginacji
+  const page = parseInt(req.query.page);
+  const limit = parseInt(req.query.limit);
+  const offset = (page - 1) * limit;
+
+  try {
+    // Sprawdzenie czy grupa istnieje
+    const fetchedGroup = await groupModel.getGroupById(groupId);
+    if (!fetchedGroup) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    let students;
+    let totalStudents;
+
+    if (page && limit) {
+      // Pobranie studentów
+      students = await groupModel.getGroupStudents(groupId, limit, offset);
+
+      // Pobranie liczby wszystkich grup
+      totalStudents = await groupModel.getTakenPlaces(groupId);
+    } else {
+      // Pobranie wszystkich studentów
+      students = await groupModel.getGroupStudents(groupId);
+
+      // Pobranie liczby wszystkich grup
+      totalStudents = students.length;
+    }
+
+    // Pobranie studentów przypisanych do grupy
+    // const students = await groupModel.getGroupStudents(groupId);
+    const totalPages = Math.ceil(totalStudents / limit);
+    res
+      .status(200)
+      .json({ students, totalPages: totalPages > 0 ? totalPages : 1 });
+  } catch (error) {
+    console.error("Error fetching group students:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAllGroups,
   getGroupById,
@@ -401,4 +461,5 @@ module.exports = {
   getUserGroups,
   getAvailableGroupsForUser,
   getTeacherGroups,
+  getGroupStudents,
 };

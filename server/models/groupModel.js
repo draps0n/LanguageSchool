@@ -310,6 +310,36 @@ const getTotalTeacherGroups = async (userId) => {
   return results[0].totalGroups;
 };
 
+const getGroupStudents = async (groupId, limit, offset) => {
+  let query = `
+    SELECT u.imie, u.nazwisko, u.email, uc.liczba_nieobecnosci
+    FROM uczestnictwo uc
+    INNER JOIN uzytkownik u ON u.id = uc.kursant
+    WHERE uc.grupa = ?
+    `;
+  const params = [groupId];
+
+  if (limit !== undefined && offset !== undefined) {
+    query += ` LIMIT ? OFFSET ?`;
+    params.push(limit, offset);
+  }
+
+  const [results] = await pool.query(query, params);
+
+  if (results.length === 0) {
+    return [];
+  }
+
+  return results.map((student) => {
+    return {
+      name: student.imie,
+      lastName: student.nazwisko,
+      email: student.email,
+      absences: student.liczba_nieobecnosci,
+    };
+  });
+};
+
 module.exports = {
   getAllGroups,
   getTotalGroups,
@@ -326,4 +356,5 @@ module.exports = {
   getAvailableGroupsForUser,
   getTeacherGroups,
   getTotalTeacherGroups,
+  getGroupStudents,
 };

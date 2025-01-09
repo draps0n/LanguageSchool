@@ -1,0 +1,6 @@
+.course-students-list-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}

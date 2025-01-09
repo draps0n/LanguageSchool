@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import CourseDetailsButtonPanel from "./CourseDetailsButtonPanel";
 import CourseStudentsList from "./CourseStudentsList";
 import "../styles/CourseDetails.css";
 
 const CourseDetails = () => {
+  const { userData } = useAuth();
   const axios = useAxiosAuth();
   const { id } = useParams();
   const [course, setCourse] = useState(null);
@@ -21,7 +23,7 @@ const CourseDetails = () => {
     };
 
     fetchCourse();
-  }, [id]);
+  }, [id, axios]);
 
   if (!course) {
     return <div>Loading...</div>;
@@ -65,6 +67,9 @@ const CourseDetails = () => {
           <p>
             <strong>Liczba nieobecności:</strong> {absences}
           </p>
+        )}
+        {group.teacher.id === userData.userId && (
+          <CourseStudentsList groupId={group.id} />
         )}
       </div>
       <CourseDetailsButtonPanel
