@@ -26,7 +26,7 @@ const CourseDetails = () => {
     return <div>Loading...</div>;
   }
 
-  const { group, takenPlaces } = course;
+  const { group, takenPlaces, absences } = course;
   const takenPercentage = (takenPlaces / group.places) * 100;
 
   return (
@@ -60,8 +60,15 @@ const CourseDetails = () => {
           <strong>Nauczyciel:</strong> {group.teacher.name}{" "}
           {group.teacher.lastName}
         </p>
+        {absences !== null && absences !== undefined && (
+          <p>
+            <strong>Liczba nieobecności:</strong> {absences}
+          </p>
+        )}
       </div>
-      <CourseDetailsButtonPanel courseId={id} />
+      <CourseDetailsButtonPanel
+        isMember={absences !== null && absences !== undefined}
+      />
     </div>
   );
 };

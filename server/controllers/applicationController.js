@@ -57,6 +57,17 @@ const addNewApplication = async (req, res) => {
       return;
     }
 
+    const isUserInGroup = await groupModel.getUserAbsences(
+      req.body.groupId,
+      req.userId
+    );
+    console.log(isUserInGroup);
+
+    if (isUserInGroup !== null) {
+      res.status(400).json({ message: "User is already in this group" });
+      return;
+    }
+
     // Pobranie stanu z bazy danych
     const state = await applicationStateModel.getStateByName(
       "W trakcie rozpatrywania"
@@ -167,9 +178,10 @@ const getApplicationsForUser = async (req, res) => {
       userId
     );
 
+    const totalPages = Math.ceil(totalApplications / limit);
     res.status(200).json({
       applications,
-      totalPages: Math.ceil(totalApplications / limit),
+      totalPages: totalPages > 0 ? totalPages : 1,
     });
   } catch (error) {
     console.error(error);
@@ -199,9 +211,10 @@ const getAllApplications = async (req, res) => {
 
     const totalApplications = await applicationModel.getTotalApplications();
 
+    const totalPages = Math.ceil(totalApplications / limit);
     res.status(200).json({
       applications,
-      totalPages: Math.ceil(totalApplications / limit),
+      totalPages: totalPages > 0 ? totalPages : 1,
     });
   } catch (error) {
     console.error(error);
@@ -263,7 +276,6 @@ const updateApplicationByUser = async (req, res) => {
       return;
     }
 
-    console.log(fetchedApplication);
     // Sprawdzenie czy aplikacja jest w odpowiednim stanie
     if (fetchedApplication.status !== applicationStates.PENDING) {
       res
@@ -287,6 +299,19 @@ const updateApplicationByUser = async (req, res) => {
     ) {
       res.status(400).json({ message: "Group is full" });
       return;
+    }
+
+    // Sprawdzenie czy użytkownik nie jest już zapisany do grupy
+    if (fetchedApplication.groupId !== req.body.groupId) {
+      const isUserInGroup = await groupModel.getUserAbsences(
+        req.body.groupId,
+        fetchedApplication.studentId
+      );
+
+      if (isUserInGroup !== null) {
+        res.status(400).json({ message: "User is already in this group" });
+        return;
+      }
     }
 
     const application = {

@@ -22,6 +22,7 @@ import Profile from "./components/Profile";
 import ApplicationsList from "./components/ApplicationsList";
 import UsersList from "./components/UsersList";
 import UserDetails from "./components/UserDetails";
+import UserForm from "./components/UserForm";
 
 function App() {
   return (
@@ -67,6 +68,14 @@ function App() {
             <Route path="admin/applications" element={<ApplicationsList />} />
             <Route path="admin/users" element={<UsersList />} />
             <Route path="admin/users/:userId" element={<UserDetails />} />
+            <Route
+              path="admin/users/:userId/edit"
+              element={<UserForm isRegistration={false} />}
+            />
+            <Route
+              path="admin/users/register"
+              element={<UserForm isRegistration={true} />}
+            />
           </Route>
 
           {/* Ścieżki dostępne dla nauczycieli i studentów */}

@@ -59,7 +59,7 @@ function ApplicationForm() {
 
     const fetchGroups = async () => {
       try {
-        const response = await axios.get(`/groups`);
+        const response = await axios.get(`/groups/available`);
 
         if (response.status === 200) {
           setGroups(
@@ -77,6 +77,7 @@ function ApplicationForm() {
         toast.error(
           "Wystąpił błąd podczas pobierania danych. Spróbuj ponownie później."
         );
+        console.error(error);
       }
     };
 

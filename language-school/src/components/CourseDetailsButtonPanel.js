@@ -6,7 +6,7 @@ import roles from "../constants/roles";
 import "../styles/CourseDetailsButtonPanel.css";
 import BackButton from "./BackButton";
 
-const CourseDetailsButtonPanel = () => {
+const CourseDetailsButtonPanel = ({ isMember }) => {
   const navigate = useNavigate();
 
   const { userData } = useAuth();
@@ -26,7 +26,7 @@ const CourseDetailsButtonPanel = () => {
   return (
     <div className="button-panel">
       <BackButton />
-      {userData.roleId === roles.STUDENT && (
+      {userData.roleId === roles.STUDENT && !isMember && (
         <button onClick={joinGroup} className="small-button">
           <FaUserPlus className="icon" />
           Dołącz

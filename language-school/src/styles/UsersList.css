@@ -1,0 +1,15 @@
+.user-add-button {
+    color: white;
+    background-color: #313a4c;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    cursor: pointer;
+}
+
+.user-add-button:hover {
+    background-color: #181c25;
+}

@@ -4,6 +4,7 @@ const levelModel = require("../models/levelModel");
 const languageModel = require("../models/languageModel");
 const applicationModel = require("../models/applicationModel");
 const daysOfWeek = require("../constants/daysOfWeek");
+const studentModel = require("../models/studentModel");
 const { pool } = require("../db/database");
 
 const getAllGroups = async (req, res) => {
@@ -38,9 +39,36 @@ const getAllGroups = async (req, res) => {
     }
 
     // Zwrócenie grup
+    const totalPages = Math.ceil(totalGroups / limit);
     res.status(200).json({
       groups,
-      totalPages: Math.ceil(totalGroups / limit),
+      totalPages: totalPages > 0 ? totalPages : 1,
+    });
+  } catch (error) {
+    console.error("Error fetching groups:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getAvailableGroupsForUser = async (req, res) => {
+  if (!req.userId || isNaN(req.userId)) {
+    return res.status(400).json({ message: "User id is required" });
+  }
+
+  try {
+    const studentId = req.userId;
+    const fetchedStudent = await studentModel.getStudentById(studentId);
+
+    if (!fetchedStudent) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // Pobranie grup z wolnymi miejscami
+    groups = await groupModel.getAvailableGroupsForUser(studentId);
+
+    // Zwrócenie grup
+    res.status(200).json({
+      groups,
     });
   } catch (error) {
     console.error("Error fetching groups:", error);
@@ -87,9 +115,10 @@ const getUserGroups = async (req, res) => {
     }
 
     // Zwrócenie grup
+    const totalPages = Math.ceil(totalGroups / limit);
     res.status(200).json({
       groups,
-      totalPages: Math.ceil(totalGroups / limit),
+      totalPages: totalPages > 0 ? totalPages : 1,
     });
   } catch (error) {
     console.error("Error fetching groups:", error);
@@ -115,9 +144,16 @@ const getGroupById = async (req, res) => {
     // Pobranie zajętych miejsc w grupie
     const takenPlaces = await groupModel.getTakenPlaces(id);
 
+    let absences = null;
+    if (req.userId && !isNaN(req.userId)) {
+      const userId = req.userId;
+
+      absences = await groupModel.getUserAbsences(id, userId);
+    }
+
     // Sprawdzenie czy grupa istnieje
     if (group) {
-      res.status(200).json({ group, takenPlaces });
+      res.status(200).json({ group, takenPlaces, absences });
     } else {
       res.status(404).json({ message: "Group not found" });
     }
@@ -308,4 +344,5 @@ module.exports = {
   createGroup,
   updateGroup,
   getUserGroups,
+  getAvailableGroupsForUser,
 };

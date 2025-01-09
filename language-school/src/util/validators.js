@@ -270,6 +270,54 @@ const validateFeedbackMessage = (message) => {
   return "";
 };
 
+const validateTeacherHourlyRate = (hourlyRate) => {
+  if (!hourlyRate) {
+    return "Stawka godzinowa jest wymagana";
+  }
+
+  if (isNaN(hourlyRate)) {
+    return "Stawka godzinowa musi być liczbą";
+  }
+
+  if (hourlyRate < 0) {
+    return "Stawka godzinowa nie może być ujemna";
+  }
+
+  if (hourlyRate > 1000) {
+    return "Stawka godzinowa nie może przekraczać 1000";
+  }
+
+  return "";
+};
+
+const validateTeacherHoursWorked = (hoursWorked) => {
+  if (!hoursWorked) {
+    return "Liczba godzin jest wymagana";
+  }
+
+  if (isNaN(hoursWorked)) {
+    return "Liczba godzin musi być liczbą";
+  }
+
+  if (hoursWorked < 0) {
+    return "Liczba godzin nie może być ujemna";
+  }
+
+  if (hoursWorked > 1000) {
+    return "Liczba godzin nie może przekraczać 1000";
+  }
+
+  return "";
+};
+
+const validateStudentDiscount = (discount) => {
+  if (discount === undefined || discount === null) {
+    return "Określenie czy przysługuje rabat jest wymagane";
+  }
+
+  return "";
+};
+
 export {
   validateName,
   validateLastName,
@@ -291,4 +339,7 @@ export {
   validateEmployeeSalary,
   validateApplicationGroup,
   validateFeedbackMessage,
+  validateTeacherHourlyRate,
+  validateTeacherHoursWorked,
+  validateStudentDiscount,
 };

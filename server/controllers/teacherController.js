@@ -19,7 +19,7 @@ const getTeacherLanguages = async (req, res) => {
   }
 
   if (isNaN(id)) {
-    res.status(400).jsno({ message: "Invalid data" });
+    res.status(400).json({ message: "Invalid data" });
     return;
   }
 

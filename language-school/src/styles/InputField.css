@@ -18,6 +18,13 @@
     outline: none;
 }
 
+textarea[readonly] {
+    background-color: #f0f0f0;
+    color: #666;
+    border: 1px solid #999;
+    outline: none;
+}
+
 .input-label {
     display: block;
     margin-bottom: 0.5rem;

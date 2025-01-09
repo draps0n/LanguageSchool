@@ -6,7 +6,6 @@ const { pool } = require("../db/database");
 const { getRoles } = require("../config/roles");
 
 const getUserProfileDetails = async (req, res) => {
-  console.log("getUserProfileDetails");
   if (!req.userId || !req.roleId) {
     res.status(401).json({ message: "Unauthorized" });
     return;
@@ -28,7 +27,6 @@ const getUserProfileDetails = async (req, res) => {
 };
 
 const getUserDetails = async (req, res) => {
-  console.log("getUserDetails");
   const userId = req.params.id;
 
   if (!userId || isNaN(userId)) {
@@ -36,7 +34,7 @@ const getUserDetails = async (req, res) => {
   }
 
   try {
-    const user = await userModel.findUserById(req.userId);
+    const user = await userModel.findUserById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -65,7 +63,10 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await userModel.getAllUsers(limit, offset);
     const totalUsers = await userModel.getTotalUsers();
-    res.status(200).send({ users, totalPages: Math.ceil(totalUsers / limit) });
+    const totalPages = Math.ceil(totalUsers / limit);
+    res
+      .status(200)
+      .send({ users, totalPages: totalPages > 0 ? totalPages : 1 });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });

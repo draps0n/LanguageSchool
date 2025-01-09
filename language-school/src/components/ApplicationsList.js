@@ -19,7 +19,6 @@ function ApplicationsList({ isUserSpecific }) {
         const response = await axios.get(
           `/applications/user?page=${currentPage}&limit=${applicationsPerPage}`
         );
-        console.log("Applications:", response.data);
         setApplications(response.data.applications);
         setTotalPages(response.data.totalPages);
       } catch (error) {

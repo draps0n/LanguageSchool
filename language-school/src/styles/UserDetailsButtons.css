@@ -1,0 +1,18 @@
+.user-details-buttons {
+    margin-top: 1rem;
+}
+
+.user-details-button {
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0.6rem;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-right: 1rem;
+    transition: background-color 0.3s ease;
+}
