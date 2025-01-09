@@ -28,6 +28,9 @@ function CourseDeleteConfirmation() {
   return (
     <div>
       <h2>Czy jesteś pewien, że chcesz usunąć ten kurs?</h2>
+      <p>
+        Wszystkie zgłoszenia oraz przypisania do niego zostaną również usunięte.
+      </p>
       <div className="button-panel">
         <button onClick={deleteCourse} className="small-button delete-button">
           Usuń

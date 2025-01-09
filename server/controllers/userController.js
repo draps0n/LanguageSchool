@@ -2,6 +2,9 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const studentModel = require("../models/studentModel");
 const employeeModel = require("../models/employeeModel");
+const teacherModel = require("../models/teacherModel");
+const groupModel = require("../models/groupModel");
+const applicationModel = require("../models/applicationModel");
 const { pool } = require("../db/database");
 const { getRoles } = require("../config/roles");
 
@@ -206,9 +209,89 @@ const updateUser = async (req, res) => {
   }
 };
 
+const deleteUserProfile = async (req, res) => {
+  if (!req.userId || !req.roleId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const connection = await pool.getConnection();
+  try {
+    const user = await userModel.findUserById(req.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    switch (req.roleId) {
+      case getRoles().KURSANT:
+        connection.beginTransaction();
+        // Usunięcie zgłoszeń kursanta
+        await applicationModel.deleteApplicationsByStudentId(
+          req.userId,
+          connection
+        );
+
+        // Usunięcie przypisania kursanta do grup
+        await groupModel.deleteGroupsMembershipsByStudentId(
+          req.userId,
+          connection
+        );
+
+        // Usunięcie kursanta
+        await studentModel.deleteStudent(req.userId, connection);
+        break;
+      case getRoles().PRACOWNIK_ADMINISTRACYJNY:
+        connection.beginTransaction();
+        // Usunięcie pracownika z rozpatrzonych zgłoszeń
+        await applicationModel.updateApplicationsByEmployeeId(
+          req.userId,
+          connection
+        );
+
+        // Usunięcie pracownika
+        await employeeModel.deleteEmployee(req.userId, connection);
+        break;
+      case getRoles().NAUCZYCIEL:
+        // Sprawdzenie czy nauczyciel prowadzi jakieś grupy
+        const teacherGroups = await groupModel.getTotalTeacherGroups(
+          req.userId
+        );
+        if (teacherGroups > 0) {
+          return res.status(409).json({
+            message: "Cannot delete teacher with groups assigned",
+          });
+        }
+
+        // Usunięcie języków nauczyciela
+        connection.beginTransaction();
+        await teacherModel.deleteAllTeacherKnownLanguages(
+          req.userId,
+          connection
+        );
+
+        // Usunięcie nauczyciela
+        await teacherModel.deleteTeacher(req.userId, connection);
+        break;
+      default:
+        return res.status(400).json({ message: "Invalid role" });
+    }
+
+    // Usunięcie użytkownika
+    await userModel.deleteUser(req.userId, connection);
+    connection.commit();
+    res.status(200).send("User deleted");
+  } catch (error) {
+    connection.rollback();
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  } finally {
+    connection.release();
+  }
+};
+
 module.exports = {
   getUserDetails,
   getUserProfileDetails,
   updateUser,
   getAllUsers,
+  deleteUserProfile,
 };

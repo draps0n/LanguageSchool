@@ -23,6 +23,7 @@ import ApplicationsList from "./components/ApplicationsList";
 import UsersList from "./components/UsersList";
 import UserDetails from "./components/UserDetails";
 import UserForm from "./components/UserForm";
+import ProfileDelete from "./components/ProfileDelete";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="courses" element={<CoursesList />} />
             <Route path="courses/:id" element={<CourseDetails />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="profile/delete" element={<ProfileDelete />} />
           </Route>
 
           {/* Ścieżki dostępne dla studentów */}

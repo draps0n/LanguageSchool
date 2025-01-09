@@ -191,6 +191,10 @@ const updateUser = async (user, connection) => {
   return results;
 };
 
+const deleteUser = async (id, connection) => {
+  await connection.query("DELETE FROM uzytkownik WHERE id = ?", [id]);
+};
+
 module.exports = {
   getAllUsers,
   getUserByEmail,
@@ -201,4 +205,5 @@ module.exports = {
   findUserById,
   updateUser,
   getTotalUsers,
+  deleteUser,
 };

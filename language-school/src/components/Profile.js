@@ -18,6 +18,7 @@ import {
 import "../styles/Profile.css";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
+import Loading from "./Loading";
 
 function Profile() {
   const navigate = useNavigate();
@@ -135,7 +136,7 @@ function Profile() {
   };
 
   const viewDeleteAccountConfirmation = async () => {
-    navigate("profile/delete");
+    navigate("/profile/delete");
   };
 
   const handleChange = (e) => {
@@ -297,7 +298,7 @@ function Profile() {
   };
 
   if (!user) {
-    return <div>Ładowanie...</div>;
+    return <Loading />;
   }
 
   return (

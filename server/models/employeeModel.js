@@ -36,8 +36,8 @@ const updateEmployee = async (id, salary, connection) => {
   return results;
 };
 
-const deleteEmployee = async (id) => {
-  const [results] = await pool.query(
+const deleteEmployee = async (id, connection) => {
+  const [results] = await connection.query(
     "DELETE FROM pracownik_administracyjny WHERE id = ?",
     [id]
   );

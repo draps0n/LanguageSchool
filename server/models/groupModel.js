@@ -253,6 +253,16 @@ const deleteStudentGroupAssignments = async (groupId, connection) => {
   );
 };
 
+const deleteGroupsMembershipsByStudentId = async (studentId, connection) => {
+  await connection.query(
+    `
+    DELETE FROM uczestnictwo
+    WHERE kursant = ?
+    `,
+    [studentId]
+  );
+};
+
 const addStudentToGroup = async (studentId, groupId, connection) => {
   await connection.query(
     `
@@ -357,4 +367,5 @@ module.exports = {
   getTeacherGroups,
   getTotalTeacherGroups,
   getGroupStudents,
+  deleteGroupsMembershipsByStudentId,
 };

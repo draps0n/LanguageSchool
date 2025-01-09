@@ -46,17 +46,9 @@ function Header() {
   // Stan do przechowywania informacji o menu w mniejszych rozdzielczościach
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Stan do przechowywania informacji o otwarciu menu dla administratora
-  const [adminMenuOpen, setAdminMenuOpen] = useState(false);
-
   // Funkcja do otwierania/zamykania menu
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
-  };
-
-  // Funkcja do otwierania/zamykania menu dla administratora
-  const toggleAdminMenu = () => {
-    setAdminMenuOpen(!adminMenuOpen);
   };
 
   return (

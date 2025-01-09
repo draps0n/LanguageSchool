@@ -183,6 +183,19 @@ const getApplicationEditableDataById = async (id) => {
   };
 };
 
+const updateApplicationsByEmployeeId = async (employeeId, connection) => {
+  await connection.query(
+    `UPDATE zgloszenie SET pracownik_rozpatrujacy = NULL WHERE pracownik_rozpatrujacy = ?`,
+    [employeeId]
+  );
+};
+
+const deleteApplicationsByStudentId = async (studentId, connection) => {
+  await connection.query(`DELETE FROM zgloszenie WHERE kursant = ?`, [
+    studentId,
+  ]);
+};
+
 module.exports = {
   addNewApplication,
   deleteApplication,
@@ -195,4 +208,6 @@ module.exports = {
   updateApplicationByUser,
   updateApplicationByEmployee,
   getApplicationEditableDataById,
+  updateApplicationsByEmployeeId,
+  deleteApplicationsByStudentId,
 };

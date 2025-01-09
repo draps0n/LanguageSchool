@@ -40,29 +40,6 @@
     justify-content: center;
 }
 
-/* .profile-container label {
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 20px;
-} */
-
-/* .profile-container input {
-    width: 300px;
-    height: 30px;
-    margin-top: 10px;
-    padding-left: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-} */
-/* 
-.profile-container input[readonly] {
-    background-color: #f0f0f0;
-    color: #666;
-    border: 1px solid #999;
-    cursor: not-allowed;
-    outline: none;
-} */
-
 .user-photo {
     max-width: 200px;
     border-radius: 50%;

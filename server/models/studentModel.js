@@ -31,15 +31,17 @@ const createStudent = async (userId, student, connection) => {
 };
 
 const updateStudent = async (id, student, connection) => {
-  const [results] = await pool.connection(
+  const [results] = await connection.connection(
     "UPDATE kursant SET czy_rabat = ?, opis = ? WHERE id = ?",
     [student.discount, student.description, id]
   );
   return results;
 };
 
-const deleteStudent = async (id) => {
-  const [results] = await pool.query("DELETE FROM kursant WHERE id = ?", [id]);
+const deleteStudent = async (id, connection) => {
+  const [results] = await connection.query("DELETE FROM kursant WHERE id = ?", [
+    id,
+  ]);
   return results;
 };
 

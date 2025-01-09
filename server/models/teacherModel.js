@@ -49,10 +49,11 @@ const updateTeacher = async (id, teacher) => {
   return results;
 };
 
-const deleteTeacher = async (id) => {
-  const [results] = await pool.query("DELETE FROM nauczyciel WHERE id = ?", [
-    id,
-  ]);
+const deleteTeacher = async (id, connection) => {
+  const [results] = await connection.query(
+    "DELETE FROM nauczyciel WHERE id = ?",
+    [id]
+  );
   return results;
 };
 
@@ -73,6 +74,14 @@ const getTeacherLanguages = async (id) => {
   });
 };
 
+const deleteAllTeacherKnownLanguages = async (id, connection) => {
+  const [results] = await connection.query(
+    "DELETE FROM znajomosc_jezyka WHERE nauczyciel = ?",
+    [id]
+  );
+  return results;
+};
+
 module.exports = {
   getAllTeachers,
   getTeacherById,
@@ -80,4 +89,5 @@ module.exports = {
   updateTeacher,
   deleteTeacher,
   getTeacherLanguages,
+  deleteAllTeacherKnownLanguages,
 };

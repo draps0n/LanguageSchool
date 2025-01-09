@@ -11,6 +11,7 @@ router
     userController.getAllUsers
   )
   .get("/profile", userController.getUserProfileDetails)
+  .delete("/profile", userController.deleteUserProfile)
   .get(
     "/:id",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
