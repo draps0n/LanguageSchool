@@ -90,8 +90,54 @@ const removeTeacherLanguage = async (req, res) => {
   }
 };
 
+const addTeacherLanguage = async (req, res) => {
+  const { teacherId } = req.params;
+  const { languageId } = req.body;
+
+  if (!teacherId || !languageId) {
+    res.status(400).json({ message: "Missing teacher or language ID" });
+    return;
+  }
+
+  if (isNaN(teacherId) || isNaN(languageId)) {
+    res.status(400).json({ message: "Invalid data" });
+    return;
+  }
+
+  try {
+    const fetchedTeacher = await teacherModel.getTeacherById(teacherId);
+    if (!fetchedTeacher) {
+      res.status(404).json({ message: "Teacher not found" });
+      return;
+    }
+
+    const fetchedLanguage = await languageModel.getLanguageById(languageId);
+    if (!fetchedLanguage) {
+      res.status(404).json({ message: "Language not found" });
+      return;
+    }
+
+    const teacherLanguage = await teacherModel.getTeacherLanguage(
+      teacherId,
+      languageId
+    );
+
+    if (teacherLanguage) {
+      res.status(409).json({ message: "Teacher already knows this language" });
+      return;
+    }
+
+    await teacherModel.addTeacherLanguage(teacherId, languageId);
+    res.sendStatus(201);
+  } catch (error) {
+    console.error("Error adding teacher language:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllTeachers,
   getTeacherLanguages,
   removeTeacherLanguage,
+  addTeacherLanguage,
 };

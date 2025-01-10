@@ -15,6 +15,11 @@ router
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     teacherController.removeTeacherLanguage
   )
+  .post(
+    "/:teacherId/languages",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    teacherController.addTeacherLanguage
+  )
   .get("/", teacherController.getAllTeachers);
 
 module.exports = router;

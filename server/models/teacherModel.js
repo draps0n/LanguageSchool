@@ -115,6 +115,14 @@ const getTeacherGroupsCountWithLanguage = async (teacherId, languageId) => {
   return results[0].groupsCount;
 };
 
+const addTeacherLanguage = async (teacherId, languageId) => {
+  const [results] = await pool.query(
+    "INSERT INTO znajomosc_jezyka (nauczyciel, jezyk) VALUES(?, ?)",
+    [teacherId, languageId]
+  );
+  return results;
+};
+
 module.exports = {
   getAllTeachers,
   getTeacherById,
@@ -126,4 +134,5 @@ module.exports = {
   deleteTeacherKnownLanguage,
   getTeacherLanguage,
   getTeacherGroupsCountWithLanguage,
+  addTeacherLanguage,
 };

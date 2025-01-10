@@ -44,3 +44,24 @@
     display: inline-block;
     margin-right: 10px;
 }
+
+.known-language-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.language-select {
+    width: 100%;
+    padding: 0.2rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.language-error-message {
+    max-width: 8rem;
+    color: #db4c4c;
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
