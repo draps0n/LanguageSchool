@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaAngleLeft } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 
 function BackButton() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const goBack = () => {
     navigate(-1);
@@ -11,7 +13,7 @@ function BackButton() {
   return (
     <button className="small-button" onClick={goBack} type="button">
       <FaAngleLeft className="icon" />
-      Wróć
+      {t("goBack")}
     </button>
   );
 }

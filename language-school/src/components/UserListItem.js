@@ -1,9 +1,11 @@
 import React from "react";
 import "../styles/UserListItem.css";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import roles from "../constants/roles";
 
 function UserListItem({ user }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const viewUserDetails = () => {
@@ -29,16 +31,16 @@ function UserListItem({ user }) {
       />
       <div className="user-info">
         <p className="info-item">
-          <span className="label">Imię:</span> {user.name}
+          <span className="label">{t("firstName")}:</span> {user.name}
         </p>
         <p className="info-item">
-          <span className="label">Nazwisko:</span> {user.lastName}
+          <span className="label">{t("lastName")}:</span> {user.lastName}
         </p>
         <p className="info-item">
-          <span className="label">Email:</span> {user.email}
+          <span className="label">{t("email")}:</span> {user.email}
         </p>
         <p className="info-item">
-          <span className="label">Rola:</span> {user.role.name}
+          <span className="label">{t("role")}:</span> {t(user.role.name)}
         </p>
         <br />
       </div>

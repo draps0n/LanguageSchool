@@ -2,9 +2,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import useAuth from "../hooks/useAuth";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 function ProfileDelete() {
+  const { t } = useTranslation();
   const axios = useAxiosAuth();
   const navigate = useNavigate();
   const { setUserData } = useAuth();
@@ -15,17 +17,17 @@ function ProfileDelete() {
 
       if (response.status === 200) {
         setUserData(null);
-        toast.success("Twoje konto zostało usunięte.");
+        toast.success(t("accountDeleted"));
         navigate("/");
       } else {
-        throw new Error("Nie udało się usunąć konta! Spróbuj ponownie.");
+        throw new Error(t("accountDeleteError"));
       }
     } catch (error) {
       if (error.response.status === 409) {
-        toast.error("Prowadzisz zajęcia. Nie możesz usunąć konta.");
+        toast.error(t("cannotDeleteAccountCourses"));
         navigate("/profile");
       } else {
-        toast.error("Nie udało się usunąć konta! Spróbuj ponownie.");
+        toast.error(t("accountDeleteError"));
       }
     }
   };
@@ -36,13 +38,13 @@ function ProfileDelete() {
 
   return (
     <div>
-      <h2>Czy jesteś pewien, że chcesz usunąć swoje konto?</h2>
+      <h2>{t("accountDeleteQuestion")}</h2>
       <div className="button-panel">
         <button onClick={deleteProfile} className="small-button delete-button">
-          Usuń
+          {t("delete")}
         </button>
         <button onClick={goBack} className="small-button">
-          Anuluj
+          {t("cancel")}
         </button>
       </div>
     </div>

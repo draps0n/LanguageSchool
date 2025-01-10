@@ -4,8 +4,10 @@ import Loading from "./Loading";
 import "../styles/KnownLanguages.css";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function KnownLanguages({ teacherId, shouldShowButtons }) {
+  const { t } = useTranslation();
   const axios = useAxiosAuth();
   const [knownLanguages, setKnownLanguages] = useState([]);
   const [availableLanguages, setAvailableLanguages] = useState([]);
@@ -21,12 +23,13 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
         setKnownLanguages(response.data);
         setLoading(false);
       } catch (error) {
+        toast.error(t("teacherLanguagesFetchError"));
         console.error("Error fetching teacher languages:", error);
       }
     };
 
     getTeacherLanguages();
-  }, [axios, teacherId]);
+  }, [axios, teacherId, t]);
 
   useEffect(() => {
     const getLanguages = async () => {
@@ -41,6 +44,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
         );
         setAvailableLanguages(filteredLanguages);
       } catch (error) {
+        toast.error(t("languagesFetchError"));
         console.error("Error fetching languages:", error);
       }
     };
@@ -48,7 +52,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
     if (shouldShowButtons) {
       getLanguages();
     }
-  }, [shouldShowButtons, knownLanguages, axios]);
+  }, [shouldShowButtons, knownLanguages, axios, t]);
 
   const handleDeleteLanguage = async (languageId) => {
     try {
@@ -65,12 +69,10 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
       }
     } catch (error) {
       if (error?.response?.status === 409) {
-        toast.error(
-          "Nie można usunąć języka, ponieważ nauczyciel prowadzi w nim grupę."
-        );
+        toast.error(t("cannotDeleteLanguageTeacherHasGroup"));
       } else {
         console.error("Error deleting teacher language:", error);
-        toast.error("Nie udało się usunąć języka.");
+        toast.error(t("deleteKnownLanguageError"));
       }
     }
   };
@@ -96,17 +98,15 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
         setChosenLanguage({ id: 0 });
         setLanguageError("");
       } else {
-        toast.error("Nie udało się dodać języka.");
+        toast.error(t("addKnownLanguageError"));
         throw new Error("Error adding teacher language.");
       }
     } catch (error) {
       if (error?.response?.status === 409) {
-        toast.error(
-          "Nauczyciel już zna ten język. Nie można go dodać ponownie."
-        );
+        toast.error(t("teacherAlreadyKnowsLanguage"));
       } else {
         console.error("Error adding teacher language:", error);
-        toast.error("Nie udało się dodać języka.");
+        toast.error(t("addKnownLanguageError"));
       }
     }
   };
@@ -121,7 +121,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
 
     const language = languages.find((language) => language.id === +languageId);
     if (!language) {
-      setLanguageError("Wybrany język nie istnieje.");
+      setLanguageError(t("languageNotExists"));
       return;
     }
 
@@ -138,13 +138,13 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
       <div>
         <h3>
           {knownLanguages.length === 0
-            ? "Nie przypisano znajomości języków."
-            : "Znane języki:"}
+            ? t("noKnownLanguages")
+            : t("knownLanguages") + ":"}
         </h3>
         <ul>
           {knownLanguages.map((language) => (
             <li key={language.id} className="known-language">
-              <p className="known-language-item">{language.name}</p>
+              <p className="known-language-item">{t(language.name)}</p>
               {shouldShowButtons && (
                 <button
                   onClick={() => handleDeleteLanguage(language.id)}
@@ -168,11 +168,11 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
                     onChange={handleLanguageChange}
                   >
                     <option value={0} disabled hidden>
-                      Wybierz język
+                      {t("choose")} {t("language")}...
                     </option>
                     {availableLanguages.map((language) => (
                       <option key={language.id} value={language.id}>
-                        {language.name}
+                        {t(language.name)}
                       </option>
                     ))}
                   </select>
@@ -185,7 +185,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
                 </div>
               </form>
               {languageError && (
-                <p className="language-error-message">{languageError}</p>
+                <p className="language-error-message">{t(languageError)}</p>
               )}
             </li>
           )}

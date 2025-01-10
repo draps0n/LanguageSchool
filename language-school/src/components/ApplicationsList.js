@@ -4,8 +4,10 @@ import Loading from "./Loading";
 import ApplicationListItem from "./ApplicationListItem";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function ApplicationsList({ isUserSpecific }) {
+  const { t } = useTranslation();
   const axios = useAxiosAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(-1);
@@ -22,6 +24,7 @@ function ApplicationsList({ isUserSpecific }) {
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error("Error fetching applications:", error);
+        toast.error(t("errorFetchingApplications"));
       }
     };
 
@@ -34,6 +37,7 @@ function ApplicationsList({ isUserSpecific }) {
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error("Error fetching applications:", error);
+        toast.error(t("errorFetchingApplications"));
       }
     };
 
@@ -42,7 +46,7 @@ function ApplicationsList({ isUserSpecific }) {
     } else {
       getAllApplications();
     }
-  }, [axios, currentPage, isUserSpecific]);
+  }, [axios, currentPage, isUserSpecific, t]);
 
   const refreshApplications = async () => {
     try {
@@ -54,7 +58,7 @@ function ApplicationsList({ isUserSpecific }) {
       setApplications(response.data.applications);
       setTotalPages(response.data.totalPages);
     } catch (error) {
-      toast.error("Wystąpił błąd podczas odświeżania zgłoszeń.");
+      toast.error(t("applicationsRefreshError"));
     }
   };
 
@@ -63,12 +67,12 @@ function ApplicationsList({ isUserSpecific }) {
   }
 
   if (applications.length === 0) {
-    return <div>Brak zgłoszeń</div>;
+    return <div>{t("noApplications")}</div>;
   }
 
   return (
     <div>
-      <h1>Lista zgłoszeń</h1>
+      <h1>{t("applicationsList")}</h1>
       <div>
         {applications.map((application) => (
           <div key={application.id}>

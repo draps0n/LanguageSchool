@@ -6,8 +6,12 @@ import CourseDetailsButtonPanel from "./CourseDetailsButtonPanel";
 import CourseStudentsList from "./CourseStudentsList";
 import "../styles/CourseDetails.css";
 import roles from "../constants/roles";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import Loading from "./Loading";
 
 const CourseDetails = () => {
+  const { t } = useTranslation();
   const { userData } = useAuth();
   const axios = useAxiosAuth();
   const { id } = useParams();
@@ -20,14 +24,15 @@ const CourseDetails = () => {
         setCourse(response.data);
       } catch (error) {
         console.error("Error fetching course:", error);
+        toast.error(t("errorFetchingCourse"));
       }
     };
 
     fetchCourse();
-  }, [id, axios]);
+  }, [id, axios, t]);
 
   if (!course) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const { group, takenPlaces, absences } = course;
@@ -37,22 +42,25 @@ const CourseDetails = () => {
     <div>
       <div className="course-details">
         <h2>
-          {group.language.name} - {group.level.name}
+          {t(group.language.name)} - {group.level.name}
         </h2>
         <p>
-          <strong>Opis:</strong> {group.description}
+          <strong>{t("groupCode")}:</strong> {group.language.code}-{group.id}
         </p>
         <p>
-          <strong>Dzień:</strong> {group.day}
+          <strong>{t("description")}:</strong> {group.description}
         </p>
         <p>
-          <strong>Godzina:</strong> {group.startTime} - {group.endTime}
+          <strong>{t("dayOfWeek")}:</strong> {t(group.day)}
         </p>
         <p>
-          <strong>Cena za zajęcia:</strong> {group.price} PLN
+          <strong>{t("time")}:</strong> {group.startTime} - {group.endTime}
         </p>
         <p>
-          <strong>Liczba miejsc:</strong> {takenPlaces}/{group.places}
+          <strong>{t("priceForClasses")}:</strong> {group.price} PLN
+        </p>
+        <p>
+          <strong>{t("takenPlaces")}:</strong> {takenPlaces}/{group.places}
         </p>
         <div className="progress-bar">
           <div
@@ -61,12 +69,12 @@ const CourseDetails = () => {
           ></div>
         </div>
         <p>
-          <strong>Nauczyciel:</strong> {group.teacher.name}{" "}
+          <strong>{t("teacher")}:</strong> {group.teacher.name}{" "}
           {group.teacher.lastName}
         </p>
         {absences !== null && absences !== undefined && (
           <p>
-            <strong>Liczba nieobecności:</strong> {absences}
+            <strong>{t("absencesNumber")}:</strong> {absences}
           </p>
         )}
         {(group.teacher.id === userData.userId ||

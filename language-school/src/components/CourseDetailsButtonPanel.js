@@ -5,8 +5,10 @@ import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
 import "../styles/CourseDetailsButtonPanel.css";
 import BackButton from "./BackButton";
+import { useTranslation } from "react-i18next";
 
 const CourseDetailsButtonPanel = ({ isMember }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const { userData } = useAuth();
@@ -29,18 +31,18 @@ const CourseDetailsButtonPanel = ({ isMember }) => {
       {userData.roleId === roles.STUDENT && !isMember && (
         <button onClick={joinGroup} className="small-button">
           <FaUserPlus className="icon" />
-          Dołącz
+          {t("join")}
         </button>
       )}
       {userData.roleId === roles.EMPLOYEE && (
         <div>
           <button onClick={editGroup} className="small-button">
             <FaPen className="icon" />
-            Edytuj
+            {t("edit")}
           </button>
           <button onClick={deleteGroup} className="small-button delete-button">
             <FaRegTrashCan className="icon" />
-            Usuń
+            {t("delete")}
           </button>
         </div>
       )}

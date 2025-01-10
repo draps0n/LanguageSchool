@@ -4,8 +4,11 @@ import Loading from "./Loading";
 import CourseStudentsListItem from "./CourseStudentsListItem";
 import Pagination from "./Pagination";
 import "../styles/CourseStudentsList.css";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 function CourseStudentsList({ groupId }) {
+  const { t } = useTranslation();
   const axios = useAxiosAuth();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,23 +31,24 @@ function CourseStudentsList({ groupId }) {
         setLoading(false);
       } catch (error) {
         console.error("Error fetching group students:", error);
+        toast.error(t("errorFetchingCourseStudents"));
       }
     };
 
     fetchGroupStudents();
-  }, [groupId, axios, currentPage]);
+  }, [groupId, axios, currentPage, t]);
 
   if (loading) {
     return <Loading />;
   }
 
   if (students.length === 0) {
-    return <h3>Brak uczestników</h3>;
+    return <h3>{t("noStudents")}</h3>;
   }
 
   return (
     <div className="course-students-list">
-      <h3>Lista uczestników</h3>
+      <h3>{t("studentsList")}</h3>
       <ul>
         {students.map((student) => (
           <CourseStudentsListItem student={student} />

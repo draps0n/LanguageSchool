@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash, FaAngleLeft } from "react-icons/fa";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import useAuth from "../hooks/useAuth";
 import "../styles/UserDetailsButtons.css";
 
 function UserDetailsButtons({ userId }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const axios = useAxiosAuth();
   const { userData } = useAuth();
@@ -22,21 +24,19 @@ function UserDetailsButtons({ userId }) {
   const handleDelete = async () => {
     try {
       if (userId === userData.userId) {
-        toast.error(
-          "Nie możesz tu usunąć swojego konta. Aby to zrobić przejdź do swojego profilu."
-        );
+        toast.error(t("toDeleteAccountVisitProfile"));
         return;
       }
 
       await axios.delete(`/users/${userId}`);
-      toast.success("Użytkownik został usunięty");
+      toast.success(t("userDeleted"));
       navigate("/admin/users");
     } catch (error) {
       console.error(error);
       if (error.response.status === 409) {
-        toast.error("Ten nauczyciel prowadzi zajęcia. Nie możesz go usunąć.");
+        toast.error(t("cannotDeleteTeacherGroup"));
       } else {
-        toast.error("Nie udało się usunąć użytkownika");
+        toast.error(t("userDeleteError"));
       }
     }
   };
@@ -44,22 +44,20 @@ function UserDetailsButtons({ userId }) {
   return (
     <div className="user-details-buttons">
       <button className="user-details-button standard-button" onClick={goBack}>
-        <FaAngleLeft className="icon" /> Wróć
+        <FaAngleLeft className="icon" /> {t("goBack")}
       </button>
       <button className="user-details-button edit-button" onClick={handleEdit}>
-        Edytuj <FaEdit className="icon" />
+        {t("edit")} <FaEdit className="icon" />
       </button>
       <button
         className="user-details-button delete-button"
         onClick={handleDelete}
         disabled={userId === userData.userId}
         title={
-          userId === userData.userId
-            ? "Nie możesz tu usunąć swojego konta, aby to zrobić przejdź do swojego profilu"
-            : ""
+          userId === userData.userId ? t("toDeleteAccountVisitProfile") : ""
         }
       >
-        Usuń <FaTrash className="icon" />
+        {t("delete")} <FaTrash className="icon" />
       </button>
     </div>
   );

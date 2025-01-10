@@ -19,12 +19,14 @@ import {
   validateStudentDiscount,
 } from "../util/validators";
 import { formatDate } from "../util/helpers";
+import { useTranslation } from "react-i18next";
 import Loading from "./Loading";
 import { toast } from "react-toastify";
 import BackButton from "./BackButton";
 import { FaSave } from "react-icons/fa";
 
 function UserForm({ isRegistration }) {
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
@@ -81,14 +83,14 @@ function UserForm({ isRegistration }) {
         });
       } catch (error) {
         console.error(error);
-        toast.error("Nie udało się pobrać danych użytkownika");
+        toast.error(t("errorFetchingUserData"));
       }
     };
 
     if (!isRegistration) {
       fetchUser();
     }
-  }, [axios, userId, isRegistration]);
+  }, [axios, userId, isRegistration, t]);
 
   useEffect(() => {
     const fetchRoles = async () => {
@@ -99,11 +101,11 @@ function UserForm({ isRegistration }) {
         );
       } catch (error) {
         console.error(error);
-        toast.error("Nie udało się pobrać ról");
+        toast.error(t("errorFetchingRoles"));
       }
     };
     fetchRoles();
-  }, [axios]);
+  }, [axios, t]);
 
   const handleChange = (e) => {
     if (e.target.type === "checkbox") {
@@ -189,8 +191,9 @@ function UserForm({ isRegistration }) {
       let toSend = {};
 
       if (user.roleId === roles.STUDENT) {
-        if (validateStudentDiscount(formData.discount)) {
-          toast.error("Niepoprawna wartość zniżki");
+        const validationResult = validateStudentDiscount(formData.discount);
+        if (validationResult) {
+          toast.error(t(validationResult));
           return;
         }
 
@@ -198,8 +201,9 @@ function UserForm({ isRegistration }) {
           discount: formData.discount,
         };
       } else if (user.roleId === roles.EMPLOYEE) {
-        if (validateEmployeeSalary(formData.salary)) {
-          toast.error("Niepoprawna wartość pensji");
+        const validationResult = validateEmployeeSalary(formData.salary);
+        if (validationResult) {
+          toast.error(t(validationResult));
           return;
         }
 
@@ -207,13 +211,19 @@ function UserForm({ isRegistration }) {
           salary: formData.salary,
         };
       } else if (user.roleId === roles.TEACHER) {
-        if (validateTeacherHoursWorked(formData.hoursWorked)) {
-          toast.error("Niepoprawna wartość godzin przepracowanych");
+        const validationResultHoursWokred = validateTeacherHoursWorked(
+          formData.hoursWorked
+        );
+        if (validationResultHoursWokred) {
+          toast.error(t(validationResultHoursWokred));
           return;
         }
 
-        if (validateTeacherHourlyRate(formData.hourlyRate)) {
-          toast.error("Niepoprawna wartość stawki godzinowej");
+        const validationResultHoursWorked = validateTeacherHourlyRate(
+          formData.hourlyRate
+        );
+        if (validationResultHoursWorked) {
+          toast.error(t(validationResultHoursWorked));
           return;
         }
 
@@ -222,17 +232,17 @@ function UserForm({ isRegistration }) {
           hourlyRate: formData.hourlyRate,
         };
       } else {
-        toast.error("Nieznana rola użytkownika");
+        toast.error(t("unknownRole"));
         return;
       }
 
       try {
         await axios.put(`/users/${userId}`, toSend);
-        toast.success("Dane użytkownika zostały zaktualizowane");
+        toast.success(t("userDataEditSuccess"));
         navigate(`/admin/users/${userId}`);
       } catch (error) {
         console.error(error);
-        toast.error("Nie udało się zaktualizować danych użytkownika");
+        toast.error(t("userDataEditError"));
       }
     } else {
       let toSend = {
@@ -255,13 +265,14 @@ function UserForm({ isRegistration }) {
           formData.passwordConfirmation
         )
       ) {
-        toast.error("Niepoprawne dane");
+        toast.error(t("formContainsErrors"));
         return;
       }
 
       if (chosenRole === roles.EMPLOYEE) {
-        if (validateEmployeeSalary(formData.salary)) {
-          toast.error("Niepoprawna wartość pensji");
+        const validationResult = validateEmployeeSalary(formData.salary);
+        if (validationResult) {
+          toast.error(t(validationResult));
           return;
         }
 
@@ -270,13 +281,19 @@ function UserForm({ isRegistration }) {
           salary: formData.salary,
         };
       } else if (chosenRole === roles.TEACHER) {
-        if (validateTeacherHoursWorked(formData.hoursWorked)) {
-          toast.error("Niepoprawna wartość godzin przepracowanych");
+        const validationResultHoursWokred = validateTeacherHoursWorked(
+          formData.hoursWorked
+        );
+        if (validationResultHoursWokred) {
+          toast.error(t(validationResultHoursWokred));
           return;
         }
 
-        if (validateTeacherHourlyRate(formData.hourlyRate)) {
-          toast.error("Niepoprawna wartość stawki godzinowej");
+        const validationResultHourlyRate = validateTeacherHourlyRate(
+          formData.hourlyRate
+        );
+        if (validationResultHourlyRate) {
+          toast.error(t(validationResultHourlyRate));
           return;
         }
 
@@ -286,7 +303,7 @@ function UserForm({ isRegistration }) {
           hourlyRate: formData.hourlyRate,
         };
       } else {
-        toast.error("Nie wybrano roli");
+        toast.error(t("roleNotChosen"));
         setErrors({
           ...errors,
           role: "Musisz wybrać rolę nowego użytkownika",
@@ -296,12 +313,12 @@ function UserForm({ isRegistration }) {
 
       try {
         const response = await axios.post("/users", toSend);
-        toast.success("Użytkownik został zarejestrowany");
+        toast.success(t("userRegisterSuccess"));
         console.log(response.data);
         navigate(`/admin/users/${response.data.userId}`);
       } catch (error) {
         console.error(error);
-        toast.error("Nie udało się zarejestrować użytkownika");
+        toast.error(t("userRegisterError"));
       }
     }
   };
@@ -317,7 +334,7 @@ function UserForm({ isRegistration }) {
       </h1>
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Imię"
+          label={t("firstName")}
           name="name"
           value={formData.name}
           onChange={handleChange}
@@ -326,7 +343,7 @@ function UserForm({ isRegistration }) {
         />
 
         <InputField
-          label="Nazwisko"
+          label={t("lastName")}
           name="lastName"
           value={formData.lastName}
           onChange={handleChange}
@@ -335,7 +352,7 @@ function UserForm({ isRegistration }) {
         />
 
         <InputField
-          label="Email"
+          label={t("email")}
           name="email"
           value={formData.email}
           onChange={handleChange}
@@ -344,7 +361,7 @@ function UserForm({ isRegistration }) {
         />
 
         <InputField
-          label="Data urodzenia"
+          label={t("dateOfBirth")}
           name="dateOfBirth"
           value={formData.dateOfBirth}
           onChange={handleChange}
@@ -355,7 +372,7 @@ function UserForm({ isRegistration }) {
 
         {isRegistration && (
           <InputField
-            label="Hasło"
+            label={t("password")}
             name="password"
             value={formData.password}
             onChange={handleChange}
@@ -366,7 +383,7 @@ function UserForm({ isRegistration }) {
 
         {isRegistration && (
           <InputField
-            label="Potwierdź hasło"
+            label={t("passwordConfirmation")}
             name="passwordConfirmation"
             value={formData.passwordConfirmation}
             onChange={handleChange}
@@ -377,16 +394,16 @@ function UserForm({ isRegistration }) {
 
         {!isRegistration && (
           <InputField
-            label="Rola"
+            label={t("role")}
             name="role"
-            value={user.role}
+            value={t(user.role)}
             readOnly={true}
           />
         )}
 
         {isRegistration && (
           <FormSelect
-            label="Rola"
+            label={t("role")}
             name="role"
             value={chosenRole}
             onChange={(e) => {
@@ -402,14 +419,14 @@ function UserForm({ isRegistration }) {
           (isRegistration && chosenRole === roles.STUDENT)) && (
           <>
             <InputTextArea
-              label="Opis"
+              label={t("description")}
               name="description"
               value={formData.description}
               readOnly={true}
             />
 
             <InputField
-              label="Czy zniżka"
+              label={t("discount")}
               name="discount"
               type="checkbox"
               onChange={handleChange}
@@ -422,7 +439,7 @@ function UserForm({ isRegistration }) {
         {((user && user.roleId === roles.EMPLOYEE) ||
           (isRegistration && chosenRole === roles.EMPLOYEE)) && (
           <InputField
-            label="Pensja"
+            label={t("salary")}
             name="salary"
             value={formData.salary}
             onChange={handleChange}
@@ -434,7 +451,7 @@ function UserForm({ isRegistration }) {
           (isRegistration && chosenRole === roles.TEACHER)) && (
           <>
             <InputField
-              label="Ilość godzin przepracowanych"
+              label={t("hoursWorked")}
               name="hoursWorked"
               value={formData.hoursWorked}
               onChange={handleChange}
@@ -442,7 +459,7 @@ function UserForm({ isRegistration }) {
             />
 
             <InputField
-              label="Stawka godzinowa"
+              label={t("hourlyRate")}
               name="hourlyRate"
               value={formData.hourlyRate}
               onChange={handleChange}
@@ -452,7 +469,7 @@ function UserForm({ isRegistration }) {
         )}
         <button className="small-button" type="submit">
           <FaSave className="icon" />
-          {isRegistration ? "Zarejestruj" : "Zapisz"}
+          {isRegistration ? t("registerUser") : t("saveEdit")}
         </button>
         <BackButton />
       </form>

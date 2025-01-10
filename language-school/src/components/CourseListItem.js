@@ -1,7 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function CourseListItem({ index, group }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   // Funkcja do obsługi kliknięcia na grupę
@@ -18,14 +20,20 @@ function CourseListItem({ index, group }) {
       />
       <div className="group-details">
         <h3>
-          {group.language} - {group.level}
+          {t(group.language)} - {group.level}
         </h3>
-        <p>Dzień: {group.day}</p>
         <p>
-          Godzina: {group.startTime} - {group.endTime}
+          {t("dayOfWeek")}: {t(group.day)}
         </p>
-        <p>Cena: {group.price} PLN</p>
-        <p>Liczba miejsc: {group.places}</p>
+        <p>
+          {t("time")}: {group.startTime} - {group.endTime}
+        </p>
+        <p>
+          {t("priceForClasses")}: {group.price} PLN
+        </p>
+        <p>
+          {t("numberOfPlaces")}: {group.places}
+        </p>
       </div>
     </li>
   );

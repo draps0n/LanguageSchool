@@ -1,18 +1,21 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import "../styles/Error.css";
 
 const Forbidden = () => {
+  const { t } = useTranslation();
+
   // Hook do nawigacji
   const navigate = useNavigate();
 
   return (
     <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>403 - Forbidden</h1>
-      <p>Nie posiadasz uprawnień do wyświetlania tej strony.</p>
+      <p>{t("forbiddenMessage")}</p>
       <br />
       <button className="error-button" onClick={() => navigate(-1)}>
-        Wróć
+        {t("goBack")}
       </button>
     </div>
   );

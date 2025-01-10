@@ -6,10 +6,13 @@ import roles from "../constants/roles";
 import { formatDate } from "../util/helpers";
 import UserDetailsButtons from "./UserDetailsButtons";
 import KnownLanguages from "./KnownLanguages";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import "../styles/UserDetails.css";
 
 function UserDetails() {
   const [user, setUser] = useState(null);
+  const { t } = useTranslation();
   const axios = useAxiosAuth();
   const { userId } = useParams();
   const [loading, setLoading] = useState(true);
@@ -21,12 +24,13 @@ function UserDetails() {
         setUser(response.data);
         setLoading(false);
       } catch (error) {
+        toast.error(t("errorWhileFetchingData"));
         console.error(error);
       }
     };
 
     fetchUser();
-  }, [axios, userId]);
+  }, [axios, userId, t]);
 
   if (loading) {
     return <Loading />;
@@ -44,7 +48,7 @@ function UserDetails() {
           : ""
       }`}
     >
-      <h1>Szczegóły użytkownika</h1>
+      <h1>{t("userDetails")}</h1>
       <div className="user-details-container">
         <img
           src={`/assets/images/user.svg`}
@@ -53,46 +57,47 @@ function UserDetails() {
         />
         <div className="user-details">
           <p className="info-item">
-            <span className="label">Imię:</span> {user.name}
+            <span className="label">{t("firstName")}:</span> {user.name}
           </p>
           <p className="info-item">
-            <span className="label">Nazwisko:</span> {user.lastName}
+            <span className="label">{t("lastName")}:</span> {user.lastName}
           </p>
           <p className="info-item">
-            <span className="label">Email:</span> {user.email}
+            <span className="label">{t("email")}:</span> {user.email}
           </p>
           <p className="info-item">
-            <span className="label">Rola:</span> {user.role}
+            <span className="label">{t("role")}:</span> {user.role}
           </p>
           <p className="info-item">
-            <span className="label">Data urodzenia:</span>{" "}
+            <span className="label">{t("dateOfBirth")}:</span>{" "}
             {formatDate(user.dateOfBirth)}
           </p>
           {user.roleId === roles.STUDENT && (
             <>
               <p className="info-item">
-                <span className="label">Opis:</span> {user.description}
+                <span className="label">{t("description")}:</span>{" "}
+                {user.description}
               </p>
               <p className="info-item">
-                <span className="label">Czy przysługuje zniżka?:</span>{" "}
-                {user.discount ? "Tak" : "Nie"}
+                <span className="label">{t("discount")}:</span>{" "}
+                {user.discount ? t("yes") : t("no")}
               </p>
             </>
           )}
           {user.roleId === roles.EMPLOYEE && (
             <p className="info-item">
-              <span className="label">Pensja:</span> {user.salary} PLN
+              <span className="label">{t("salary")}:</span> {user.salary} PLN
             </p>
           )}
           {user.roleId === roles.TEACHER && (
             <>
               <p className="info-item">
-                <span className="label">Stawka godzinowa:</span>{" "}
-                {user.hourlyRate} PLN
+                <span className="label">{t("hourlyRate")}:</span>{" "}
+                {user.hourlyRate} PLN/h
               </p>
               <p className="info-item">
-                <span className="label">Przepracowane godziny:</span>{" "}
-                {user.hoursWorked}
+                <span className="label">{t("hoursWorked")}:</span>{" "}
+                {user.hoursWorked} h
               </p>
               <KnownLanguages teacherId={user.id} shouldShowButtons={true} />
             </>

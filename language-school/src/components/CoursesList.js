@@ -7,8 +7,11 @@ import Loading from "./Loading";
 import CourseListItem from "./CourseListItem";
 import "../styles/CoursesList.css";
 import Pagination from "./Pagination";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const CoursesList = ({ isUserSpecific }) => {
+  const { t } = useTranslation();
   const { userData } = useAuth();
   const navigate = useNavigate();
   const axios = useAxiosAuth();
@@ -33,11 +36,12 @@ const CoursesList = ({ isUserSpecific }) => {
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error("Error fetching groups:", error);
+        toast.error(t("errorFetchingCourses"));
       }
     };
 
     fetchGroups();
-  }, [currentPage, axios, isUserSpecific, userData.roleId]);
+  }, [currentPage, axios, isUserSpecific, userData.roleId, t]);
 
   const addGroup = () => {
     navigate("/courses/add");
@@ -50,10 +54,10 @@ const CoursesList = ({ isUserSpecific }) => {
   if (!groups.length) {
     return (
       <div>
-        <h1 className="text-center">Brak grup do wyświetlenia.</h1>
+        <h1 className="text-center">{t("noCourses")}</h1>
         {userData.roleId === roles.EMPLOYEE && (
           <button className="group-add-button" onClick={addGroup}>
-            Dodaj
+            {t("add")}
           </button>
         )}
       </div>
@@ -62,10 +66,12 @@ const CoursesList = ({ isUserSpecific }) => {
 
   return (
     <div className="group-list-container">
-      <h1 className="text-center">{isUserSpecific ? "Moje kursy" : "Kursy"}</h1>
+      <h1 className="text-center">
+        {isUserSpecific ? t("myCourses") : t("coursesList")}
+      </h1>
       {userData.roleId === roles.EMPLOYEE && (
         <button className="group-add-button" onClick={addGroup}>
-          Dodaj
+          {t("add")}
         </button>
       )}
 

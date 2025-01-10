@@ -20,8 +20,10 @@ import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import Loading from "./Loading";
 import KnownLanguages from "./KnownLanguages";
+import { useTranslation } from "react-i18next";
 
 function Profile() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [editMode, setEditMode] = useState(false);
   const { userData } = useAuth();
@@ -209,7 +211,7 @@ function Profile() {
       (userData.roleId === roles.EMPLOYEE &&
         validateEmployeeSalary(formData.salary))
     ) {
-      toast.error("Niepoprawnie wypełniony formularz");
+      toast.error(t("formContainsErrors"));
       return;
     }
 
@@ -252,18 +254,18 @@ function Profile() {
         passwordConfirmation: "",
       }));
 
-      toast.success("Zaktualizowano dane");
+      toast.success(t("profileUpdated"));
       setEditMode(false);
     } catch (error) {
       if (error.response.status === 409) {
-        toast.error("Podany adres email jest już zajęty");
+        toast.error(t("emailTaken"));
       } else if (
         error.response.status === 401 &&
         error?.response?.data?.message
       ) {
-        toast.error("Niepoprawne hasło");
+        toast.error(t("incorrectPassword"));
       } else {
-        toast.error("Wystąpił błąd podczas aktualizacji danych");
+        toast.error(t("updateProfileError"));
       }
 
       // Resetuj dane w formularzy gdy błąd
@@ -301,20 +303,20 @@ function Profile() {
       <form onSubmit={handleFormSubmit}>
         <div className="profile-container">
           <div className="profile-left">
-            <h1>Profil użytkownika</h1>
-            <p>Witaj! Zalogowano Cię w roli:</p>
+            <h1>{t("yourProfile")}</h1>
+            <p>{t("welcomeProfile")}</p>
             <p className="profile-role-name">
               <strong>
                 {userData.roleId === roles.EMPLOYEE
-                  ? "Pracownik Administracyjny"
+                  ? t("employeeRole")
                   : userData.roleId === roles.TEACHER
-                  ? "Nauczyciel"
-                  : "Student"}
+                  ? t("teacherRole")
+                  : t("studentRole")}
               </strong>
             </p>
 
             <InputField
-              label="Imię"
+              label={t("firstName")}
               name="name"
               value={formData.name}
               onChange={handleChange}
@@ -325,7 +327,7 @@ function Profile() {
             />
 
             <InputField
-              label="Nazwisko"
+              label={t("lastName")}
               name="lastName"
               value={formData.lastName}
               onChange={handleChange}
@@ -336,7 +338,7 @@ function Profile() {
             />
 
             <InputField
-              label="E-mail"
+              label={t("email")}
               type="email"
               name="email"
               value={formData.email}
@@ -348,7 +350,7 @@ function Profile() {
             />
 
             <InputField
-              label="Data urodzenia"
+              label={t("dateOfBirth")}
               type="date"
               name="dateOfBirth"
               value={formData.dateOfBirth}
@@ -360,7 +362,7 @@ function Profile() {
             />
 
             <InputField
-              label="Hasło"
+              label={t("password")}
               type="password"
               name="password"
               value={editMode ? formData.password : "********"}
@@ -372,7 +374,7 @@ function Profile() {
             {editMode && (
               <>
                 <InputField
-                  label="Nowe hasło"
+                  label={t("newPassword")}
                   type="password"
                   name="newPassword"
                   value={formData.newPassword}
@@ -382,7 +384,7 @@ function Profile() {
                 />
 
                 <InputField
-                  label="Powtórz nowe hasło"
+                  label={t("newPasswordConfirmation")}
                   type="password"
                   name="passwordConfirmation"
                   value={formData.passwordConfirmation}
@@ -402,7 +404,7 @@ function Profile() {
             {userData.roleId === roles.STUDENT && (
               <div className="student-info">
                 <InputTextArea
-                  label="Opis"
+                  label={t("description")}
                   name="description"
                   value={formData.description}
                   onChange={handleChange}
@@ -413,7 +415,7 @@ function Profile() {
                 />
 
                 <InputField
-                  label={"Czy przysługuje zniżka"}
+                  label={t("discount")}
                   type="checkbox"
                   name="discount"
                   value={formData.discount}
@@ -425,7 +427,7 @@ function Profile() {
             {userData.roleId === roles.TEACHER && (
               <div className="teacher-info">
                 <InputField
-                  label="Stawka godzinowa (PLN)"
+                  label={t("hourlyRate") + " (PLN/h)"}
                   name="hourlyRate"
                   type="number"
                   value={formData.hourlyRate || ""}
@@ -433,7 +435,7 @@ function Profile() {
                 />
 
                 <InputField
-                  label="Przepracowane godziny"
+                  label={t("hoursWorked") + " (h)"}
                   name="hoursWorked"
                   type="number"
                   value={formData.hoursWorked || ""}
@@ -446,7 +448,7 @@ function Profile() {
             {userData.roleId === roles.EMPLOYEE && (
               <div className="employee-info">
                 <InputField
-                  label="Pensja"
+                  label={t("salary") + " (PLN)"}
                   name="salary"
                   type="number"
                   onChange={handleChange}
@@ -459,24 +461,24 @@ function Profile() {
         </div>
         <div className="profile-buttons">
           <button onClick={toggleEditMode} type="button">
-            {editMode ? "Anuluj" : "Edytuj"}
+            {editMode ? t("cancel") : t("edit")}
           </button>
-          {editMode && <button type="submit">Zapisz</button>}
+          {editMode && <button type="submit">{t("save")}</button>}
           {editMode && (
             <button onClick={viewDeleteAccountConfirmation} type="button">
-              Usuń konto
+              {t("deleteAccount")}
             </button>
           )}
           {!editMode &&
             (userData.roleId === roles.STUDENT ||
               userData.roleId === roles.TEACHER) && (
               <button onClick={viewMyCourses} type="button">
-                Moje kursy
+                {t("myCourses")}
               </button>
             )}
           {!editMode && userData.roleId === roles.STUDENT && (
             <button onClick={viewMyApplications} type="button">
-              Moje zgłoszenia
+              {t("myApplications")}
             </button>
           )}
         </div>

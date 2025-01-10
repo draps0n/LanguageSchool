@@ -1,20 +1,22 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "../styles/CourseStudentsListItem.css";
 
 function CourseStudentsListItem({ student }) {
+  const { t } = useTranslation();
   return (
     <li className="course-students-list-item" key={student.email}>
       <div>
-        <strong>Imię:</strong> {student.name}
+        <strong>{t("firstName")}:</strong> {student.name}
       </div>
       <div>
-        <strong>Nazwisko:</strong> {student.lastName}
+        <strong>{t("lastName")}:</strong> {student.lastName}
       </div>
       <div>
-        <strong>Email:</strong> {student.email}
+        <strong>{t("email")}:</strong> {student.email}
       </div>
       <div>
-        <strong>Nieobecności:</strong> {student.absences}
+        <strong>{t("absences")}:</strong> {student.absences}
       </div>
     </li>
   );

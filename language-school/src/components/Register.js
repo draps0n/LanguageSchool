@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "../api/axios";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import {
   validateName,
   validateLastName,
@@ -12,11 +13,11 @@ import {
   validateDescription,
 } from "../util/validators";
 import InputField from "./InputField";
-import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
 import InputTextArea from "./InputTextArea";
 
 function Register() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -51,7 +52,7 @@ function Register() {
       validateDateOfBirth(formData.dateOfBirth) ||
       validateDescription(formData.description)
     ) {
-      toast.error("Formularz zawiera błędy");
+      toast.error(t("formContainsErrors"));
       return;
     }
 
@@ -84,18 +85,18 @@ function Register() {
           password: "",
           confirmPassword: "",
         });
-        toast.success("Rejestracja zakończona pomyślnie!");
+        toast.success(t("registrationSuccess"));
         navigate("/login");
       }
     } catch (error) {
       if (error?.response?.status === 409) {
         setErrors((prev) => ({
           ...prev,
-          email: "Użytkownik o podanym adresie email już istnieje",
+          email: t("emailTaken"),
         }));
-        toast.error("Użytkownik o podanym adresie email już istnieje");
+        toast.error(t("emailTaken"));
       } else {
-        toast.error("Błąd podczas rejestracji. Spróbuj ponownie później.");
+        toast.error(t("registrationError"));
       }
     }
   };
@@ -166,10 +167,10 @@ function Register() {
 
   return (
     <div className="login-container">
-      <h1>Rejestracja</h1>
+      <h1>{t("registration")}</h1>
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Imię"
+          label={t("firstName")}
           name="name"
           type="text"
           value={formData.name}
@@ -177,11 +178,11 @@ function Register() {
           required={true}
           error={errors.name}
           autoComplete={"given-name"}
-          placeholder={"Wpisz imię"}
+          placeholder={t("enterFirstName")}
         />
 
         <InputField
-          label="Nazwisko"
+          label={t("lastName")}
           name="lastName"
           type="text"
           value={formData.lastName}
@@ -189,11 +190,11 @@ function Register() {
           required={true}
           error={errors.lastName}
           autoComplete={"family-name"}
-          placeholder={"Wpisz nazwisko"}
+          placeholder={t("enterLastName")}
         />
 
         <InputField
-          label="Email"
+          label={t("email")}
           name="email"
           type="email"
           value={formData.email}
@@ -201,11 +202,11 @@ function Register() {
           required={true}
           error={errors.email}
           autoComplete={"email"}
-          placeholder={"Wpisz email"}
+          placeholder={t("enterEmail")}
         />
 
         <InputField
-          label="Data urodzenia"
+          label={t("dateOfBirth")}
           name="dateOfBirth"
           type="date"
           value={formData.dateOfBirth}
@@ -216,7 +217,7 @@ function Register() {
         />
 
         <InputField
-          label="Hasło"
+          label={t("password")}
           name="password"
           type="password"
           value={formData.password}
@@ -224,11 +225,11 @@ function Register() {
           required={true}
           error={errors.password}
           autoComplete={"new-password"}
-          placeholder={"Wpisz hasło"}
+          placeholder={t("enterPassword")}
         />
 
         <InputField
-          label="Powtórz hasło"
+          label={t("passwordConfirmation")}
           name="confirmPassword"
           type="password"
           value={formData.confirmPassword}
@@ -236,21 +237,21 @@ function Register() {
           required={true}
           error={errors.confirmPassword}
           autoComplete={"new-password"}
-          placeholder={"Powtórz hasło"}
+          placeholder={t("passwordConfirmation")}
         />
 
         <InputTextArea
-          label="Opis"
+          label={t("description")}
           name="description"
           value={formData.description}
           onChange={handleChange}
           error={errors.description}
-          placeholder={"Wpisz opis"}
+          placeholder={t("enterDescription")}
           rows="7"
         />
 
         <div className="form-group">
-          <Link to="/login">Masz już konto? Zaloguj się</Link>
+          <Link to="/login">{t("loginQuestion")}</Link>
         </div>
 
         <button
@@ -265,7 +266,7 @@ function Register() {
             errors.confirmPassword
           }
         >
-          Zarejestruj się
+          {t("register")}
         </button>
       </form>
     </div>

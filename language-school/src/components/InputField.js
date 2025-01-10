@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "../styles/InputField.css";
 
 function InputField({
@@ -16,6 +17,7 @@ function InputField({
   disabled = false,
   checked = false,
 }) {
+  const { t } = useTranslation();
   return (
     <div className="form-group">
       <label className="input-label" htmlFor={name}>
@@ -36,7 +38,7 @@ function InputField({
         disabled={disabled}
         checked={checked}
       />
-      {error && <p className="input-field-error">{error}</p>}
+      {error && <p className="input-field-error">{t(error)}</p>}
     </div>
   );
 }

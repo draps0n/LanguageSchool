@@ -7,9 +7,11 @@ import applicationStates from "../constants/applicationStates";
 import ApplicationListItemStudentButtons from "./ApplicationListItemStudentButtons";
 import { FaEye } from "react-icons/fa";
 import "../styles/ApplicationListItem.css";
+import { useTranslation } from "react-i18next";
 import ApplicationListItemEmployeeButtons from "./ApplicationListItemEmployeeButtons";
 
 const ApplicationListItem = ({ application, refreshApplications }) => {
+  const { t } = useTranslation();
   const { userData } = useAuth();
   const navigate = useNavigate();
   const [showDetails, setShowDetails] = useState(false);
@@ -38,37 +40,37 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
     >
       <div className="application-summary">
         <p>
-          <strong>Kod grupy:</strong> {application.language.code}-
+          <strong>{t("groupCode")}:</strong> {application.language.code}-
           {application.groupId}
         </p>
         <p>
-          <strong>Status:</strong> {application.status.name}
+          <strong>{t("status")}</strong> {application.status.name}
         </p>
       </div>
       <div className={`application-details ${showDetails ? "open" : ""}`}>
         <p>
-          <strong>Język:</strong> {application.language.name}
+          <strong>{t("language")}</strong> {t(application.language.name)}
         </p>
         <p>
-          <strong>Poziom:</strong> {application.level.name}
+          <strong>{t("level")}</strong> {application.level.name}
         </p>
         <p>
-          <strong>Data rozpoczęcia:</strong>{" "}
+          <strong>{t("preferredStartDate")}</strong>{" "}
           {new Date(application.startDate).toLocaleDateString()}
         </p>
         <p>
-          <strong>Data przesłania:</strong>{" "}
+          <strong>{t("sendDate")}</strong>{" "}
           {new Date(application.sentDate).toLocaleDateString()}
         </p>
         <p>
-          <strong>Uwagi:</strong> {application.comment || "-"}
+          <strong>{t("comments")}</strong> {application.comment || "-"}
         </p>
         {((application.feedbackMessage && userData.roleId === roles.STUDENT) ||
           (application.feedbackMessage &&
             userData.roleId === roles.EMPLOYEE &&
             application.status.id !== applicationStates.PENDING)) && (
           <InputTextArea
-            label="Wiadomość zwrotna"
+            label={t("feedbackMessage")}
             value={application.feedbackMessage}
             readOnly={true}
           />
@@ -93,6 +95,7 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
         <button
           className="application-details-button standard-button"
           onClick={toggleDetails}
+          title={t("showDetails")}
         >
           <FaEye className="icon" />
         </button>

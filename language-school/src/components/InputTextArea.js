@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "../styles/InputField.css";
 
 function InputTextArea({
@@ -10,6 +11,7 @@ function InputTextArea({
   error,
   rows,
 }) {
+  const { t } = useTranslation();
   return (
     <div className="form-group">
       <label className="input-label" htmlFor={name}>
@@ -30,7 +32,7 @@ function InputTextArea({
           resize: "none",
         }}
       ></textarea>
-      {error && <p className="input-field-error">{error}</p>}
+      {error && <p className="input-field-error">{t(error)}</p>}
     </div>
   );
 }

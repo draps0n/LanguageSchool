@@ -4,9 +4,11 @@ import Loading from "./Loading";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import UserListItem from "./UserListItem";
 import Pagination from "./Pagination";
+import { useTranslation } from "react-i18next";
 import "../styles/UsersList.css";
 
 function UsersList() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(-1);
@@ -36,7 +38,7 @@ function UsersList() {
     };
 
     fetchUsers();
-  }, [axios, currentPage]);
+  }, [axios, currentPage, t]);
 
   if (loading) {
     return <Loading />;
@@ -44,9 +46,9 @@ function UsersList() {
 
   return (
     <div className="users-list-page">
-      <h1>Lista użytkowników</h1>
+      <h1>{t("usersList")}</h1>
       <button className="user-add-button" onClick={handleAddUser}>
-        Dodaj pracownika/nauczyciela
+        {t("addEmpTeach")}
       </button>
       {users.map((user) => (
         <UserListItem user={user} />

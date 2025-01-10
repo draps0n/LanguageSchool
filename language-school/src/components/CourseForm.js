@@ -20,8 +20,11 @@ import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import FormSelect from "./FormSelect";
 import Loading from "./Loading";
+import { useTranslation } from "react-i18next";
 
 function CourseForm() {
+  const { t } = useTranslation();
+
   // Hook do pobrania axios'a z autoryzacją
   const axios = useAxiosAuth();
 
@@ -264,7 +267,7 @@ function CourseForm() {
       validateGroupDayOfWeek(formData.day) ||
       validateGroupTime(formData.startTime, formData.endTime)
     ) {
-      toast.error("Formularz zawiera błędy!");
+      toast.error(t("formContainsErrors"));
       return;
     }
 
@@ -293,7 +296,7 @@ function CourseForm() {
       toSend.startTime === group.startTime &&
       toSend.endTime === group.endTime
     ) {
-      toast.error("Nie wprowadzono zmian");
+      toast.error(t("noChangesMade"));
       return;
     }
 
@@ -301,14 +304,14 @@ function CourseForm() {
     try {
       if (id) {
         await axios.put(`/groups/${id}`, toSend);
-        toast.success("Zaktualizowano grupę");
+        toast.success(t("groupUpdated"));
       } else {
         await axios.post("/groups", toSend);
-        toast.success("Dodano nową grupę");
+        toast.success(t("groupAdded"));
       }
       navigate(`/courses/${id}`);
     } catch (error) {
-      toast.error("Nie udało się zapisać danych");
+      toast.error(t("errorSavingData") + " " + t("tryAgainLater"));
       console.error(error);
     }
   };
@@ -322,12 +325,12 @@ function CourseForm() {
     <div className="login-container">
       <h1 className="login-text">
         {id
-          ? `Edycja grupy językowej: ${group.code}-${id}`
-          : "Dodaj nową grupę językową"}
+          ? `${t("editLanguageGroup")}: ${group.code}-${id}`
+          : t("addLanguageGroup")}
       </h1>
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Liczba miejsc"
+          label={t("numberOfPlaces")}
           name="places"
           type="number"
           value={formData.places}
@@ -338,7 +341,7 @@ function CourseForm() {
         />
 
         <InputTextArea
-          label="Opis"
+          label={t("description")}
           name="description"
           value={formData.description || ""}
           onChange={handleChange}
@@ -349,7 +352,7 @@ function CourseForm() {
         />
 
         <InputField
-          label="Cena zajęć"
+          label={t("priceForClasses")}
           name="price"
           type="number"
           step="0.01"
@@ -361,7 +364,7 @@ function CourseForm() {
         />
 
         <FormSelect
-          label="Nauczyciel"
+          label={t("teacher")}
           name="teacher"
           value={formData.teacher.id || ""}
           onChange={handleChange}
@@ -370,7 +373,7 @@ function CourseForm() {
         />
 
         <FormSelect
-          label="Język"
+          label={t("language")}
           name="language"
           value={formData.language.id || ""}
           onChange={handleChange}
@@ -379,7 +382,7 @@ function CourseForm() {
         />
 
         <FormSelect
-          label="Poziom"
+          label={t("level")}
           name="level"
           value={formData.level.id || ""}
           onChange={handleChange}
@@ -388,7 +391,7 @@ function CourseForm() {
         />
 
         <FormSelect
-          label="Dzień tygodnia"
+          label={t("dayOfWeek")}
           name="day"
           value={formData.day.id || ""}
           onChange={handleChange}
@@ -397,7 +400,7 @@ function CourseForm() {
         />
 
         <InputField
-          label="Godzina rozpoczęcia"
+          label={t("startTime")}
           name="startTime"
           type="time"
           value={formData.startTime}
@@ -406,7 +409,7 @@ function CourseForm() {
         />
 
         <InputField
-          label="Godzina zakończenia"
+          label={t("endTime")}
           name="endTime"
           type="time"
           value={formData.endTime}
@@ -432,7 +435,7 @@ function CourseForm() {
             }
           >
             <FaSave className="icon" />
-            Zapisz
+            {t("save")}
           </button>
         </div>
       </form>

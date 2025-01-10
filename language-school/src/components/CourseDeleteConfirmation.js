@@ -2,9 +2,12 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import "../styles/CourseDeleteConfirmation.css";
 
 function CourseDeleteConfirmation() {
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
 
   const { id } = useParams();
@@ -18,25 +21,23 @@ function CourseDeleteConfirmation() {
   const deleteCourse = async () => {
     try {
       await axios.delete(`/groups/${id}`);
-      toast.success(`Kurs został usunięty!`);
+      toast.success(t("courseDeleted"));
       navigate("/courses");
     } catch (error) {
-      toast.error("Nie udało się usunąć kursu! Spróbuj ponownie.");
+      toast.error(t("courseDeleteError") + " " + t("tryAgainLater"));
     }
   };
 
   return (
     <div>
-      <h2>Czy jesteś pewien, że chcesz usunąć ten kurs?</h2>
-      <p>
-        Wszystkie zgłoszenia oraz przypisania do niego zostaną również usunięte.
-      </p>
+      <h2>{t("deleteCourseQuestion")}</h2>
+      <p>{t("deleteCourseAdditionalInfo")}</p>
       <div className="button-panel">
         <button onClick={deleteCourse} className="small-button delete-button">
-          Usuń
+          {t("delete")}
         </button>
         <button onClick={goBack} className="small-button">
-          Anuluj
+          {t("cancel")}
         </button>
       </div>
     </div>

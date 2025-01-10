@@ -16,8 +16,10 @@ import "../styles/Login.css";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import Loading from "./Loading";
+import { useTranslation } from "react-i18next";
 
 function ApplicationForm() {
+  const { t } = useTranslation();
   const axios = useAxiosAuth();
   const { id, applicationId } = useParams();
   const navigate = useNavigate();
@@ -50,9 +52,7 @@ function ApplicationForm() {
           throw new Error("Error");
         }
       } catch (error) {
-        toast.error(
-          "Wystąpił błąd podczas pobierania danych. Spróbuj ponownie później."
-        );
+        toast.error(t("errorWhileFetchingData") + t("tryAgainLater"));
         navigate(`/my-applications`);
       }
     };
@@ -74,9 +74,7 @@ function ApplicationForm() {
           throw new Error("Error");
         }
       } catch (error) {
-        toast.error(
-          "Wystąpił błąd podczas pobierania danych. Spróbuj ponownie później."
-        );
+        toast.error(t("errorWhileFetchingData") + t("tryAgainLater"));
         console.error(error);
       }
     };
@@ -85,7 +83,7 @@ function ApplicationForm() {
       fetchApplication();
       fetchGroups();
     }
-  }, [axios, applicationId, navigate]);
+  }, [axios, applicationId, navigate, t]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,7 +93,7 @@ function ApplicationForm() {
       validateApplicationComment(formData.comment) ||
       (!id && validateApplicationGroup(formData.groupId))
     ) {
-      toast.error("Formularz zawiera błędy");
+      toast.error(t("formContainsErrors"));
       return;
     }
 
@@ -139,9 +137,7 @@ function ApplicationForm() {
         }
       }
     } catch (error) {
-      toast.error(
-        "Wystąpił błąd podczas zgłaszania. Spróbuj ponownie później."
-      );
+      toast.error(t("errorWhileSendingData") + t("tryAgainLater"));
     }
   };
 
@@ -177,13 +173,13 @@ function ApplicationForm() {
   return (
     <div className="login-container">
       {id ? (
-        <h1>Zgłoszenie do grupy językowej</h1>
+        <h1>{t("applicationFormAdd")}</h1>
       ) : (
-        <h1>Edycja zgłoszenia do grupy językowej</h1>
+        <h1>{t("applicationFormEdit")}</h1>
       )}
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Preferowana data rozpoczęcia"
+          label={t("preferredStartDate")}
           name="startDate"
           type="date"
           value={formData.startDate}
@@ -194,7 +190,7 @@ function ApplicationForm() {
 
         {!id && (
           <FormSelect
-            label="Grupa językowa"
+            label={t("languageGroup")}
             name="groupId"
             value={formData.groupId}
             options={groups}
@@ -204,7 +200,7 @@ function ApplicationForm() {
         )}
 
         <InputTextArea
-          label="Uwagi: (opcjonalnie)"
+          label={t("comments") + " (" + t("optional") + ")"}
           name="comment"
           value={formData.comment || ""}
           onChange={handleChange}
@@ -219,7 +215,7 @@ function ApplicationForm() {
             disabled={errors.startDate || errors.comment || !formData.startDate}
           >
             {id && <FaUserPlus className="icon" />}
-            {id ? "Zgłoś się" : "Zapisz zmiany"}
+            {id ? t("apply") : t("saveEdit")}
           </button>
         </div>
       </form>

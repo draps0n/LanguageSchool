@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "../styles/InputField.css";
 
 function FormSelect({ label, name, value, onChange, options, error }) {
+  const { t } = useTranslation();
   return (
     <div className="form-group">
       <label className="input-label" htmlFor={name}>
@@ -15,7 +17,7 @@ function FormSelect({ label, name, value, onChange, options, error }) {
         onChange={onChange}
       >
         <option value="" disabled hidden className="placeholder-option">
-          Wybierz {label.toLowerCase()}
+          {t("choose")} {label.toLowerCase()}
         </option>
         {options.map((option) => (
           <option key={option.id} value={option.id}>
@@ -23,7 +25,7 @@ function FormSelect({ label, name, value, onChange, options, error }) {
           </option>
         ))}
       </select>
-      {error && <p className="input-field-error">{error}</p>}
+      {error && <p className="input-field-error">{t(error)}</p>}
     </div>
   );
 }

@@ -4,12 +4,14 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import applicationStates from "../constants/applicationStates";
 import useAxiosAuth from "../hooks/useAxiosAuth";
+import { useTranslation } from "react-i18next";
 
 function ApplicationListItemStudentButtons({
   application,
   viewGroup,
   refreshApplications,
 }) {
+  const { t } = useTranslation();
   const axios = useAxiosAuth();
   const navigate = useNavigate();
 
@@ -21,10 +23,10 @@ function ApplicationListItemStudentButtons({
     try {
       await axios.delete(`/applications/${applicationId}`);
       await refreshApplications();
-      toast.success("Zgłoszenie zostało wycofane.");
+      toast.success(t("applicationWithdrawn"));
     } catch (error) {
       console.error("Error while cancelling application: ", error);
-      toast.error("Wystąpił błąd podczas wycofywania zgłoszenia.");
+      toast.error(t("applicationWithdrawError"));
     }
   };
 
@@ -33,7 +35,7 @@ function ApplicationListItemStudentButtons({
       <button
         className="application-details-button standard-button"
         onClick={() => viewGroup(application.groupId)}
-        title="Zobacz grupę"
+        title={t("viewGroup")}
       >
         <FaUsers className="icon" />
       </button>
@@ -41,14 +43,14 @@ function ApplicationListItemStudentButtons({
         <>
           <button
             className="application-details-button edit-button"
-            title="Edytuj"
+            title={t("edit")}
             onClick={viewEditApplication}
           >
             <FaEdit className="icon" />
           </button>
           <button
             className="application-details-button delete-button"
-            title="Wycofaj"
+            title={t("withdraw")}
             onClick={() => cancelApplication(application.id)}
           >
             <FaTimesCircle className="icon" />

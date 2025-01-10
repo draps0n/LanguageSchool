@@ -1,7 +1,10 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import "../styles/Pagination.css";
 
 function Pagination({ currentPage, totalPages, setCurrentPage }) {
+  const { t } = useTranslation();
+
   // Funkcja do obsługi przycisku "Następna"
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -19,10 +22,10 @@ function Pagination({ currentPage, totalPages, setCurrentPage }) {
   return (
     <div className="pagination">
       <button onClick={prevPage} disabled={currentPage === 1}>
-        Poprzednia
+        {t("previous")}
       </button>
       <button onClick={nextPage} disabled={currentPage === totalPages}>
-        Następna
+        {t("next")}
       </button>
     </div>
   );

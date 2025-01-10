@@ -6,9 +6,12 @@ import { toast } from "react-toastify";
 import { validateEmail } from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Login.css";
+import { useTranslation } from "react-i18next";
 import InputField from "./InputField";
 
 function Login() {
+  const { t } = useTranslation();
+
   // Hook do przechowywania danych użytkownika
   const { setUserData } = useAuth();
 
@@ -52,7 +55,7 @@ function Login() {
       // Usunięcie błędów i przekierowanie na stronę z informacjami o użytkowniku
       setError("");
       setFormData({ email: "", password: "" });
-      toast.success("Zalogowano pomyślnie!");
+      toast.success(t("loginSuccess"));
       navigate(from, { replace: true });
     } catch (error) {
       if (error && !error.response) {
@@ -84,7 +87,7 @@ function Login() {
       <h1 className="login-text">Logowanie</h1>
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Email"
+          label={t("email")}
           type="email"
           name="email"
           value={formData.email}
@@ -96,7 +99,7 @@ function Login() {
         />
 
         <InputField
-          label="Hasło"
+          label={t("password")}
           type="password"
           name="password"
           value={formData.password}
@@ -106,16 +109,16 @@ function Login() {
           placeholder="Wpisz hasło"
         />
         <div className="form-group">
-          <Link to="/register">Zarejestruj się</Link>
+          <Link to="/register">{t("register")}</Link>
         </div>
         <button
           className="login-button"
           type="submit"
           disabled={!formData.email || !formData.password || emailError !== ""}
         >
-          Zaloguj się
+          {t("login")}
         </button>
-        {error && <p className="error">{error}</p>}
+        {error && <p className="error">{t(error)}</p>}
       </form>
     </div>
   );
