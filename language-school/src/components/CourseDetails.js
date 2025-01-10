@@ -73,7 +73,7 @@ const CourseDetails = () => {
           <strong>{t("teacher")}:</strong> {group.teacher.name}{" "}
           {group.teacher.lastName}
         </p>
-        {absences && (
+        {absences !== null && absences !== undefined && (
           <p>
             <strong>{t("absencesNumber")}:</strong> {absences}
           </p>
@@ -89,6 +89,7 @@ const CourseDetails = () => {
       </div>
       <CourseDetailsButtonPanel
         isMember={absences !== null && absences !== undefined}
+        groupId={group.id}
       />
     </div>
   );

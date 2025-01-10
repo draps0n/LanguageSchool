@@ -232,5 +232,8 @@
   "Zaakceptowane": "Zaakceptowane",
   "Odrzucone": "Odrzucone",
   "errorDeletingStudentFromCourse": "Wystąpił błąd podczas usuwania ucznia z kursu.",
-  "studentDeletedFromCourse": "Uczeń został usunięty z kursu."
+  "studentDeletedFromCourse": "Uczeń został usunięty z kursu.",
+  "leaveGroup": "Opuść grupę",
+  "errorLeavingGroup": "Wystąpił błąd podczas opuszczania grupy.",
+  "groupLeft": "Grupa została opuszczona."
 }

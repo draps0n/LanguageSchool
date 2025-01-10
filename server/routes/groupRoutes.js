@@ -18,6 +18,7 @@ router
     groupController.deleteStudentFromGroup
   )
   .get("/:id/students", groupController.getGroupStudents)
+  .delete("/:id/leave", groupController.leaveGroup)
   .get("/:id", groupController.getGroupById)
   .delete(
     "/:id",

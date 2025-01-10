@@ -5,10 +5,13 @@ import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
 import "../styles/CourseDetailsButtonPanel.css";
 import BackButton from "./BackButton";
+import useAxiosAuth from "../hooks/useAxiosAuth";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
-const CourseDetailsButtonPanel = ({ isMember }) => {
+const CourseDetailsButtonPanel = ({ isMember, groupId }) => {
   const { t } = useTranslation();
+  const axios = useAxiosAuth();
   const navigate = useNavigate();
 
   const { userData } = useAuth();
@@ -25,6 +28,17 @@ const CourseDetailsButtonPanel = ({ isMember }) => {
     navigate("delete");
   };
 
+  const leaveGroup = async () => {
+    try {
+      await axios.delete(`/groups/${groupId}/leave`);
+      navigate("/courses");
+      toast.info(t("groupLeft"));
+    } catch (error) {
+      console.error("Error leaving group:", error);
+      toast.error(t("errorLeavingGroup"));
+    }
+  };
+
   return (
     <div className="button-panel">
       <BackButton />
@@ -32,6 +46,11 @@ const CourseDetailsButtonPanel = ({ isMember }) => {
         <button onClick={joinGroup} className="small-button">
           <FaUserPlus className="icon" />
           {t("join")}
+        </button>
+      )}
+      {userData.roleId === roles.STUDENT && isMember && (
+        <button onClick={leaveGroup} className="small-button">
+          {t("leaveGroup")}
         </button>
       )}
       {userData.roleId === roles.EMPLOYEE && (

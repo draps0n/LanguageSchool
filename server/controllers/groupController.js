@@ -536,6 +536,49 @@ const deleteStudentFromGroup = async (req, res) => {
   }
 };
 
+const leaveGroup = async (req, res) => {
+  const groupId = req.params.id;
+  const studentId = req.userId;
+
+  if (!groupId || isNaN(groupId)) {
+    return res
+      .status(400)
+      .json({ message: "Group id is required and has to be a number" });
+  }
+
+  if (!studentId || isNaN(studentId)) {
+    return res
+      .status(400)
+      .json({ message: "Student id is required and has to be a number" });
+  }
+
+  try {
+    const fetchedGroup = await groupModel.getGroupById(groupId);
+    if (!fetchedGroup) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    const fetchedStudent = await studentModel.getStudentById(studentId);
+    if (!fetchedStudent) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const isStudentInGroup = await groupModel.isStudentInGroup(
+      groupId,
+      studentId
+    );
+    if (!isStudentInGroup) {
+      return res.status(409).json({ message: "Student is not in this group" });
+    }
+
+    await groupModel.deleteStudentFromGroup(groupId, studentId);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error leaving group:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   getAllGroups,
   getGroupById,
@@ -547,4 +590,5 @@ module.exports = {
   getTeacherGroups,
   getGroupStudents,
   deleteStudentFromGroup,
+  leaveGroup,
 };

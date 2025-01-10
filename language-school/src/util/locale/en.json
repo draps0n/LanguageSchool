@@ -232,5 +232,8 @@
   "Zaakceptowane": "Accepted",
   "Odrzucone": "Rejected",
   "errorDeletingStudentFromCourse": "An error occurred while removing the student from the course.",
-  "studentDeletedFromCourse": "Student has been removed from the course."
+  "studentDeletedFromCourse": "Student has been removed from the course.",
+  "leaveGroup": "Leave the group",
+  "errorLeavingGroup": "An error occurred while leaving the group.",
+  "groupLeft": "You left the group."
 }
