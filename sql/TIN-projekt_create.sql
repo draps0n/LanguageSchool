@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2025-01-06 16:09:46.867
+-- Last modification date: 2025-01-10 22:10:44.548
 
 -- tables
 -- Table: Grupa
@@ -65,7 +65,7 @@ CREATE TABLE Rola (
 
 -- Table: Status_zgloszenia
 CREATE TABLE Status_zgloszenia (
-    id int  NOT NULL AUTO_INCREMENT,
+    id int  NOT NULL,
     nazwa nvarchar(50)  NOT NULL,
     CONSTRAINT Status_zgloszenia_pk PRIMARY KEY (id)
 );
@@ -109,7 +109,6 @@ CREATE TABLE Zgloszenie (
 CREATE TABLE Znajomosc_jezyka (
     nauczyciel int  NOT NULL,
     jezyk int  NOT NULL,
-    poziom int  NOT NULL,
     CONSTRAINT Znajomosc_jezyka_pk PRIMARY KEY (nauczyciel,jezyk)
 );
 
@@ -173,10 +172,6 @@ ALTER TABLE Znajomosc_jezyka ADD CONSTRAINT Znajomosc_jezyka_Jezyk FOREIGN KEY Z
 -- Reference: Znajomosc_jezyka_Nauczyciel (table: Znajomosc_jezyka)
 ALTER TABLE Znajomosc_jezyka ADD CONSTRAINT Znajomosc_jezyka_Nauczyciel FOREIGN KEY Znajomosc_jezyka_Nauczyciel (nauczyciel)
     REFERENCES Nauczyciel (id);
-
--- Reference: Znajomosc_jezyka_Poziom_jezyka (table: Znajomosc_jezyka)
-ALTER TABLE Znajomosc_jezyka ADD CONSTRAINT Znajomosc_jezyka_Poziom_jezyka FOREIGN KEY Znajomosc_jezyka_Poziom_jezyka (poziom)
-    REFERENCES Poziom_jezyka (id);
 
 -- End of file.
 
