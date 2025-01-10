@@ -13,6 +13,7 @@ import {
   FaUsers,
   FaClipboardList,
 } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/Header.css";
 
@@ -20,8 +21,20 @@ function Header() {
   // Pobierz dane użytkownika i funkcję do ich aktualizacji z kontekstu
   const { userData, setUserData } = useAuth();
 
+  // Pobierz tłumaczenia
+  const { t, i18n } = useTranslation();
+
   // Funkcja do nawigacji
   const navigate = useNavigate();
+
+  // Stan do przechowywania akutalnie wybranego języka
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
+
+  // Funkcja do zmiany języka
+  const changeLanguage = (language) => {
+    i18n.changeLanguage(language);
+    setCurrentLanguage(language);
+  };
 
   // Funkcja do wylogowania użytkownika
   const handleLogout = async () => {
@@ -57,29 +70,37 @@ function Header() {
         <nav>
           <div className="logo-container">
             <img src="/favicon.ico" alt="Logo" className="logo" />
-            <span className="logo-text">Szkoła Inglisz</span>
+            <span className="logo-text">{t("title")}</span>
           </div>
           <div className="menu-toggle" onClick={toggleMenu}>
             <span></span>
             <span></span>
             <span></span>
           </div>
+          <select
+            className="page-language-select"
+            value={currentLanguage}
+            onChange={(e) => changeLanguage(e.target.value)}
+          >
+            <option value="pl">PL</option>
+            <option value="en">EN</option>
+          </select>
           <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
             {(!userData || userData?.roleId !== roles.EMPLOYEE) && (
               <>
                 <li>
                   <Link to="/" className="link-with-icon">
-                    Szkoła <FaSchool className="icon" />
+                    {t("school")} <FaSchool className="icon" />
                   </Link>
                 </li>
                 <li>
                   <Link to="/about" className="link-with-icon">
-                    O nas <FaCircleInfo className="icon" />
+                    {t("about")} <FaCircleInfo className="icon" />
                   </Link>
                 </li>
                 <li>
                   <Link to="/contact" className="link-with-icon">
-                    Kontakt <FaSquarePhone className="icon" />
+                    {t("contact")} <FaSquarePhone className="icon" />
                   </Link>
                 </li>
               </>
@@ -88,12 +109,12 @@ function Header() {
               <>
                 <li>
                   <Link to="/admin/applications" className="link-with-icon">
-                    Zgłoszenia <FaClipboardList className="icon" />
+                    {t("applications")} <FaClipboardList className="icon" />
                   </Link>
                 </li>
                 <li>
                   <Link to="/admin/users" className="link-with-icon">
-                    Użytkownicy <FaUsers className="icon" />
+                    {t("users")} <FaUsers className="icon" />
                   </Link>
                 </li>
               </>
@@ -101,28 +122,28 @@ function Header() {
             {userData && (
               <li>
                 <Link to="/courses" className="link-with-icon">
-                  Kursy <FaBook className="icon" />
+                  {t("courses")} <FaBook className="icon" />
                 </Link>
               </li>
             )}
             {userData && (
               <li>
                 <Link to="/profile" className="link-with-icon">
-                  Profil <FaHouseUser className="icon" />
+                  {t("profile")} <FaHouseUser className="icon" />
                 </Link>
               </li>
             )}
             <li>
               {userData ? (
                 <button className="header-button" onClick={handleLogout}>
-                  Wyloguj się
+                  {t("logout")}
                 </button>
               ) : (
                 <button
                   className="header-button"
                   onClick={() => navigate("/login")}
                 >
-                  Zaloguj się
+                  {t("login")}
                 </button>
               )}
             </li>

@@ -86,6 +86,13 @@ nav {
   background-color: #181c25;
 }
 
+.page-language-select {
+  padding: 0.2rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
 @media (max-width: 1200px) {
   nav {
     flex-direction: column;

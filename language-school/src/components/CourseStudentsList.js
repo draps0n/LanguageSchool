@@ -32,7 +32,7 @@ function CourseStudentsList({ groupId }) {
     };
 
     fetchGroupStudents();
-  }, [groupId, axios]);
+  }, [groupId, axios, currentPage]);
 
   if (loading) {
     return <Loading />;

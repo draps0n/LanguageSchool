@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
 import ApplicationListItem from "./ApplicationListItem";
@@ -56,20 +55,6 @@ function ApplicationsList({ isUserSpecific }) {
       setTotalPages(response.data.totalPages);
     } catch (error) {
       toast.error("Wystąpił błąd podczas odświeżania zgłoszeń.");
-    }
-  };
-
-  // Funkcja do obsługi przycisku "Następna"
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
-
-  // Funkcja do obsługi przycisku "Poprzednia"
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
     }
   };
 

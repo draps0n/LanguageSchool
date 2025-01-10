@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaUserPlus, FaEdit } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import BackButton from "./BackButton";
 import FormSelect from "./FormSelect";
 import { formatDate } from "../util/helpers";

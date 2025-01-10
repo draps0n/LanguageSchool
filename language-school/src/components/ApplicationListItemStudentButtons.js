@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheckCircle, FaTimesCircle, FaUsers, FaEdit } from "react-icons/fa";
+import { FaTimesCircle, FaUsers, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import applicationStates from "../constants/applicationStates";
