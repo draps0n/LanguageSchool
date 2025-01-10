@@ -133,26 +133,14 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
     return <Loading />;
   }
 
-  if (knownLanguages.length === 0) {
-    return (
-      <div className="known-languages-container">
-        <h3>Nie przypisano znajomości języków.</h3>
-        {shouldShowButtons && (
-          <button
-            onClick={handleAddLanguage}
-            className="icon-button add-button"
-          >
-            <FaPlus />
-          </button>
-        )}
-      </div>
-    );
-  }
-
   return (
     <div className="known-languages-container">
       <div>
-        <h3>Znane języki:</h3>
+        <h3>
+          {knownLanguages.length === 0
+            ? "Nie przypisano znajomości języków."
+            : "Znane języki:"}
+        </h3>
         <ul>
           {knownLanguages.map((language) => (
             <li key={language.id} className="known-language">
