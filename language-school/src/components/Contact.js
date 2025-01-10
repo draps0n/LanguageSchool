@@ -10,11 +10,14 @@ function Contact() {
         <p>{t("contactDescription")}</p>
         <h2>{t("contact")}</h2>
         <p>
-          {t("address")}: ul. Językowa 123, 00-001 Warszawa
+          {t("schoolAddress")}
           <br />
           {t("phone")}: 123-456-789
           <br />
-          {t("emailAddress")}: kontakt@szkolajezykowa.pl
+          {t("emailAddress")}:{" "}
+          <a href="mailto:kontakt@szkolajezykowa.pl">
+            kontakt@szkolajezykowa.pl
+          </a>
         </p>
       </section>
     </div>

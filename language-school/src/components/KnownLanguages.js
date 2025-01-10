@@ -81,7 +81,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
     e.preventDefault();
 
     if (!chosenLanguage || chosenLanguage.id === 0) {
-      setLanguageError("Musisz wybrać język, aby go dodać.");
+      setLanguageError(t("chooseLanguageToAdd"));
       return;
     }
 
@@ -115,7 +115,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
     const languageId = e.target.value;
 
     if (!languageId) {
-      setLanguageError("Musisz wybrać język, aby go dodać.");
+      setLanguageError(t("chooseLanguageToAdd"));
       return;
     }
 

@@ -1,10 +1,10 @@
 const validateName = (name) => {
   if (!name) {
-    return "Imię nie może być puste";
+    return "nameCannotBeEmpty";
   }
 
-  if (name.length < 3) {
-    return "Imię musi zawierać co najmniej 3 znaki";
+  if (name.length < 3 || name.length > 50) {
+    return "incorrectNameSize";
   }
 
   return "";
@@ -12,11 +12,11 @@ const validateName = (name) => {
 
 const validateLastName = (lastName) => {
   if (!lastName) {
-    return "Naziwsko nie może być puste";
+    return "lastNameCannotBeEmpty";
   }
 
   if (lastName.length < 3) {
-    return "Imię musi zawierać co najmniej 3 znaki";
+    return "incorrectLastNameSize";
   }
 
   return "";
@@ -24,12 +24,16 @@ const validateLastName = (lastName) => {
 
 const validateEmail = (email) => {
   if (!email) {
-    return "Adres email jest wymagany";
+    return "emailCannotBeEmpty";
+  }
+
+  if (email.length < 5 || email.length > 100) {
+    return "incorrectEmailSize";
   }
 
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!regex.test(email)) {
-    return "Proszę podać prawidłowy adres email";
+    return "incorrectEmailFormat";
   }
 
   return "";
@@ -41,12 +45,16 @@ const validatePassword = (password, isObligatory = false) => {
   }
 
   if (isObligatory && !password) {
-    return "Hasło nie może być puste";
+    return "passwordCannotBeEmpty";
+  }
+
+  if (password.length < 8 || password.length > 50) {
+    return "incorrectPasswordSize";
   }
 
   const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\d\s]).{8,}$/;
   if (!regex.test(password)) {
-    return "Hasło musi zawierać co najmniej 8 znaków, w tym jedną wielką literę, jedną małą literę, jedną cyfrę i jeden znak specjalny.";
+    return "passwordNotSecure";
   }
 
   return "";
@@ -54,7 +62,7 @@ const validatePassword = (password, isObligatory = false) => {
 
 const validateIfPasswordsMatch = (password, confirmPassword) => {
   if (password !== confirmPassword) {
-    return "Hasła nie są takie same";
+    return "passwordsDoNotMatch";
   }
 
   return "";
@@ -66,7 +74,7 @@ const validateDateOfBirth = (dateOfBirth) => {
   }
 
   if (new Date(dateOfBirth) > new Date()) {
-    return "Data urodzenia nie może być z przyszłości";
+    return "dateOfBirthCannotBeEmpty";
   }
 
   const today = new Date();
@@ -74,7 +82,7 @@ const validateDateOfBirth = (dateOfBirth) => {
     new Date(dateOfBirth) >
     new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
   ) {
-    return "Musisz mieć ukończone 18 lat";
+    return "atLeast18YearsOld";
   }
 
   return "";
@@ -82,15 +90,11 @@ const validateDateOfBirth = (dateOfBirth) => {
 
 const validateDescription = (description) => {
   if (!description) {
-    return "Opis nie może być pusty";
+    return "descriptionCannotBeEmpty";
   }
 
-  if (description.length < 10) {
-    return "Opis musi zawierać co najmniej 10 znaków";
-  }
-
-  if (description.length > 200) {
-    return "Opis nie może zawierać więcej niż 200 znaków";
+  if (description.length < 10 || description.length > 200) {
+    return "incorrectDescriptionSize";
   }
 
   return "";
@@ -98,7 +102,7 @@ const validateDescription = (description) => {
 
 const validateApplicationStartDate = (startDate) => {
   if (!startDate) {
-    return "Data rozpoczęcia jest wymagana";
+    return "startDateIsRequired";
   }
 
   const today = new Date();
@@ -122,7 +126,7 @@ const validateApplicationComment = (message) => {
   }
 
   if (message.length < 10 || message.length > 300) {
-    return "Uwagi muszą mieć od 10 do 300 znaków";
+    return "incorrectCommentSize";
   }
 
   return "";
@@ -133,16 +137,8 @@ const validateGroupPlaces = (places) => {
     return "Liczba miejsc jest wymagana";
   }
 
-  if (isNaN(places)) {
-    return "Liczba miejsc musi być liczbą";
-  }
-
-  if (places < 6) {
-    return "Liczba miejsc nie może być mniejsza od 6";
-  }
-
-  if (places > 20) {
-    return "Liczba miejsc nie może być większa od 20";
+  if (isNaN(places) || places < 6 || places > 20) {
+    return "incorrectNumberOfPlaces";
   }
 
   return "";
@@ -150,15 +146,11 @@ const validateGroupPlaces = (places) => {
 
 const validateGroupDescription = (description) => {
   if (!description) {
-    return "Opis jest wymagany";
+    return "descriptionCannotBeEmpty";
   }
 
-  if (description.length < 5) {
-    return "Opis musi zawierać co najmniej 5 znaków";
-  }
-
-  if (description.length > 250) {
-    return "Opis nie może przekraczać 250 znaków";
+  if (description.length < 5 || description.length > 250) {
+    return "incorrectGroupDescription";
   }
 
   return "";
@@ -166,15 +158,11 @@ const validateGroupDescription = (description) => {
 
 const validateGroupPrice = (price) => {
   if (!price) {
-    return "Cena jest wymagana";
+    return "priceForClassesRequired";
   }
 
-  if (isNaN(price)) {
-    return "Cena musi być liczbą";
-  }
-
-  if (price < 0 || price > 1000) {
-    return "Cena musi być w przedziale (0, 1000)";
+  if (isNaN(price) || price < 0 || price > 1000) {
+    return "incorrectPriceForClasses";
   }
 
   return "";
@@ -182,7 +170,7 @@ const validateGroupPrice = (price) => {
 
 const validateGroupTeacher = (teacher) => {
   if (!teacher) {
-    return "Nauczyciel jest wymagany";
+    return "teacherIsRequired";
   }
 
   return "";
@@ -190,7 +178,7 @@ const validateGroupTeacher = (teacher) => {
 
 const validateGroupLanguage = (language) => {
   if (!language) {
-    return "Język jest wymagany";
+    return "languageIsRequired";
   }
 
   return "";
@@ -198,7 +186,7 @@ const validateGroupLanguage = (language) => {
 
 const validateGroupLevel = (level) => {
   if (!level) {
-    return "Poziom jest wymagany";
+    return "levelIsRequired";
   }
 
   return "";
@@ -206,7 +194,7 @@ const validateGroupLevel = (level) => {
 
 const validateGroupDayOfWeek = (day) => {
   if (!day) {
-    return "Dzień tygodnia jest wymagany";
+    return "dayOfWeekIsRequired";
   }
 
   return "";
@@ -214,13 +202,13 @@ const validateGroupDayOfWeek = (day) => {
 
 const validateGroupTime = (startTime, endTime) => {
   if (!startTime || !endTime) {
-    return "Godzina rozpoczęcia i zakończenia są wymagane";
+    return "timeIsRequired";
   }
 
   if (startTime >= endTime) {
-    return "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia";
+    return "endTimeInvalid";
   } else if (endTime <= startTime) {
-    return "Godzina zakończenia musi być późniejsza niż godzina rozpoczęcia";
+    return "startTimeInvalid";
   } else {
     return "";
   }
@@ -228,19 +216,11 @@ const validateGroupTime = (startTime, endTime) => {
 
 const validateEmployeeSalary = (salary) => {
   if (!salary) {
-    return "Wynagrodzenie jest wymagane";
+    return "salaryRequired";
   }
 
-  if (isNaN(salary)) {
-    return "Wynagrodzenie musi być liczbą";
-  }
-
-  if (salary < 0) {
-    return "Wynagrodzenie nie może być ujemne";
-  }
-
-  if (salary > 100000) {
-    return "Wynagrodzenie nie może przekraczać 100 000";
+  if (isNaN(salary) || salary < 0 || salary > 100000) {
+    return "incorrectSalary";
   }
 
   return "";
@@ -248,7 +228,7 @@ const validateEmployeeSalary = (salary) => {
 
 const validateApplicationGroup = (groupId) => {
   if (!groupId) {
-    return "Grupa jest wymagana";
+    return "groupIsRequired";
   }
 
   return "";
@@ -259,12 +239,8 @@ const validateFeedbackMessage = (message) => {
     return "";
   }
 
-  if (message.length < 10) {
-    return "Wiadomość zwrotna musi zawierać co najmniej 10 znaków";
-  }
-
-  if (message.length > 200) {
-    return "Wiadomość zwrotna nie może przekraczać 200 znaków";
+  if (message.length < 10 || message.length > 200) {
+    return "feedbackMessageSize";
   }
 
   return "";
@@ -272,19 +248,11 @@ const validateFeedbackMessage = (message) => {
 
 const validateTeacherHourlyRate = (hourlyRate) => {
   if (!hourlyRate) {
-    return "Stawka godzinowa jest wymagana";
+    return "hourlyRateRequired";
   }
 
-  if (isNaN(hourlyRate)) {
-    return "Stawka godzinowa musi być liczbą";
-  }
-
-  if (hourlyRate < 0) {
-    return "Stawka godzinowa nie może być ujemna";
-  }
-
-  if (hourlyRate > 1000) {
-    return "Stawka godzinowa nie może przekraczać 1000";
+  if (isNaN(hourlyRate) || hourlyRate < 0 || hourlyRate > 1000) {
+    return "hourlyRateInvalid";
   }
 
   return "";
@@ -292,19 +260,11 @@ const validateTeacherHourlyRate = (hourlyRate) => {
 
 const validateTeacherHoursWorked = (hoursWorked) => {
   if (!hoursWorked) {
-    return "Liczba godzin jest wymagana";
+    return "hoursWorkedRequired";
   }
 
-  if (isNaN(hoursWorked)) {
-    return "Liczba godzin musi być liczbą";
-  }
-
-  if (hoursWorked < 0) {
-    return "Liczba godzin nie może być ujemna";
-  }
-
-  if (hoursWorked > 1000) {
-    return "Liczba godzin nie może przekraczać 1000";
+  if (isNaN(hoursWorked) || hoursWorked < 0 || hoursWorked > 1000) {
+    return "incorrectHoursWorked";
   }
 
   return "";
@@ -312,7 +272,7 @@ const validateTeacherHoursWorked = (hoursWorked) => {
 
 const validateStudentDiscount = (discount) => {
   if (discount === undefined || discount === null) {
-    return "Określenie czy przysługuje rabat jest wymagane";
+    return "discountRequired";
   }
 
   return "";

@@ -66,7 +66,7 @@ function UserDetails() {
             <span className="label">{t("email")}:</span> {user.email}
           </p>
           <p className="info-item">
-            <span className="label">{t("role")}:</span> {user.role}
+            <span className="label">{t("role")}:</span> {t(user.role)}
           </p>
           <p className="info-item">
             <span className="label">{t("dateOfBirth")}:</span>{" "}

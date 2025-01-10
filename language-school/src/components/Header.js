@@ -46,13 +46,13 @@ function Header() {
       setUserData(null);
 
       // Wyświetlenie komunikatu o wylogowaniu
-      toast.info("Zostałeś wylogowany.");
+      toast.info(t("logoutSuccess"));
 
       // Przekierowanie na stronę główną
       navigate("/");
     } catch (error) {
       console.error(error);
-      toast.error("Wystąpił błąd podczas wylogowywania. Spróbuj ponownie.");
+      toast.error(t("logoutError"));
     }
   };
 

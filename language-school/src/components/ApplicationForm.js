@@ -66,7 +66,11 @@ function ApplicationForm() {
             response.data.groups.map((group) => {
               return {
                 id: group.id,
-                name: `${group.languageCode}-${group.id} - ${group.language} - ${group.level} - ${group.day} - ${group.startTime}-${group.endTime}`,
+                name: `${group.languageCode}-${group.id} - ${t(
+                  group.language
+                )} - ${group.level} - ${t(group.day)} - ${group.startTime}-${
+                  group.endTime
+                }`,
               };
             })
           );
@@ -117,9 +121,7 @@ function ApplicationForm() {
         );
 
         if (response.status === 204) {
-          toast.success(
-            "Zgłoszenie do grupy językowej zaktualizowane pomyślnie!"
-          );
+          toast.success(t("applicationEdited"));
           navigate(`/my-applications`);
         } else {
           throw new Error("Error");
@@ -130,7 +132,7 @@ function ApplicationForm() {
 
         // jeśli zgłoszenie zakończyło się sukcesem
         if (response.status === 201) {
-          toast.success("Zgłoszenie do grupy językowej zakończone pomyślnie!");
+          toast.success(t("applicationAdded"));
           navigate(`/courses/${id}`);
         } else {
           throw new Error("Error");

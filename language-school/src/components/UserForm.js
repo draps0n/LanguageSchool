@@ -314,7 +314,6 @@ function UserForm({ isRegistration }) {
       try {
         const response = await axios.post("/users", toSend);
         toast.success(t("userRegisterSuccess"));
-        console.log(response.data);
         navigate(`/admin/users/${response.data.userId}`);
       } catch (error) {
         console.error(error);
@@ -412,6 +411,7 @@ function UserForm({ isRegistration }) {
             }}
             options={rolesFromDb}
             error={errors.role}
+            shouldTranslateName={true}
           />
         )}
 

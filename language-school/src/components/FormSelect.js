@@ -2,7 +2,15 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import "../styles/InputField.css";
 
-function FormSelect({ label, name, value, onChange, options, error }) {
+function FormSelect({
+  label,
+  name,
+  value,
+  onChange,
+  options,
+  error,
+  shouldTranslateName = false,
+}) {
   const { t } = useTranslation();
   return (
     <div className="form-group">
@@ -16,12 +24,13 @@ function FormSelect({ label, name, value, onChange, options, error }) {
         value={value || ""}
         onChange={onChange}
       >
-        <option value="" disabled hidden className="placeholder-option">
+        <option key={0} value="" disabled hidden className="placeholder-option">
           {t("choose")} {label.toLowerCase()}
         </option>
         {options.map((option) => (
           <option key={option.id} value={option.id}>
-            {option.name + (option?.lastName ? ` ${option.lastName}` : "")}
+            {(shouldTranslateName ? t(option.name) : option.name) +
+              (option?.lastName ? ` ${option.lastName}` : "")}
           </option>
         ))}
       </select>

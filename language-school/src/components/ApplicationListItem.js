@@ -44,7 +44,7 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
           {application.groupId}
         </p>
         <p>
-          <strong>{t("status")}</strong> {application.status.name}
+          <strong>{t("status")}</strong> {t(application.status.name)}
         </p>
       </div>
       <div className={`application-details ${showDetails ? "open" : ""}`}>

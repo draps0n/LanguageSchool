@@ -347,7 +347,7 @@ function CourseForm() {
           onChange={handleChange}
           required={true}
           error={errors.description}
-          placeholder="Opis grupy (5-250 znaków)"
+          placeholder={t("groupDescriptionPlaceholder")}
           rows={5}
         />
 
@@ -379,6 +379,7 @@ function CourseForm() {
           onChange={handleChange}
           options={languages}
           error={errors.language}
+          shouldTranslateName={true}
         />
 
         <FormSelect
@@ -397,6 +398,7 @@ function CourseForm() {
           onChange={handleChange}
           options={daysOfWeek}
           error={errors.day}
+          shouldTranslateName={true}
         />
 
         <InputField

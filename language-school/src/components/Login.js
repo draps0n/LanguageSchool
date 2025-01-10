@@ -59,13 +59,13 @@ function Login() {
       navigate(from, { replace: true });
     } catch (error) {
       if (error && !error.response) {
-        setError("Brak odpowiedzi ze strony serwera");
+        setError(t("noServerResponse"));
       } else if (error.response.status === 400) {
-        setError("Email lub hasło nie zostało podane");
+        setError(t("emailOrPasswordNotGiven"));
       } else if (error.response.status === 401) {
-        setError("Nieprawidłowy email lub hasło");
+        setError(t("emailOrPasswordIncorrect"));
       } else {
-        setError("Logowanie nie powiodło się");
+        setError(t("loginError"));
       }
     }
   };
@@ -95,7 +95,7 @@ function Login() {
           error={emailError}
           required={true}
           autoComplete={"email"}
-          placeholder="Wpisz email"
+          placeholder={t("enterEmail")}
         />
 
         <InputField
@@ -106,7 +106,7 @@ function Login() {
           onChange={handleChange}
           required={true}
           autoComplete={"current-password"}
-          placeholder="Wpisz hasło"
+          placeholder={t("enterPassword")}
         />
         <div className="form-group">
           <Link to="/register">{t("register")}</Link>

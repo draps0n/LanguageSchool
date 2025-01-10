@@ -97,11 +97,12 @@ function Profile() {
         });
       } catch (error) {
         console.error("Error fetching user data:", error);
+        toast.error(t("errorFetchingUserData"));
       }
     };
 
     getProfileData();
-  }, [userData, axios]);
+  }, [userData, axios, t]);
 
   const toggleEditMode = () => {
     setEditMode(!editMode);
@@ -268,7 +269,7 @@ function Profile() {
         toast.error(t("updateProfileError"));
       }
 
-      // Resetuj dane w formularzy gdy błąd
+      // Resetuj dane w formularzy, gdy błąd
       setFormData((prev) => ({
         ...prev,
         name: user.name,
@@ -281,6 +282,8 @@ function Profile() {
         description: user.description,
         salary: user.salary,
       }));
+
+      toast.error(t("profileEditError"));
       console.error("Error updating user data:", error);
       setEditMode(false);
     }
