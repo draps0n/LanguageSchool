@@ -230,5 +230,7 @@
   "discountRequired": "Determining whether you are eligible for a discount is required.",
   "W trakcie rozpatrywania": "Under consideration",
   "Zaakceptowane": "Accepted",
-  "Odrzucone": "Rejected"
+  "Odrzucone": "Rejected",
+  "errorDeletingStudentFromCourse": "An error occurred while removing the student from the course.",
+  "studentDeletedFromCourse": "Student has been removed from the course."
 }

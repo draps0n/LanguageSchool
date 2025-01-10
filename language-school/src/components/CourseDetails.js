@@ -15,13 +15,17 @@ const CourseDetails = () => {
   const { userData } = useAuth();
   const axios = useAxiosAuth();
   const { id } = useParams();
-  const [course, setCourse] = useState(null);
+  const [group, setGroup] = useState(null);
+  const [takenPlaces, setTakenPlaces] = useState(0);
+  const [absences, setAbsences] = useState(null);
 
   useEffect(() => {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(`/groups/${id}`);
-        setCourse(response.data);
+        setGroup(response.data.group);
+        setTakenPlaces(response.data.takenPlaces);
+        setAbsences(response.data.absences);
       } catch (error) {
         console.error("Error fetching course:", error);
         toast.error(t("errorFetchingCourse"));
@@ -31,12 +35,9 @@ const CourseDetails = () => {
     fetchCourse();
   }, [id, axios, t]);
 
-  if (!course) {
+  if (!group) {
     return <Loading />;
   }
-
-  const { group, takenPlaces, absences } = course;
-  const takenPercentage = (takenPlaces / group.places) * 100;
 
   return (
     <div>
@@ -65,21 +66,25 @@ const CourseDetails = () => {
         <div className="progress-bar">
           <div
             className="progress"
-            style={{ width: `${takenPercentage}%` }}
+            style={{ width: `${(takenPlaces / group.places) * 100}%` }}
           ></div>
         </div>
         <p>
           <strong>{t("teacher")}:</strong> {group.teacher.name}{" "}
           {group.teacher.lastName}
         </p>
-        {absences !== null && absences !== undefined && (
+        {absences && (
           <p>
             <strong>{t("absencesNumber")}:</strong> {absences}
           </p>
         )}
         {(group.teacher.id === userData.userId ||
           userData.roleId === roles.EMPLOYEE) && (
-          <CourseStudentsList groupId={group.id} />
+          <CourseStudentsList
+            groupId={group.id}
+            takenPlaces={takenPlaces}
+            setTakenPlaces={setTakenPlaces}
+          />
         )}
       </div>
       <CourseDetailsButtonPanel

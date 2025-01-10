@@ -230,5 +230,7 @@
   "discountRequired": "Es muss festgestellt werden, ob Sie Anspruch auf einen Rabatt haben.",
   "W trakcie rozpatrywania": "In Erwägung gezogen",
   "Zaakceptowane": "Akzeptiert",
-  "Odrzucone": "Abgelehnt"
+  "Odrzucone": "Abgelehnt",
+  "errorDeletingStudentFromCourse": "Beim Entfernen eines Studenten aus dem Kurs ist ein Fehler aufgetreten.",
+  "studentDeletedFromCourse": "Der Student wurde aus dem Kurs entfernt."
 }

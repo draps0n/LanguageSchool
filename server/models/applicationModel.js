@@ -33,6 +33,7 @@ const getAllApplications = async (limit, offset) => {
     INNER JOIN status_zgloszenia sz ON z.status = sz.id
     INNER JOIN jezyk j ON g.jezyk = j.id
     INNER JOIN poziom_jezyka pj ON g.poziom = pj.id
+    ORDER BY z.data_przeslania DESC
     LIMIT ?
     OFFSET ?;
     `,
@@ -71,6 +72,7 @@ const getUserApplications = async (userId, limit, offset) => {
     INNER JOIN jezyk j ON g.jezyk = j.id
     INNER JOIN poziom_jezyka pj ON g.poziom = pj.id
     WHERE z.kursant = ?
+    ORDER BY z.data_przeslania DESC
     LIMIT ?
     OFFSET ?;
     `,

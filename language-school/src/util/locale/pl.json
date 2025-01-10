@@ -230,5 +230,7 @@
   "discountRequired": "Określenie czy przysługuje rabat jest wymagane.",
   "W trakcie rozpatrywania": "W trakcie rozpatrywania",
   "Zaakceptowane": "Zaakceptowane",
-  "Odrzucone": "Odrzucone"
+  "Odrzucone": "Odrzucone",
+  "errorDeletingStudentFromCourse": "Wystąpił błąd podczas usuwania ucznia z kursu.",
+  "studentDeletedFromCourse": "Uczeń został usunięty z kursu."
 }

@@ -6,6 +6,7 @@ const getAllGroups = async (limit, offset) => {
     FROM grupa g
     INNER JOIN jezyk j ON j.id = g.jezyk
     INNER JOIN poziom_jezyka pj ON pj.id = g.poziom
+    ORDER BY g.id
     `;
   const params = [];
 
@@ -67,6 +68,7 @@ const getUserGroups = async (userId, limit, offset) => {
     INNER JOIN poziom_jezyka pj ON pj.id = g.poziom
     INNER JOIN uczestnictwo u ON u.grupa = g.id
     WHERE u.kursant = ?
+    ORDER BY g.id
     `;
   const params = [userId];
 
@@ -280,6 +282,7 @@ const getTeacherGroups = async (userId, limit, offset) => {
     INNER JOIN jezyk j ON j.id = g.jezyk
     INNER JOIN poziom_jezyka pj ON pj.id = g.poziom
     WHERE g.nauczyciel = ?
+    ORDER BY g.id
     `;
   const params = [userId];
 
@@ -322,10 +325,11 @@ const getTotalTeacherGroups = async (userId) => {
 
 const getGroupStudents = async (groupId, limit, offset) => {
   let query = `
-    SELECT u.imie, u.nazwisko, u.email, uc.liczba_nieobecnosci
+    SELECT u.id, u.imie, u.nazwisko, u.email, uc.liczba_nieobecnosci
     FROM uczestnictwo uc
     INNER JOIN uzytkownik u ON u.id = uc.kursant
     WHERE uc.grupa = ?
+    ORDER BY uc.liczba_nieobecnosci DESC
     `;
   const params = [groupId];
 
@@ -342,12 +346,36 @@ const getGroupStudents = async (groupId, limit, offset) => {
 
   return results.map((student) => {
     return {
+      id: student.id,
       name: student.imie,
       lastName: student.nazwisko,
       email: student.email,
       absences: student.liczba_nieobecnosci,
     };
   });
+};
+
+const isStudentInGroup = async (groupId, studentId) => {
+  const [results] = await pool.query(
+    `
+    SELECT 1
+    FROM uczestnictwo
+    WHERE kursant = ? AND grupa = ?
+    `,
+    [studentId, groupId]
+  );
+
+  return results.length > 0;
+};
+
+const deleteStudentFromGroup = async (groupId, studentId) => {
+  await pool.query(
+    `
+    DELETE FROM uczestnictwo
+    WHERE grupa = ? AND kursant = ?
+    `,
+    [groupId, studentId]
+  );
 };
 
 module.exports = {
@@ -368,4 +396,6 @@ module.exports = {
   getTotalTeacherGroups,
   getGroupStudents,
   deleteGroupsMembershipsByStudentId,
+  isStudentInGroup,
+  deleteStudentFromGroup,
 };

@@ -6,29 +6,34 @@ const { getRoles } = require("../config/roles");
 
 router
   .get("/available", groupController.getAvailableGroupsForUser)
-  .get("/", groupController.getAllGroups)
   .get("/user", verifyRole(getRoles().KURSANT), groupController.getUserGroups)
   .get(
     "/teacher",
     verifyRole(getRoles().NAUCZYCIEL),
     groupController.getTeacherGroups
   )
-  .get("/:id", groupController.getGroupById)
+  .delete(
+    "/:groupId/students/:studentId",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    groupController.deleteStudentFromGroup
+  )
   .get("/:id/students", groupController.getGroupStudents)
+  .get("/:id", groupController.getGroupById)
   .delete(
     "/:id",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     groupController.deleteGroup
   )
-  .post(
-    "/",
-    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
-    groupController.createGroup
-  )
   .put(
     "/:id",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     groupController.updateGroup
+  )
+  .get("/", groupController.getAllGroups)
+  .post(
+    "/",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    groupController.createGroup
   );
 
 module.exports = router;

@@ -6,6 +6,7 @@ const applicationModel = require("../models/applicationModel");
 const daysOfWeek = require("../constants/daysOfWeek");
 const studentModel = require("../models/studentModel");
 const { pool } = require("../db/database");
+const { getRoles } = require("../config/roles");
 
 const getAllGroups = async (req, res) => {
   if (req.query.page && isNaN(req.query.page)) {
@@ -200,7 +201,7 @@ const getGroupById = async (req, res) => {
     const takenPlaces = await groupModel.getTakenPlaces(id);
 
     let absences = null;
-    if (req.userId && !isNaN(req.userId)) {
+    if (req.userId && !isNaN(req.userId) && req.roleId === getRoles().KURSANT) {
       const userId = req.userId;
 
       absences = await groupModel.getUserAbsences(id, userId);
@@ -482,11 +483,55 @@ const getGroupStudents = async (req, res) => {
     // Pobranie studentów przypisanych do grupy
     // const students = await groupModel.getGroupStudents(groupId);
     const totalPages = Math.ceil(totalStudents / limit);
-    res
-      .status(200)
-      .json({ students, totalPages: totalPages > 0 ? totalPages : 1 });
+    res.status(200).json({
+      students,
+      totalPages: totalPages > 0 ? totalPages : 1,
+    });
   } catch (error) {
     console.error("Error fetching group students:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const deleteStudentFromGroup = async (req, res) => {
+  const groupId = req.params.groupId;
+  const studentId = req.params.studentId;
+
+  if (!groupId || isNaN(groupId)) {
+    return res
+      .status(400)
+      .json({ message: "Group id is required and has to be a number" });
+  }
+
+  if (!studentId || isNaN(studentId)) {
+    return res
+      .status(400)
+      .json({ message: "Student id is required and has to be a number" });
+  }
+
+  try {
+    const fetchedGroup = await groupModel.getGroupById(groupId);
+    if (!fetchedGroup) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    const fetchedStudent = await studentModel.getStudentById(studentId);
+    if (!fetchedStudent) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const isStudentInGroup = await groupModel.isStudentInGroup(
+      groupId,
+      studentId
+    );
+    if (!isStudentInGroup) {
+      return res.status(404).json({ message: "Student is not in this group" });
+    }
+
+    await groupModel.deleteStudentFromGroup(groupId, studentId);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error("Error deleting student from group:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -501,4 +546,5 @@ module.exports = {
   getAvailableGroupsForUser,
   getTeacherGroups,
   getGroupStudents,
+  deleteStudentFromGroup,
 };
