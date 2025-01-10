@@ -269,6 +269,18 @@ const validateGroup = async (group) => {
     languageId,
   } = group;
 
+  console.log(
+    places,
+    price,
+    description,
+    levelId,
+    day,
+    startTime,
+    endTime,
+    teacherId,
+    languageId
+  );
+
   if (
     !places ||
     !price ||
@@ -321,6 +333,16 @@ const validateGroup = async (group) => {
     return { code: 404, message: "Language not found" };
   }
 
+  let teacherLanguages = await teacherModel.getTeacherLanguages(teacherId);
+  teacherLanguages = teacherLanguages.map((lang) => lang.id);
+  console.log("teacherLanguages", teacherLanguages);
+  if (teacherLanguages.indexOf(languageId) === -1) {
+    return {
+      code: 409,
+      message: "Teacher does not teach this language",
+    };
+  }
+
   if (daysOfWeek.indexOf(day) === -1) {
     return { code: 400, message: "Invalid day" };
   }
@@ -363,6 +385,9 @@ const updateGroup = async (req, res) => {
   const id = req.params.id;
   const group = req.body;
 
+  console.log("group", group);
+  console.log("id", id);
+
   // Sprawdzenie czy podano id grupy
   if (!id) {
     return res.status(400).json({ message: "Group id is required" });
@@ -382,8 +407,22 @@ const updateGroup = async (req, res) => {
   group.places = parseInt(group.places);
   group.price = parseInt(group.price);
 
-  // Aktualizacja grupy w bazie
   try {
+    // TODO: Sprawdzenie czy grupa istnieje
+    const fetchedGroup = await groupModel.getGroupById(id);
+    if (!fetchedGroup) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    // TOOD: Sprawdzenie czy nie będzie konflitku miejsc
+    const takenPlaces = await groupModel.getTakenPlaces(id);
+    if (group.places < takenPlaces) {
+      return res.status(409).json({
+        message: "Cannot set places to less than taken places",
+      });
+    }
+
+    // Aktualizacja grupy w bazie
     await groupModel.updateGroup(id, group);
     res.status(200).send("Group updated");
   } catch (error) {

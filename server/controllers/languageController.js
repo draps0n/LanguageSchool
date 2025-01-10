@@ -86,10 +86,20 @@ const deleteLanguage = async (req, res) => {
   }
 };
 
+const getTaughtLanguages = async (req, res) => {
+  try {
+    const languages = await languageModel.getTaughtLanguages();
+    res.status(200).json(languages);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+};
+
 module.exports = {
   getLanguages,
   getLanguageById,
   createLanguage,
   updateLanguage,
   deleteLanguage,
+  getTaughtLanguages,
 };

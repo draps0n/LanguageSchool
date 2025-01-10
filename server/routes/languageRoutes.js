@@ -5,17 +5,18 @@ const verifyRole = require("../middlewares/verifyRoleMiddleware");
 const { getRoles } = require("../config/roles");
 
 router
-  .get("/", languageController.getLanguages)
+  .get("/taught", languageController.getTaughtLanguages)
   .get("/:id", languageController.getLanguageById)
-  .post(
-    "/",
-    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
-    languageController.createLanguage
-  )
   .put(
     "/:id",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     languageController.updateLanguage
+  )
+  .get("/", languageController.getLanguages)
+  .post(
+    "/",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    languageController.createLanguage
   );
 
 module.exports = router;

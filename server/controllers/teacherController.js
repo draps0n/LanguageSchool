@@ -4,7 +4,15 @@ const languageModel = require("../models/languageModel");
 const getAllTeachers = async (req, res) => {
   try {
     const teachers = await teacherModel.getAllTeachers();
-    res.status(200).json(teachers);
+
+    const teachersWithLanguages = await Promise.all(
+      teachers.map(async (teacher) => {
+        const languages = await teacherModel.getTeacherLanguages(teacher.id);
+        return { ...teacher, languages };
+      })
+    );
+
+    res.status(200).json(teachersWithLanguages);
   } catch (error) {
     console.error("Error fetching teachers:", error);
     res.status(500).json({ message: "Internal server error" });

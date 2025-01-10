@@ -53,7 +53,7 @@ const addNewApplication = async (req, res) => {
     // Sprawdzenie czy grupa nie jest pełna
     const takenPlaces = await groupModel.getTakenPlaces(req.body.groupId);
     if (takenPlaces >= fetchedGroup.places) {
-      res.status(400).json({ message: "Group is full" });
+      res.status(409).json({ message: "Group is full" });
       return;
     }
 
@@ -63,7 +63,7 @@ const addNewApplication = async (req, res) => {
     );
 
     if (isUserInGroup !== null) {
-      res.status(400).json({ message: "User is already in this group" });
+      res.status(409).json({ message: "User is already in this group" });
       return;
     }
 
@@ -296,7 +296,7 @@ const updateApplicationByUser = async (req, res) => {
       fetchedApplication.groupId !== req.body.groupId &&
       takenPlaces >= fetchedGroup.places
     ) {
-      res.status(400).json({ message: "Group is full" });
+      res.status(409).json({ message: "Group is full" });
       return;
     }
 
@@ -308,7 +308,7 @@ const updateApplicationByUser = async (req, res) => {
       );
 
       if (isUserInGroup !== null) {
-        res.status(400).json({ message: "User is already in this group" });
+        res.status(409).json({ message: "User is already in this group" });
         return;
       }
     }

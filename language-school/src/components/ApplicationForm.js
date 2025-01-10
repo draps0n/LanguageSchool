@@ -139,7 +139,18 @@ function ApplicationForm() {
         }
       }
     } catch (error) {
-      toast.error(t("errorWhileSendingData") + t("tryAgainLater"));
+      if (error?.response?.status === 400) {
+        toast.error(t("formContainsErrors"));
+      } else if (error?.response?.status === 409) {
+        if (error?.response?.data?.message === "Group is full") {
+          toast.error(t("groupIsFull"));
+        } else {
+          console.log(error.response.data);
+          toast.error(t("userAlreadyApplied"));
+        }
+      } else {
+        toast.error(t("errorWhileSendingData") + t("tryAgainLater"));
+      }
     }
   };
 

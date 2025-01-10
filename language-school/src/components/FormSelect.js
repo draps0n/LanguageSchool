@@ -10,6 +10,7 @@ function FormSelect({
   options,
   error,
   shouldTranslateName = false,
+  disabled = false,
 }) {
   const { t } = useTranslation();
   return (
@@ -21,8 +22,9 @@ function FormSelect({
         id={name}
         className="input-field"
         name={name}
-        value={value || ""}
+        value={value || 0}
         onChange={onChange}
+        disabled={disabled || options.length === 0}
       >
         <option key={0} value="" disabled hidden className="placeholder-option">
           {t("choose")} {label.toLowerCase()}

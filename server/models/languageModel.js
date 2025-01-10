@@ -45,10 +45,23 @@ const deleteLanguage = async (id) => {
   return results;
 };
 
+const getTaughtLanguages = async () => {
+  const [results] = await pool.query(
+    "SELECT * FROM jezyk WHERE jezyk.id IN (SELECT DISTINCT jezyk FROM znajomosc_jezyka)"
+  );
+
+  return results.map((language) => ({
+    id: language.id,
+    name: language.nazwa,
+    code: language.skrot,
+  }));
+};
+
 module.exports = {
   getAllLanguages,
   getLanguageById,
   createLanguage,
   updateLanguage,
   deleteLanguage,
+  getTaughtLanguages,
 };

@@ -176,9 +176,22 @@ const validateGroupTeacher = (teacher) => {
   return "";
 };
 
-const validateGroupLanguage = (language) => {
-  if (!language) {
+const validateGroupLanguage = (language, teachers) => {
+  if (!language || isNaN(language)) {
     return "languageIsRequired";
+  }
+
+  language = parseInt(language);
+
+  const knownLanguages = new Set();
+  teachers.forEach((teacher) => {
+    teacher.languages.forEach((teacherLang) => {
+      knownLanguages.add(teacherLang.id);
+    });
+  });
+
+  if (!knownLanguages.has(language)) {
+    return "noTeacherTeachesThisLanguage";
   }
 
   return "";

@@ -39,20 +39,9 @@ function CourseForm() {
     places: 0,
     description: "",
     price: 0,
-    teacher: {
-      id: "",
-      name: "",
-      lastName: "",
-    },
-    language: {
-      id: "",
-      name: "",
-      code: "",
-    },
-    level: {
-      id: "",
-      name: "",
-    },
+    teacher: "",
+    language: "",
+    level: "",
     day: {
       id: "",
       name: "",
@@ -94,7 +83,7 @@ function CourseForm() {
 
     const fetchLanguages = async () => {
       try {
-        const response = await axios.get("/languages");
+        const response = await axios.get("/languages/taught");
         setLanguages(response.data);
       } catch (error) {
         console.error(error);
@@ -131,23 +120,12 @@ function CourseForm() {
           places: response.data.group.places,
           description: response.data.group.description,
           price: response.data.group.price,
-          teacher: {
-            id: response.data.group.teacher.id,
-            name: response.data.group.teacher.name,
-            lastName: response.data.group.teacher.lastName,
-          },
-          language: {
-            id: response.data.group.language.id,
-            name: response.data.group.language.name,
-            code: response.data.group.language.code,
-          },
-          level: {
-            id: response.data.group.level.id,
-            name: response.data.group.level.name,
-          },
+          teacher: response.data.group.teacher.id,
+          language: response.data.group.language.id,
+          level: response.data.group.level.id,
           day: {
             id: daysOfWeek.find((d) => d.name === response.data.group.day).id,
-            name: response.data.group.day.name,
+            name: response.data.group.day,
           },
           startTime: response.data.group.startTime,
           endTime: response.data.group.endTime,
@@ -201,7 +179,7 @@ function CourseForm() {
     } else if (name === "language") {
       setErrors({
         ...errors,
-        language: validateGroupLanguage(value),
+        language: validateGroupLanguage(value, teachers),
       });
     } else if (name === "level") {
       setErrors({
@@ -215,27 +193,10 @@ function CourseForm() {
       });
     }
 
-    if (name === "teacher") {
-      const teacher = teachers.find(
-        (teacher) => teacher.id === parseInt(value)
-      );
+    if (name === "teacher" || name === "language" || name === "level") {
       setFormData({
         ...formData,
-        teacher,
-      });
-    } else if (name === "language") {
-      const language = languages.find(
-        (language) => language.id === parseInt(value)
-      );
-      setFormData({
-        ...formData,
-        language,
-      });
-    } else if (name === "level") {
-      const level = levels.find((level) => level.id === parseInt(value));
-      setFormData({
-        ...formData,
-        level,
+        [name]: parseInt(value),
       });
     } else if (name === "day") {
       const day = daysOfWeek.find((day) => day.id === parseInt(value));
@@ -261,7 +222,7 @@ function CourseForm() {
       validateGroupDescription(formData.description) ||
       validateGroupPrice(formData.price) ||
       validateGroupTeacher(formData.teacher) ||
-      validateGroupLanguage(formData.language) ||
+      validateGroupLanguage(formData.language, teachers) ||
       validateGroupLevel(formData.level) ||
       validateGroupDayOfWeek(formData.day) ||
       validateGroupTime(formData.startTime, formData.endTime)
@@ -275,9 +236,9 @@ function CourseForm() {
       places: formData.places,
       description: formData.description,
       price: formData.price,
-      teacherId: formData.teacher.id,
-      languageId: formData.language.id,
-      levelId: formData.level.id,
+      teacherId: formData.teacher,
+      languageId: formData.language,
+      levelId: formData.level,
       day: formData.day.name,
       startTime: formData.startTime,
       endTime: formData.endTime,
@@ -310,7 +271,21 @@ function CourseForm() {
       }
       navigate(`/courses/${id}`);
     } catch (error) {
-      toast.error(t("errorSavingData") + " " + t("tryAgainLater"));
+      if (error?.response?.status === 400) {
+        toast.error(t("formContainsErrors"));
+        return;
+      } else if (error?.response?.status === 409) {
+        if (
+          error.response?.data?.message ===
+          "Cannot set places to less than taken places"
+        ) {
+          toast.error(t("groupHasMoreStudentsThanPlaces"));
+        } else {
+          toast.error(t("teacherCannotTeachThisLanguage"));
+        }
+      } else {
+        toast.error(t("errorSavingData") + " " + t("tryAgainLater"));
+      }
       console.error(error);
     }
   };
@@ -363,18 +338,9 @@ function CourseForm() {
         />
 
         <FormSelect
-          label={t("teacher")}
-          name="teacher"
-          value={formData.teacher.id || ""}
-          onChange={handleChange}
-          options={teachers}
-          error={errors.teacher}
-        />
-
-        <FormSelect
           label={t("language")}
           name="language"
-          value={formData.language.id || ""}
+          value={formData.language || ""}
           onChange={handleChange}
           options={languages}
           error={errors.language}
@@ -382,9 +348,21 @@ function CourseForm() {
         />
 
         <FormSelect
+          label={t("teacher")}
+          name="teacher"
+          value={formData.teacher || ""}
+          onChange={handleChange}
+          options={teachers.filter((teacher) =>
+            teacher.languages.map((l) => l.id).includes(formData.language)
+          )}
+          error={errors.teacher}
+          disabled={!formData.language}
+        />
+
+        <FormSelect
           label={t("level")}
           name="level"
-          value={formData.level.id || ""}
+          value={formData.level || ""}
           onChange={handleChange}
           options={levels}
           error={errors.level}
