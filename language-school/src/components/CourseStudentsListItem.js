@@ -1,11 +1,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import useAuth from "../hooks/useAuth";
+import roles from "../constants/roles";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import "../styles/CourseStudentsListItem.css";
 import { FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 function CourseStudentsListItem({ student, groupId, refreshStudents }) {
+  const { userData } = useAuth();
   const { t } = useTranslation();
   const axios = useAxiosAuth();
 
@@ -43,12 +46,14 @@ function CourseStudentsListItem({ student, groupId, refreshStudents }) {
           <strong>{t("absences")}:</strong> {student.absences}
         </div>
       </div>
-      <button
-        className="remove-from-course-button"
-        onClick={handleDeleteFromCourse}
-      >
-        <FaTimes />
-      </button>
+      {userData.roleId === roles.EMPLOYEE && (
+        <button
+          className="remove-from-course-button"
+          onClick={handleDeleteFromCourse}
+        >
+          <FaTimes />
+        </button>
+      )}
     </li>
   );
 }
