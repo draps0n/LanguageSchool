@@ -61,7 +61,6 @@ const addNewApplication = async (req, res) => {
       req.body.groupId,
       req.userId
     );
-    console.log(isUserInGroup);
 
     if (isUserInGroup !== null) {
       res.status(400).json({ message: "User is already in this group" });

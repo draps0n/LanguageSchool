@@ -70,11 +70,11 @@ const validateIfPasswordsMatch = (password, confirmPassword) => {
 
 const validateDateOfBirth = (dateOfBirth) => {
   if (!dateOfBirth) {
-    return "Data urodzenia jest wymagana";
+    return "dateOfBirthCannotBeEmpty";
   }
 
   if (new Date(dateOfBirth) > new Date()) {
-    return "dateOfBirthCannotBeEmpty";
+    return "dateOfBirthInvalid";
   }
 
   const today = new Date();
@@ -114,7 +114,7 @@ const validateApplicationStartDate = (startDate) => {
 
   const startDateDate = new Date(startDate);
   if (startDateDate > nextMonth || startDateDate < nextWeek) {
-    return "Data rozpoczęcia musi być w ciągu najbliższego miesiąca i nie wcześniej niż za tydzień";
+    return "startDateInvalid";
   }
 
   return "";
@@ -134,7 +134,7 @@ const validateApplicationComment = (message) => {
 
 const validateGroupPlaces = (places) => {
   if (!places) {
-    return "Liczba miejsc jest wymagana";
+    return "numberOfPlacesRequired";
   }
 
   if (isNaN(places) || places < 6 || places > 20) {

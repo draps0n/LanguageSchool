@@ -22,10 +22,6 @@ function CourseStudentsList({ groupId }) {
         const response = await axios.get(
           `/groups/${groupId}/students?page=${currentPage}&limit=${studentsPerPage}`
         );
-        console.log(
-          `/groups/${groupId}/students?page=${currentPage}&limit=${studentsPerPage}`,
-          response.data
-        );
         setStudents(response.data.students);
         setTotalPages(response.data.totalPages);
         setLoading(false);

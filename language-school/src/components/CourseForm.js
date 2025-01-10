@@ -243,7 +243,6 @@ function CourseForm() {
         ...formData,
         day,
       });
-      console.log(day);
     } else {
       setFormData({
         ...formData,

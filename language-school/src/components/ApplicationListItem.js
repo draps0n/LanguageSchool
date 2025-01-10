@@ -44,26 +44,26 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
           {application.groupId}
         </p>
         <p>
-          <strong>{t("status")}</strong> {t(application.status.name)}
+          <strong>{t("status")}:</strong> {t(application.status.name)}
         </p>
       </div>
       <div className={`application-details ${showDetails ? "open" : ""}`}>
         <p>
-          <strong>{t("language")}</strong> {t(application.language.name)}
+          <strong>{t("language")}:</strong> {t(application.language.name)}
         </p>
         <p>
-          <strong>{t("level")}</strong> {application.level.name}
+          <strong>{t("level")}:</strong> {application.level.name}
         </p>
         <p>
-          <strong>{t("preferredStartDate")}</strong>{" "}
+          <strong>{t("preferredStartDate")}:</strong>{" "}
           {new Date(application.startDate).toLocaleDateString()}
         </p>
         <p>
-          <strong>{t("sendDate")}</strong>{" "}
+          <strong>{t("sendDate")}:</strong>{" "}
           {new Date(application.sentDate).toLocaleDateString()}
         </p>
         <p>
-          <strong>{t("comments")}</strong> {application.comment || "-"}
+          <strong>{t("comments")}:</strong> {application.comment || "-"}
         </p>
         {((application.feedbackMessage && userData.roleId === roles.STUDENT) ||
           (application.feedbackMessage &&
