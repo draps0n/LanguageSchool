@@ -5,12 +5,12 @@ import { toast } from "react-toastify";
 import { FaUserPlus } from "react-icons/fa";
 import BackButton from "./BackButton";
 import FormSelect from "./FormSelect";
-import { formatDate } from "../util/helpers";
+import { formatDate } from "../utils/helpers";
 import {
   validateApplicationComment,
   validateApplicationStartDate,
   validateApplicationGroup,
-} from "../util/validators";
+} from "../utils/validators";
 import "react-toastify/dist/ReactToastify.css";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";

@@ -240,5 +240,6 @@
   "showApplications": "Show applications",
   "applicantNameAndLastName": "Applicant's data",
   "applicantEmail": "Applicant's email address",
-  "loggingIn": "Log in"
+  "loggingIn": "Log in",
+  "errorFetchingLanguages": "An error occurred while retrieving languages."
 }

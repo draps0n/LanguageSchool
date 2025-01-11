@@ -49,11 +49,13 @@ const startServer = async () => {
     // Ustaw routy przed weryfikacją JWT
     app.use("/auth", authRoutes);
 
+    // Jeden route bez weryfikacji JWT, reszta z weryfikacją JWT
+    app.use("/languages", languageRoutes);
+
     // Ustaw middleware do weryfikacji JWT
     app.use(verifyJWT);
 
     // Ustaw routy po weryfikacji JWT
-    app.use("/languages", languageRoutes);
     app.use("/roles", roleRoutes);
     app.use("/levels", levelRoutes);
     app.use("/applicationStates", applicationStateRoutes);

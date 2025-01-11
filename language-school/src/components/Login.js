@@ -3,7 +3,7 @@ import axios from "../api/axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
-import { validateEmail } from "../util/validators";
+import { validateEmail } from "../utils/validators";
 import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import InputField from "./InputField";

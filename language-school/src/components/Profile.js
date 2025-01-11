@@ -4,7 +4,7 @@ import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
-import { formatDate } from "../util/helpers";
+import { formatDate } from "../utils/helpers";
 import {
   validateName,
   validateLastName,
@@ -14,7 +14,7 @@ import {
   validateIfPasswordsMatch,
   validateDescription,
   validateEmployeeSalary,
-} from "../util/validators";
+} from "../utils/validators";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import Loading from "./Loading";

@@ -240,5 +240,6 @@
   "showApplications": "Anwendungen anzeigen",
   "applicantNameAndLastName": "Angaben zum Antragsteller",
   "applicantEmail": "E-Mail-Adresse des Einsenders",
-  "loggingIn": "Anmeldung"
+  "loggingIn": "Anmeldung",
+  "errorFetchingLanguages": "Beim Abrufen der Sprachen ist ein Fehler aufgetreten."
 }

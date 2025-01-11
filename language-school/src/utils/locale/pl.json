@@ -240,5 +240,6 @@
   "showApplications": "Pokaż zgłoszenia",
   "applicantNameAndLastName": "Dane zgłaszającego",
   "applicantEmail": "E-mail zgłaszającego",
-  "loggingIn": "Logowanie"
+  "loggingIn": "Logowanie",
+  "errorFetchingLanguages": "Wystąpił błąd podczas pobierania języków."
 }

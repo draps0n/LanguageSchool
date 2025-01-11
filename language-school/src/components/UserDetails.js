@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
 import roles from "../constants/roles";
-import { formatDate } from "../util/helpers";
+import { formatDate } from "../utils/helpers";
 import UserDetailsButtons from "./UserDetailsButtons";
 import KnownLanguages from "./KnownLanguages";
 import { toast } from "react-toastify";

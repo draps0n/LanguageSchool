@@ -11,7 +11,7 @@ import {
   validateIfPasswordsMatch,
   validateDateOfBirth,
   validateDescription,
-} from "../util/validators";
+} from "../utils/validators";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 

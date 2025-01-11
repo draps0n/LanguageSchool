@@ -12,7 +12,7 @@ import {
   validateGroupLevel,
   validateGroupDayOfWeek,
   validateGroupTime,
-} from "../util/validators";
+} from "../utils/validators";
 import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa";
 import InputField from "./InputField";

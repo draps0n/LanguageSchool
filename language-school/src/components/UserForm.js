@@ -17,8 +17,8 @@ import {
   validatePassword,
   validateIfPasswordsMatch,
   validateStudentDiscount,
-} from "../util/validators";
-import { formatDate } from "../util/helpers";
+} from "../utils/validators";
+import { formatDate } from "../utils/helpers";
 import { useTranslation } from "react-i18next";
 import Loading from "./Loading";
 import { toast } from "react-toastify";

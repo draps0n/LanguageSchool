@@ -3,7 +3,7 @@ import { FaCheckCircle, FaTimesCircle, FaUsers } from "react-icons/fa";
 import applicationStates from "../constants/applicationStates";
 import InputTextArea from "./InputTextArea";
 import useAxiosAuth from "../hooks/useAxiosAuth";
-import { validateFeedbackMessage } from "../util/validators";
+import { validateFeedbackMessage } from "../utils/validators";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
