@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import applicationStates from "../constants/applicationStates";
 import ApplicationListItemStudentButtons from "./ApplicationListItemStudentButtons";
 import { FaEye } from "react-icons/fa";
-import "../styles/ApplicationListItem.css";
 import { useTranslation } from "react-i18next";
 import ApplicationListItemEmployeeButtons from "./ApplicationListItemEmployeeButtons";
 

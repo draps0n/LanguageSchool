@@ -1,7 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import "../styles/InputField.css";
-
 function InputField({
   label,
   type = "text",

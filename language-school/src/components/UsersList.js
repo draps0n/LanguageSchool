@@ -5,7 +5,6 @@ import useAxiosAuth from "../hooks/useAxiosAuth";
 import UserListItem from "./UserListItem";
 import Pagination from "./Pagination";
 import { useTranslation } from "react-i18next";
-import "../styles/UsersList.css";
 
 function UsersList() {
   const { t } = useTranslation();

@@ -4,7 +4,6 @@ import useAuth from "../hooks/useAuth";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import CourseDetailsButtonPanel from "./CourseDetailsButtonPanel";
 import CourseStudentsList from "./CourseStudentsList";
-import "../styles/CourseDetails.css";
 import roles from "../constants/roles";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";

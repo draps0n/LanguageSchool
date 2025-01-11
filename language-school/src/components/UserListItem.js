@@ -1,5 +1,4 @@
 import React from "react";
-import "../styles/UserListItem.css";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import roles from "../constants/roles";

@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FaRegTrashCan, FaPen, FaUserPlus } from "react-icons/fa6";
 import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
-import "../styles/CourseDetailsButtonPanel.css";
 import BackButton from "./BackButton";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { useTranslation } from "react-i18next";

@@ -239,5 +239,6 @@
   "showStudents": "Show students",
   "showApplications": "Show applications",
   "applicantNameAndLastName": "Applicant's data",
-  "applicantEmail": "Applicant's email address"
+  "applicantEmail": "Applicant's email address",
+  "loggingIn": "Log in"
 }

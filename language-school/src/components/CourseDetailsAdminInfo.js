@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import CourseStudentsList from "./CourseStudentsList";
 import { useTranslation } from "react-i18next";
 import ApplicationsList from "./ApplicationsList";
-import "../styles/CourseDetailsAdminInfo.css";
 
 const STUDENTS = "students";
 const APPLICATIONS = "applications";

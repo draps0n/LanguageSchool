@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
-import "../styles/KnownLanguages.css";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";

@@ -15,7 +15,6 @@ import {
   validateDescription,
   validateEmployeeSalary,
 } from "../util/validators";
-import "../styles/Profile.css";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import Loading from "./Loading";

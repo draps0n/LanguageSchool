@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import "../styles/Pagination.css";
 
 function Pagination({ currentPage, totalPages, setCurrentPage }) {
   const { t } = useTranslation();

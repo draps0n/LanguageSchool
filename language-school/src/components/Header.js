@@ -15,7 +15,6 @@ import {
 } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/Header.css";
 
 function Header() {
   // Pobierz dane użytkownika i funkcję do ich aktualizacji z kontekstu

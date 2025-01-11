@@ -5,7 +5,6 @@ import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
 import Loading from "./Loading";
 import CourseListItem from "./CourseListItem";
-import "../styles/CoursesList.css";
 import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";

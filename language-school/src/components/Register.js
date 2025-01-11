@@ -13,7 +13,6 @@ import {
   validateDescription,
 } from "../util/validators";
 import InputField from "./InputField";
-import "../styles/Login.css";
 import InputTextArea from "./InputTextArea";
 
 function Register() {

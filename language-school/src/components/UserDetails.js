@@ -8,7 +8,6 @@ import UserDetailsButtons from "./UserDetailsButtons";
 import KnownLanguages from "./KnownLanguages";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import "../styles/UserDetails.css";
 
 function UserDetails() {
   const [user, setUser] = useState(null);

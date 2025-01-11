@@ -5,7 +5,6 @@ import { useAuth } from "../hooks/useAuth";
 import { toast } from "react-toastify";
 import { validateEmail } from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/Login.css";
 import { useTranslation } from "react-i18next";
 import InputField from "./InputField";
 
@@ -84,7 +83,7 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1 className="login-text">Logowanie</h1>
+      <h1 className="login-text">{t("loggingIn")}</h1>
       <form onSubmit={handleSubmit}>
         <InputField
           label={t("email")}

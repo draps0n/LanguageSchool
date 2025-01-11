@@ -3,7 +3,6 @@ import useAxiosAuth from "../hooks/useAxiosAuth";
 import Loading from "./Loading";
 import CourseStudentsListItem from "./CourseStudentsListItem";
 import Pagination from "./Pagination";
-import "../styles/CourseStudentsList.css";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 

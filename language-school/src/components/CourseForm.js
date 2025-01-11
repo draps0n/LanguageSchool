@@ -15,7 +15,6 @@ import {
 } from "../util/validators";
 import { toast } from "react-toastify";
 import { FaSave } from "react-icons/fa";
-import "../styles/Login.css";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import FormSelect from "./FormSelect";

@@ -15,7 +15,6 @@ import Forbidden from "./components/Forbidden";
 import CourseForm from "./components/CourseForm";
 import ApplicationForm from "./components/ApplicationForm";
 import CourseDeleteConfirmation from "./components/CourseDeleteConfirmation";
-import "./App.css";
 import NotFound from "./components/NotFound";
 import { ToastContainer } from "react-toastify";
 import Profile from "./components/Profile";

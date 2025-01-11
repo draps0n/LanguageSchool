@@ -12,7 +12,6 @@ import {
   validateApplicationGroup,
 } from "../util/validators";
 import "react-toastify/dist/ReactToastify.css";
-import "../styles/Login.css";
 import InputField from "./InputField";
 import InputTextArea from "./InputTextArea";
 import Loading from "./Loading";

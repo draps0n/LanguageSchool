@@ -239,5 +239,6 @@
   "showStudents": "Pokaż uczniów",
   "showApplications": "Pokaż zgłoszenia",
   "applicantNameAndLastName": "Dane zgłaszającego",
-  "applicantEmail": "E-mail zgłaszającego"
+  "applicantEmail": "E-mail zgłaszającego",
+  "loggingIn": "Logowanie"
 }

@@ -5,7 +5,6 @@ import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import useAuth from "../hooks/useAuth";
-import "../styles/UserDetailsButtons.css";
 
 function UserDetailsButtons({ userId }) {
   const { t } = useTranslation();

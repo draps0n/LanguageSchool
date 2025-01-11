@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import "../styles/CourseDeleteConfirmation.css";
 
 function CourseDeleteConfirmation() {
   const { t } = useTranslation();

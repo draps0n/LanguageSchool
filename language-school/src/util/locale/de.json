@@ -239,5 +239,6 @@
   "showStudents": "Studenten anzeigen",
   "showApplications": "Anwendungen anzeigen",
   "applicantNameAndLastName": "Angaben zum Antragsteller",
-  "applicantEmail": "E-Mail-Adresse des Einsenders"
+  "applicantEmail": "E-Mail-Adresse des Einsenders",
+  "loggingIn": "Anmeldung"
 }
