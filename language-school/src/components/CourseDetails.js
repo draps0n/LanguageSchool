@@ -9,6 +9,8 @@ import roles from "../constants/roles";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import Loading from "./Loading";
+import CourseDetailsAdminInfo from "./CourseDetailsAdminInfo";
+import ApplicationsList from "./ApplicationsList";
 
 const CourseDetails = () => {
   const { t } = useTranslation();
@@ -73,14 +75,30 @@ const CourseDetails = () => {
           <strong>{t("teacher")}:</strong> {group.teacher.name}{" "}
           {group.teacher.lastName}
         </p>
+        {/* Liczba nieobecności ucznia i jego zgłoszeń do grupy  */}
         {absences !== null && absences !== undefined && (
-          <p>
-            <strong>{t("absencesNumber")}:</strong> {absences}
-          </p>
+          <div>
+            <p>
+              <strong>{t("absencesNumber")}:</strong> {absences}
+            </p>
+            <ApplicationsList
+              isUserSpecific={true}
+              groupId={group.id}
+              applicationsPerPage={2}
+            />
+          </div>
         )}
-        {(group.teacher.id === userData.userId ||
-          userData.roleId === roles.EMPLOYEE) && (
+        {/* Lista uczniów dla nauczyciela grupy */}
+        {group.teacher.id === userData.userId && (
           <CourseStudentsList
+            groupId={group.id}
+            takenPlaces={takenPlaces}
+            setTakenPlaces={setTakenPlaces}
+          />
+        )}
+        {/* Panel kontrolny dla pracownika */}
+        {userData.roleId === roles.EMPLOYEE && (
+          <CourseDetailsAdminInfo
             groupId={group.id}
             takenPlaces={takenPlaces}
             setTakenPlaces={setTakenPlaces}

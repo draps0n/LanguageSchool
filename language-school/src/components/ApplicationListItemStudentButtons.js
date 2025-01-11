@@ -10,6 +10,7 @@ function ApplicationListItemStudentButtons({
   application,
   viewGroup,
   refreshApplications,
+  shouldShowGroup,
 }) {
   const { t } = useTranslation();
   const axios = useAxiosAuth();
@@ -32,13 +33,15 @@ function ApplicationListItemStudentButtons({
 
   return (
     <div className="application-details-extra-buttons-container">
-      <button
-        className="application-details-button standard-button"
-        onClick={() => viewGroup(application.groupId)}
-        title={t("viewGroup")}
-      >
-        <FaUsers className="icon" />
-      </button>
+      {shouldShowGroup && (
+        <button
+          className="application-details-button standard-button"
+          onClick={() => viewGroup(application.groupId)}
+          title={t("viewGroup")}
+        >
+          <FaUsers className="icon" />
+        </button>
+      )}
       {application.status.id === applicationStates.PENDING && (
         <>
           <button

@@ -235,5 +235,9 @@
   "studentDeletedFromCourse": "Uczeń został usunięty z kursu.",
   "leaveGroup": "Opuść grupę",
   "errorLeavingGroup": "Wystąpił błąd podczas opuszczania grupy.",
-  "groupLeft": "Grupa została opuszczona."
+  "groupLeft": "Grupa została opuszczona.",
+  "showStudents": "Pokaż uczniów",
+  "showApplications": "Pokaż zgłoszenia",
+  "applicantNameAndLastName": "Dane zgłaszającego",
+  "applicantEmail": "E-mail zgłaszającego"
 }

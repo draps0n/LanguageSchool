@@ -188,6 +188,68 @@ const getApplicationsForUser = async (req, res) => {
   }
 };
 
+const getApplicationsForUserToGroup = async (req, res) => {
+  const userId = req.userId;
+  const groupId = req.params.id;
+
+  if (!userId || isNaN(userId)) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+
+  if (!groupId || isNaN(groupId)) {
+    res
+      .status(400)
+      .json({ message: "Group ID is required and must be a number" });
+  }
+
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  // Pobranie parametrów paginacji
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const offset = (page - 1) * limit;
+
+  try {
+    const fetchedStudent = await studentModel.getStudentById(userId);
+    if (!fetchedStudent) {
+      res.status(404).json({ message: "Student not found" });
+      return;
+    }
+
+    const fetchedGroup = await groupModel.getGroupById(groupId);
+    if (!fetchedGroup) {
+      res.status(404).json({ message: "Group not found" });
+      return;
+    }
+
+    const applications = await applicationModel.getUserApplicationsToGroup(
+      userId,
+      groupId,
+      limit,
+      offset
+    );
+
+    const totalApplications =
+      await applicationModel.getTotalUserApplicationsToGroup(userId, groupId);
+
+    const totalPages = Math.ceil(totalApplications / limit);
+    res.status(200).json({
+      applications,
+      totalPages: totalPages > 0 ? totalPages : 1,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 const getAllApplications = async (req, res) => {
   if (req.query.page && isNaN(req.query.page)) {
     return res.status(400).json({ message: "Page must be a number" });
@@ -209,6 +271,50 @@ const getAllApplications = async (req, res) => {
     );
 
     const totalApplications = await applicationModel.getTotalApplications();
+
+    const totalPages = Math.ceil(totalApplications / limit);
+    res.status(200).json({
+      applications,
+      totalPages: totalPages > 0 ? totalPages : 1,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const getApplicationsForGroup = async (req, res) => {
+  const groupId = req.params.id;
+
+  if (!groupId || isNaN(groupId)) {
+    res
+      .status(400)
+      .json({ message: "Group ID is required and must be a number" });
+    return;
+  }
+
+  if (req.query.page && isNaN(req.query.page)) {
+    return res.status(400).json({ message: "Page must be a number" });
+  }
+
+  if (req.query.limit && isNaN(req.query.limit)) {
+    return res.status(400).json({ message: "Limit must be a number" });
+  }
+
+  // Pobranie parametrów paginacji
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const offset = (page - 1) * limit;
+
+  try {
+    const applications = await applicationModel.getApplicationsForGroup(
+      groupId,
+      limit,
+      offset
+    );
+
+    const totalApplications =
+      await applicationModel.getTotalApplicationsForGroup(groupId);
 
     const totalPages = Math.ceil(totalApplications / limit);
     res.status(200).json({
@@ -478,4 +584,6 @@ module.exports = {
   updateApplicationByUser,
   reviewApplication,
   getApplicationEditableData,
+  getApplicationsForGroup,
+  getApplicationsForUserToGroup,
 };

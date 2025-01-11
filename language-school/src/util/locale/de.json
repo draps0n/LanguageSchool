@@ -235,5 +235,9 @@
   "studentDeletedFromCourse": "Der Student wurde aus dem Kurs entfernt.",
   "leaveGroup": "Gruppe verlassen",
   "errorLeavingGroup": "Beim Verlassen der Gruppe ist ein Fehler aufgetreten.",
-  "groupLeft": "Sie haben die Gruppe verlassen."
+  "groupLeft": "Sie haben die Gruppe verlassen.",
+  "showStudents": "Studenten anzeigen",
+  "showApplications": "Anwendungen anzeigen",
+  "applicantNameAndLastName": "Angaben zum Antragsteller",
+  "applicantEmail": "E-Mail-Adresse des Einsenders"
 }

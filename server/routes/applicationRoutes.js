@@ -5,10 +5,27 @@ const verifyRole = require("../middlewares/verifyRoleMiddleware");
 const { getRoles } = require("../config/roles");
 
 router
-  .post(
-    "/",
+  .get("/group/:id/user", applicationController.getApplicationsForUserToGroup)
+  .get("/group/:id", applicationController.getApplicationsForGroup)
+  .get(
+    "/user",
     verifyRole(getRoles().KURSANT),
-    applicationController.addNewApplication
+    applicationController.getApplicationsForUser
+  )
+  .put(
+    "/:id/review",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    applicationController.reviewApplication
+  )
+  .get(
+    "/:id",
+    verifyRole(getRoles().KURSANT),
+    applicationController.getApplicationEditableData
+  )
+  .put(
+    "/:id",
+    verifyRole(getRoles().KURSANT),
+    applicationController.updateApplicationByUser
   )
   .delete(
     "/:id",
@@ -20,25 +37,10 @@ router
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     applicationController.getAllApplications
   )
-  .get(
-    "/user",
+  .post(
+    "/",
     verifyRole(getRoles().KURSANT),
-    applicationController.getApplicationsForUser
-  )
-  .put(
-    "/:id",
-    verifyRole(getRoles().KURSANT),
-    applicationController.updateApplicationByUser
-  )
-  .put(
-    "/:id/review",
-    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
-    applicationController.reviewApplication
-  )
-  .get(
-    "/:id",
-    verifyRole(getRoles().KURSANT),
-    applicationController.getApplicationEditableData
+    applicationController.addNewApplication
   );
 
 module.exports = router;

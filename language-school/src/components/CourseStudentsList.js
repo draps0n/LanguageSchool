@@ -51,7 +51,6 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
       setStudents(response.data.students);
       setTotalPages(response.data.totalPages);
       setTakenPlaces((prev) => prev - 1);
-      setLoading(false);
     } catch (error) {
       console.error("Error fetching group students:", error);
       toast.error(t("errorFetchingCourseStudents"));

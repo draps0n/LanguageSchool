@@ -6,13 +6,16 @@ import Pagination from "./Pagination";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
-function ApplicationsList({ isUserSpecific }) {
+function ApplicationsList({
+  isUserSpecific,
+  groupId,
+  applicationsPerPage = 4,
+}) {
   const { t } = useTranslation();
   const axios = useAxiosAuth();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(-1);
   const [applications, setApplications] = useState([]);
-  const applicationsPerPage = 4;
 
   useEffect(() => {
     const getApplicationsForUser = async () => {
@@ -41,12 +44,44 @@ function ApplicationsList({ isUserSpecific }) {
       }
     };
 
+    const getApplicationsForGroup = async () => {
+      try {
+        const response = await axios.get(
+          `/applications/group/${groupId}?page=${currentPage}&limit=${applicationsPerPage}`
+        );
+        setApplications(response.data.applications);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+        toast.error(t("errorFetchingApplications"));
+      }
+    };
+
+    const getApplicationsForUserToGroup = async () => {
+      try {
+        const response = await axios.get(
+          `/applications/group/${groupId}/user?page=${currentPage}&limit=${applicationsPerPage}`
+        );
+        setApplications(response.data.applications);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+        toast.error(t("errorFetchingApplications"));
+      }
+    };
+
     if (isUserSpecific) {
-      getApplicationsForUser();
+      if (groupId) {
+        getApplicationsForUserToGroup();
+      } else {
+        getApplicationsForUser();
+      }
+    } else if (groupId) {
+      getApplicationsForGroup();
     } else {
       getAllApplications();
     }
-  }, [axios, currentPage, isUserSpecific, t]);
+  }, [axios, currentPage, isUserSpecific, t, applicationsPerPage, groupId]);
 
   const refreshApplications = async () => {
     try {
@@ -79,6 +114,7 @@ function ApplicationsList({ isUserSpecific }) {
             <ApplicationListItem
               application={application}
               refreshApplications={refreshApplications}
+              shouldShowGroup={groupId === undefined || groupId === null}
             />
           </div>
         ))}

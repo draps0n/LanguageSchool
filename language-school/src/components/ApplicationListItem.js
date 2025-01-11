@@ -10,7 +10,11 @@ import "../styles/ApplicationListItem.css";
 import { useTranslation } from "react-i18next";
 import ApplicationListItemEmployeeButtons from "./ApplicationListItemEmployeeButtons";
 
-const ApplicationListItem = ({ application, refreshApplications }) => {
+const ApplicationListItem = ({
+  application,
+  refreshApplications,
+  shouldShowGroup,
+}) => {
   const { t } = useTranslation();
   const { userData } = useAuth();
   const navigate = useNavigate();
@@ -46,14 +50,25 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
         <p>
           <strong>{t("status")}:</strong> {t(application.status.name)}
         </p>
+        <p>
+          <strong>{t("applicantNameAndLastName")}:</strong>{" "}
+          {application.student.name + " " + application.student.lastName}
+        </p>
       </div>
       <div className={`application-details ${showDetails ? "open" : ""}`}>
         <p>
-          <strong>{t("language")}:</strong> {t(application.language.name)}
+          <strong>{t("applicantEmail")}:</strong> {application.student.email}
         </p>
-        <p>
-          <strong>{t("level")}:</strong> {application.level.name}
-        </p>
+        {shouldShowGroup && (
+          <>
+            <p>
+              <strong>{t("language")}:</strong> {t(application.language.name)}
+            </p>
+            <p>
+              <strong>{t("level")}:</strong> {application.level.name}
+            </p>
+          </>
+        )}
         <p>
           <strong>{t("preferredStartDate")}:</strong>{" "}
           {new Date(application.startDate).toLocaleDateString()}
@@ -80,6 +95,7 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
             application={application}
             viewGroup={viewGroup}
             refreshApplications={refreshApplications}
+            shouldShowGroup={shouldShowGroup}
           />
         )}
         {userData.roleId === roles.EMPLOYEE && (
@@ -87,6 +103,7 @@ const ApplicationListItem = ({ application, refreshApplications }) => {
             application={application}
             viewGroup={viewGroup}
             refreshApplications={refreshApplications}
+            shouldShowGroup={shouldShowGroup}
           />
         )}
         <div></div>

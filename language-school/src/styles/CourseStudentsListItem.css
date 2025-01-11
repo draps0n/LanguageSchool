@@ -7,7 +7,7 @@
 
 .remove-from-course-button {
     color: #f44336;
-    background-color: white;
+    background-color: inherit;
     border: none;
     padding: 5px 10px;
     border-radius: 5px;

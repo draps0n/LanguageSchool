@@ -27,12 +27,13 @@ const deleteApplicationByGroupId = async (groupId, connection) => {
 const getAllApplications = async (limit, offset) => {
   const [results] = await pool.query(
     `
-    SELECT z.id, z.grupa as grupaId, z.data_rozpoczecia as dataRozpoczecia, z.uwagi, z.data_przeslania as dataPrzeslania, z.wiadomosc_zwrotna, sz.id as statusId, sz.nazwa as 'status', j.id as jezykId, j.nazwa as jezyk, j.skrot, pj.id as poziomId, pj.nazwa as poziom
+    SELECT z.id, z.grupa as grupaId, z.data_rozpoczecia as dataRozpoczecia, z.uwagi, z.data_przeslania as dataPrzeslania, z.wiadomosc_zwrotna, sz.id as statusId, sz.nazwa as 'status', j.id as jezykId, j.nazwa as jezyk, j.skrot, pj.id as poziomId, pj.nazwa as poziom, u.id as kursantId, u.imie as kursantImie, u.nazwisko as kursantNazwisko, u.email as kursantEmail
     FROM zgloszenie z
     INNER JOIN grupa g ON z.grupa = g.id
     INNER JOIN status_zgloszenia sz ON z.status = sz.id
     INNER JOIN jezyk j ON g.jezyk = j.id
     INNER JOIN poziom_jezyka pj ON g.poziom = pj.id
+    INNER JOIN uzytkownik u ON z.kursant = u.id
     ORDER BY z.data_przeslania DESC
     LIMIT ?
     OFFSET ?;
@@ -59,18 +60,71 @@ const getAllApplications = async (limit, offset) => {
       id: application.poziomId,
       name: application.poziom,
     },
+    student: {
+      id: application.kursantId,
+      name: application.kursantImie,
+      lastName: application.kursantNazwisko,
+      email: application.kursantEmail,
+    },
+  }));
+};
+
+const getApplicationsForGroup = async (groupId, limit, offset) => {
+  const [results] = await pool.query(
+    `
+    SELECT z.id, z.grupa as grupaId, z.data_rozpoczecia as dataRozpoczecia, z.uwagi, z.data_przeslania as dataPrzeslania, z.wiadomosc_zwrotna, sz.id as statusId, sz.nazwa as 'status', j.id as jezykId, j.nazwa as jezyk, j.skrot, pj.id as poziomId, pj.nazwa as poziom, u.id as kursantId, u.imie as kursantImie, u.nazwisko as kursantNazwisko, u.email as kursantEmail
+    FROM zgloszenie z
+    INNER JOIN grupa g ON z.grupa = g.id
+    INNER JOIN status_zgloszenia sz ON z.status = sz.id
+    INNER JOIN jezyk j ON g.jezyk = j.id
+    INNER JOIN poziom_jezyka pj ON g.poziom = pj.id
+    INNER JOIN uzytkownik u ON z.kursant = u.id
+    WHERE g.id = ?
+    ORDER BY z.data_przeslania DESC
+    LIMIT ?
+    OFFSET ?;
+    `,
+    [groupId, limit, offset]
+  );
+  return results.map((application) => ({
+    id: application.id,
+    groupId: application.grupaId,
+    startDate: application.dataRozpoczecia,
+    comment: application.uwagi,
+    sentDate: application.dataPrzeslania,
+    feedbackMessage: application.wiadomosc_zwrotna,
+    status: {
+      id: application.statusId,
+      name: application.status,
+    },
+    language: {
+      id: application.jezykId,
+      name: application.jezyk,
+      code: application.skrot,
+    },
+    level: {
+      id: application.poziomId,
+      name: application.poziom,
+    },
+    student: {
+      id: application.kursantId,
+      name: application.kursantImie,
+      lastName: application.kursantNazwisko,
+      email: application.kursantEmail,
+    },
   }));
 };
 
 const getUserApplications = async (userId, limit, offset) => {
   const [results] = await pool.query(
     `
-    SELECT z.id, z.grupa as grupaId, z.data_rozpoczecia as dataRozpoczecia, z.uwagi, z.data_przeslania as dataPrzeslania, z.wiadomosc_zwrotna, sz.id as statusId, sz.nazwa as 'status', j.id as jezykId, j.nazwa as jezyk, j.skrot, pj.id as poziomId, pj.nazwa as poziom
+    SELECT z.id, z.grupa as grupaId, z.data_rozpoczecia as dataRozpoczecia, z.uwagi, z.data_przeslania as dataPrzeslania, z.wiadomosc_zwrotna, sz.id as statusId, sz.nazwa as 'status', j.id as jezykId, j.nazwa as jezyk, j.skrot, pj.id as poziomId, pj.nazwa as poziom, u.id as kursantId, u.imie as kursantImie, u.nazwisko as kursantNazwisko, u.email as kursantEmail
     FROM zgloszenie z
     INNER JOIN grupa g ON z.grupa = g.id
     INNER JOIN status_zgloszenia sz ON z.status = sz.id
     INNER JOIN jezyk j ON g.jezyk = j.id
     INNER JOIN poziom_jezyka pj ON g.poziom = pj.id
+    INNER JOIN uzytkownik u ON z.kursant = u.id
     WHERE z.kursant = ?
     ORDER BY z.data_przeslania DESC
     LIMIT ?
@@ -98,6 +152,58 @@ const getUserApplications = async (userId, limit, offset) => {
       id: application.poziomId,
       name: application.poziom,
     },
+    student: {
+      id: application.kursantId,
+      name: application.kursantImie,
+      lastName: application.kursantNazwisko,
+      email: application.kursantEmail,
+    },
+  }));
+};
+
+const getUserApplicationsToGroup = async (userId, groupId, limit, offset) => {
+  const [results] = await pool.query(
+    `
+    SELECT z.id, z.grupa as grupaId, z.data_rozpoczecia as dataRozpoczecia, z.uwagi, z.data_przeslania as dataPrzeslania, z.wiadomosc_zwrotna, sz.id as statusId, sz.nazwa as 'status', j.id as jezykId, j.nazwa as jezyk, j.skrot, pj.id as poziomId, pj.nazwa as poziom, u.id as kursantId, u.imie as kursantImie, u.nazwisko as kursantNazwisko, u.email as kursantEmail
+    FROM zgloszenie z
+    INNER JOIN grupa g ON z.grupa = g.id
+    INNER JOIN status_zgloszenia sz ON z.status = sz.id
+    INNER JOIN jezyk j ON g.jezyk = j.id
+    INNER JOIN poziom_jezyka pj ON g.poziom = pj.id
+    INNER JOIN uzytkownik u ON z.kursant = u.id
+    WHERE z.kursant = ? AND z.grupa = ?
+    ORDER BY z.data_przeslania DESC
+    LIMIT ?
+    OFFSET ?;
+    `,
+    [userId, groupId, limit, offset]
+  );
+  return results.map((application) => ({
+    id: application.id,
+    groupId: application.grupaId,
+    startDate: application.dataRozpoczecia,
+    comment: application.uwagi,
+    sentDate: application.dataPrzeslania,
+    feedbackMessage: application.wiadomosc_zwrotna,
+    status: {
+      id: application.statusId,
+      name: application.status,
+    },
+    language: {
+      id: application.jezykId,
+      name: application.jezyk,
+      code: application.skrot,
+    },
+    level: {
+      id: application.poziomId,
+      name: application.poziom,
+    },
+    student: {
+      id: application.kursantId,
+      name: application.kursantImie,
+      lastName: application.kursantNazwisko,
+      email: application.kursantEmail,
+    },
   }));
 };
 
@@ -109,10 +215,28 @@ const getTotalApplications = async () => {
   return results[0].totalApplications;
 };
 
+const getTotalApplicationsForGroup = async (groupId) => {
+  const [results] = await pool.query(
+    `SELECT COUNT(*) as totalApplications FROM zgloszenie WHERE grupa = ?`,
+    [groupId]
+  );
+
+  return results[0].totalApplications;
+};
+
 const getTotalUserApplications = async (userId) => {
   const [results] = await pool.query(
     `SELECT COUNT(*) as totalApplications FROM zgloszenie WHERE kursant = ?`,
     [userId]
+  );
+
+  return results[0].totalApplications;
+};
+
+const getTotalUserApplicationsToGroup = async (userId, groupId) => {
+  const [results] = await pool.query(
+    `SELECT COUNT(*) as totalApplications FROM zgloszenie WHERE kursant = ? AND grupa = ?`,
+    [userId, groupId]
   );
 
   return results[0].totalApplications;
@@ -212,4 +336,8 @@ module.exports = {
   getApplicationEditableDataById,
   updateApplicationsByEmployeeId,
   deleteApplicationsByStudentId,
+  getApplicationsForGroup,
+  getTotalApplicationsForGroup,
+  getTotalUserApplicationsToGroup,
+  getUserApplicationsToGroup,
 };
