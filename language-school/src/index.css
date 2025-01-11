@@ -48,9 +48,13 @@ a:hover {
 }
 
 nav {
-    max-width: 1200px;
     margin: 0 auto;
+    max-width: 80%;
     padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
 }
 
 nav ul {
@@ -530,16 +534,6 @@ header {
     width: 100%;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-nav {
-    min-width: 80%;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
 }
 
 .nav-links {
