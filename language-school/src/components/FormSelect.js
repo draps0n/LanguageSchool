@@ -25,7 +25,13 @@ function FormSelect({
         onChange={onChange}
         disabled={disabled || options.length === 0}
       >
-        <option key={0} value="" disabled hidden className="placeholder-option">
+        <option
+          key={0}
+          value={0}
+          disabled
+          hidden
+          className="placeholder-option"
+        >
           {t("choose")} {label.toLowerCase()}
         </option>
         {options.map((option) => (

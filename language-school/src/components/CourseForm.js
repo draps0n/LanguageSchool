@@ -347,7 +347,7 @@ function CourseForm() {
         <FormSelect
           label={t("language")}
           name="language"
-          value={formData.language || ""}
+          value={formData.language || 0}
           onChange={handleChange}
           options={languages}
           error={errors.language}
@@ -357,7 +357,7 @@ function CourseForm() {
         <FormSelect
           label={t("teacher")}
           name="teacher"
-          value={formData.teacher || ""}
+          value={formData.teacher || 0}
           onChange={handleChange}
           options={teachers.filter((teacher) =>
             teacher.languages.map((l) => l.id).includes(formData.language)
@@ -369,7 +369,7 @@ function CourseForm() {
         <FormSelect
           label={t("level")}
           name="level"
-          value={formData.level || ""}
+          value={formData.level || 0}
           onChange={handleChange}
           options={levels}
           error={errors.level}
@@ -378,7 +378,7 @@ function CourseForm() {
         <FormSelect
           label={t("dayOfWeek")}
           name="day"
-          value={formData.day.id || ""}
+          value={formData.day.id || 0}
           onChange={handleChange}
           options={daysOfWeek}
           error={errors.day}

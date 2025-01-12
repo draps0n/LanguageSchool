@@ -48,7 +48,7 @@ function UserForm({ isRegistration }) {
   });
 
   const [rolesFromDb, setRolesFromDb] = useState(null);
-  const [chosenRole, setChosenRole] = useState(null);
+  const [chosenRole, setChosenRole] = useState(0);
 
   const [errors, setErrors] = useState({
     name: "",

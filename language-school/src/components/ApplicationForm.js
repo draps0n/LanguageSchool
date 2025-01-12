@@ -27,7 +27,7 @@ function ApplicationForm() {
 
   const [formData, setFormData] = useState({
     startDate: "",
-    groupId: id || "",
+    groupId: id || 0,
     comment: "",
   });
 
