@@ -5,8 +5,16 @@ const verifyRole = require("../middlewares/verifyRoleMiddleware");
 const { getRoles } = require("../config/roles");
 
 router
-  .get("/group/:id/user", applicationController.getApplicationsForUserToGroup)
-  .get("/group/:id", applicationController.getApplicationsForGroup)
+  .get(
+    "/group/:id/user",
+    verifyRole(getRoles().KURSANT),
+    applicationController.getApplicationsForUserToGroup
+  )
+  .get(
+    "/group/:id",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    applicationController.getApplicationsForGroup
+  )
   .get(
     "/user",
     verifyRole(getRoles().KURSANT),
