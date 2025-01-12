@@ -20,6 +20,10 @@ router
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     teacherController.addTeacherLanguage
   )
-  .get("/", teacherController.getAllTeachers);
+  .get(
+    "/",
+    verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    teacherController.getAllTeachers
+  );
 
 module.exports = router;

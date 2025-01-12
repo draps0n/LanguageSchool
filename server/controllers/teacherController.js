@@ -1,5 +1,6 @@
 const teacherModel = require("../models/teacherModel");
 const languageModel = require("../models/languageModel");
+const { getRoles } = require("../config/roles");
 
 const getAllTeachers = async (req, res) => {
   try {
@@ -22,17 +23,25 @@ const getAllTeachers = async (req, res) => {
 const getTeacherLanguages = async (req, res) => {
   const { id } = req.params;
 
-  if (!id) {
-    res.status(400).json({ message: "Missing teacher ID" });
+  if (!id || isNaN(id)) {
+    res
+      .status(400)
+      .json({ message: "Missing teacher ID. It has to be a number." });
     return;
   }
 
-  if (isNaN(id)) {
-    res.status(400).json({ message: "Invalid data" });
+  if (req.roleId === getRoles().NAUCZYCIEL && req.userId !== parseInt(id)) {
+    res.status(403).json({ message: "Forbidden" });
     return;
   }
 
   try {
+    const fetchedTeacher = await teacherModel.getTeacherById(id);
+    if (!fetchedTeacher) {
+      res.status(404).json({ message: "Teacher not found" });
+      return;
+    }
+
     const languages = await teacherModel.getTeacherLanguages(id);
     res.status(200).json(languages);
   } catch (error) {
