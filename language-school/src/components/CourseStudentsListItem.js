@@ -26,12 +26,12 @@ function CourseStudentsListItem({
         toast.success(t("studentDeletedFromCourse"));
         refreshStudents();
       } else {
-        toast.error(t("errorDeletingStudentFromCourse"));
         throw new Error("Error deleting student from course");
       }
     } catch (error) {
       console.error("Error deleting student from course:", error);
       toast.error(t("errorDeletingStudentFromCourse"));
+      setGeneralError(t("errorUpdatingAbsences"));
     }
   };
 
@@ -62,7 +62,7 @@ function CourseStudentsListItem({
     } catch (error) {
       if (error?.response?.status === 409) {
         toast.error(t("cannotHaveNegativeAbsences"));
-        setGeneralError = t("cannotHaveNegativeAbsences");
+        setGeneralError(t("cannotHaveNegativeAbsences"));
       }
       toast.error(t("errorUpdatingAbsences"));
       setGeneralError(t("errorUpdatingAbsences"));
