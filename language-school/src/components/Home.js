@@ -8,6 +8,7 @@ function Home() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [languages, setLanguages] = useState([]);
+  const [generalError, setGeneralError] = useState("");
 
   useEffect(() => {
     const fetchLanguages = async () => {
@@ -15,10 +16,10 @@ function Home() {
         const response = await axios.get("/languages");
         setLanguages(response.data);
         setLoading(false);
-        setLoading(false);
       } catch (error) {
         console.error(error);
         toast.error(t("errorFetchingLanguages"));
+        setGeneralError(t("errorFetchingLanguages"));
       }
     };
 
@@ -26,7 +27,7 @@ function Home() {
   }, [t]);
 
   if (loading) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (
@@ -38,6 +39,7 @@ function Home() {
         <h2>{t("about")}</h2>
         <p>{t("schoolDescription")}</p>
       </section>
+      {generalError && <p>{generalError}</p>}
       <section className="courses-section">
         <h2>{t("toughtLanguages")}</h2>
         <ul>

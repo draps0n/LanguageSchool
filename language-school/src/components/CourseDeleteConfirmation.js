@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import { toast } from "react-toastify";
@@ -13,6 +13,8 @@ function CourseDeleteConfirmation() {
 
   const axios = useAxiosAuth();
 
+  const [generalError, setGeneralError] = useState("");
+
   const goBack = () => {
     navigate(-1);
   };
@@ -24,6 +26,7 @@ function CourseDeleteConfirmation() {
       navigate("/courses");
     } catch (error) {
       toast.error(t("courseDeleteError") + " " + t("tryAgainLater"));
+      setGeneralError(t("courseDeleteError") + " " + t("tryAgainLater"));
     }
   };
 
@@ -31,6 +34,7 @@ function CourseDeleteConfirmation() {
     <div>
       <h2>{t("deleteCourseQuestion")}</h2>
       <p>{t("deleteCourseAdditionalInfo")}</p>
+      {generalError && <p className="error">{generalError}</p>}
       <div className="button-panel">
         <button onClick={deleteCourse} className="small-button delete-button">
           {t("delete")}

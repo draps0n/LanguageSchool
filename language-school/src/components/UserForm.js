@@ -64,6 +64,8 @@ function UserForm({ isRegistration }) {
     role: "",
   });
 
+  const [generalError, setGeneralError] = useState("");
+
   useEffect(() => {
     // Pobierz dane użytkownika
     const fetchUser = async () => {
@@ -84,6 +86,7 @@ function UserForm({ isRegistration }) {
       } catch (error) {
         console.error(error);
         toast.error(t("errorFetchingUserData"));
+        setGeneralError(t("errorFetchingUserData"));
       }
     };
 
@@ -102,6 +105,7 @@ function UserForm({ isRegistration }) {
       } catch (error) {
         console.error(error);
         toast.error(t("errorFetchingRoles"));
+        setGeneralError(t("errorFetchingRoles"));
       }
     };
     fetchRoles();
@@ -194,6 +198,7 @@ function UserForm({ isRegistration }) {
         const validationResult = validateStudentDiscount(formData.discount);
         if (validationResult) {
           toast.error(t(validationResult));
+          setGeneralError(t(validationResult));
           return;
         }
 
@@ -204,6 +209,7 @@ function UserForm({ isRegistration }) {
         const validationResult = validateEmployeeSalary(formData.salary);
         if (validationResult) {
           toast.error(t(validationResult));
+          setGeneralError(t(validationResult));
           return;
         }
 
@@ -216,14 +222,16 @@ function UserForm({ isRegistration }) {
         );
         if (validationResultHoursWokred) {
           toast.error(t(validationResultHoursWokred));
+          setGeneralError(t(validationResultHoursWokred));
           return;
         }
 
-        const validationResultHoursWorked = validateTeacherHourlyRate(
+        const validationResultHourlyRate = validateTeacherHourlyRate(
           formData.hourlyRate
         );
-        if (validationResultHoursWorked) {
-          toast.error(t(validationResultHoursWorked));
+        if (validationResultHourlyRate) {
+          toast.error(t(validationResultHourlyRate));
+          setGeneralError(t(validationResultHourlyRate));
           return;
         }
 
@@ -233,6 +241,7 @@ function UserForm({ isRegistration }) {
         };
       } else {
         toast.error(t("unknownRole"));
+        setGeneralError(t("unknownRole"));
         return;
       }
 
@@ -243,6 +252,7 @@ function UserForm({ isRegistration }) {
       } catch (error) {
         console.error(error);
         toast.error(t("userDataEditError"));
+        setGeneralError(t("userDataEditError"));
       }
     } else {
       let toSend = {
@@ -266,6 +276,7 @@ function UserForm({ isRegistration }) {
         )
       ) {
         toast.error(t("formContainsErrors"));
+        setGeneralError(t("formContainsErrors"));
         return;
       }
 
@@ -273,6 +284,7 @@ function UserForm({ isRegistration }) {
         const validationResult = validateEmployeeSalary(formData.salary);
         if (validationResult) {
           toast.error(t(validationResult));
+          setGeneralError(t(validationResult));
           return;
         }
 
@@ -286,6 +298,7 @@ function UserForm({ isRegistration }) {
         );
         if (validationResultHoursWokred) {
           toast.error(t(validationResultHoursWokred));
+          setGeneralError(t(validationResultHoursWokred));
           return;
         }
 
@@ -294,6 +307,7 @@ function UserForm({ isRegistration }) {
         );
         if (validationResultHourlyRate) {
           toast.error(t(validationResultHourlyRate));
+          setGeneralError(t(validationResultHourlyRate));
           return;
         }
 
@@ -318,12 +332,13 @@ function UserForm({ isRegistration }) {
       } catch (error) {
         console.error(error);
         toast.error(t("userRegisterError"));
+        setGeneralError(t("userRegisterError"));
       }
     }
   };
 
   if ((!isRegistration && !user) || (isRegistration && !rolesFromDb)) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (
@@ -467,6 +482,8 @@ function UserForm({ isRegistration }) {
             />
           </>
         )}
+
+        {generalError && <p className="error">{generalError}</p>}
         <button className="small-button" type="submit">
           <FaSave className="icon" />
           {isRegistration ? t("registerUser") : t("saveEdit")}

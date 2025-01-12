@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosAuth from "../hooks/useAxiosAuth";
 import useAuth from "../hooks/useAuth";
@@ -10,6 +10,7 @@ function ProfileDelete() {
   const axios = useAxiosAuth();
   const navigate = useNavigate();
   const { setUserData } = useAuth();
+  const [generalError, setGeneralError] = useState("");
 
   const deleteProfile = async () => {
     try {
@@ -28,6 +29,7 @@ function ProfileDelete() {
         navigate("/profile");
       } else {
         toast.error(t("accountDeleteError"));
+        setGeneralError(t("accountDeleteError"));
       }
     }
   };
@@ -39,6 +41,7 @@ function ProfileDelete() {
   return (
     <div>
       <h2>{t("accountDeleteQuestion")}</h2>
+      {generalError && <p className="error">{generalError}</p>}
       <div className="button-panel">
         <button onClick={deleteProfile} className="small-button delete-button">
           {t("delete")}

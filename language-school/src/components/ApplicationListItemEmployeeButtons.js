@@ -15,6 +15,7 @@ function ApplicationListItemEmployeeButtons({
 }) {
   const { t } = useTranslation();
   const axios = useAxiosAuth();
+  const [generalError, setGeneralError] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState(
     application.feedbackMessage || ""
   );
@@ -32,6 +33,7 @@ function ApplicationListItemEmployeeButtons({
 
     if (validateFeedbackMessage(feedbackMessage)) {
       toast.error(t("formContainsErrors"));
+      setGeneralError(t("formContainsErrors"));
       return;
     }
 
@@ -55,6 +57,7 @@ function ApplicationListItemEmployeeButtons({
     } catch (error) {
       console.error("Error while updating application: ", error);
       toast.error(t("applicationReviewError"));
+      setGeneralError(t("applicationReviewError"));
     }
   };
 
@@ -72,6 +75,7 @@ function ApplicationListItemEmployeeButtons({
           />
         </>
       )}
+      {generalError && <p className="error">{generalError}</p>}
       <div className="application-details-extra-buttons-container">
         {shouldShowGroup && (
           <button

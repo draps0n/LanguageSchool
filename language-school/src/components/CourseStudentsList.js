@@ -13,6 +13,7 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(-1);
+  const [generalError, setGeneralError] = useState("");
   const studentsPerPage = 4;
 
   useEffect(() => {
@@ -27,6 +28,7 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
       } catch (error) {
         console.error("Error fetching group students:", error);
         toast.error(t("errorFetchingCourseStudents"));
+        setGeneralError(t("errorFetchingCourseStudents"));
       }
     };
 
@@ -53,6 +55,7 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
     } catch (error) {
       console.error("Error fetching group students:", error);
       toast.error(t("errorFetchingCourseStudents"));
+      setGeneralError(t("errorFetchingCourseStudents"));
     }
   };
 
@@ -65,7 +68,7 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
   };
 
   if (loading) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   if (students.length === 0) {

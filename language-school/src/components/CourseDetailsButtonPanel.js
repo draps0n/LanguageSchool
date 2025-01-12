@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaRegTrashCan, FaPen, FaUserPlus } from "react-icons/fa6";
 import useAuth from "../hooks/useAuth";
@@ -14,6 +14,8 @@ const CourseDetailsButtonPanel = ({ isMember, groupId }) => {
   const navigate = useNavigate();
 
   const { userData } = useAuth();
+
+  const [generalError, setGeneralError] = useState("");
 
   const joinGroup = () => {
     navigate("apply");
@@ -35,36 +37,43 @@ const CourseDetailsButtonPanel = ({ isMember, groupId }) => {
     } catch (error) {
       console.error("Error leaving group:", error);
       toast.error(t("errorLeavingGroup"));
+      setGeneralError(t("errorLeavingGroup"));
     }
   };
 
   return (
-    <div className="button-panel">
-      <BackButton />
-      {userData.roleId === roles.STUDENT && !isMember && (
-        <button onClick={joinGroup} className="small-button">
-          <FaUserPlus className="icon" />
-          {t("join")}
-        </button>
-      )}
-      {userData.roleId === roles.STUDENT && isMember && (
-        <button onClick={leaveGroup} className="small-button">
-          {t("leaveGroup")}
-        </button>
-      )}
-      {userData.roleId === roles.EMPLOYEE && (
-        <div>
-          <button onClick={editGroup} className="small-button">
-            <FaPen className="icon" />
-            {t("edit")}
+    <>
+      {generalError && <p className="error">{generalError}</p>}
+      <div className="button-panel">
+        <BackButton />
+        {userData.roleId === roles.STUDENT && !isMember && (
+          <button onClick={joinGroup} className="small-button">
+            <FaUserPlus className="icon" />
+            {t("join")}
           </button>
-          <button onClick={deleteGroup} className="small-button delete-button">
-            <FaRegTrashCan className="icon" />
-            {t("delete")}
+        )}
+        {userData.roleId === roles.STUDENT && isMember && (
+          <button onClick={leaveGroup} className="small-button">
+            {t("leaveGroup")}
           </button>
-        </div>
-      )}
-    </div>
+        )}
+        {userData.roleId === roles.EMPLOYEE && (
+          <div>
+            <button onClick={editGroup} className="small-button">
+              <FaPen className="icon" />
+              {t("edit")}
+            </button>
+            <button
+              onClick={deleteGroup}
+              className="small-button delete-button"
+            >
+              <FaRegTrashCan className="icon" />
+              {t("delete")}
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 

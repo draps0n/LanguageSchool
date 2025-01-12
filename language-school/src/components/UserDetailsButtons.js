@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash, FaAngleLeft } from "react-icons/fa";
 import useAxiosAuth from "../hooks/useAxiosAuth";
@@ -11,6 +11,7 @@ function UserDetailsButtons({ userId }) {
   const navigate = useNavigate();
   const axios = useAxiosAuth();
   const { userData } = useAuth();
+  const [generalError, setGeneralError] = useState("");
 
   const goBack = () => {
     navigate("/admin/users");
@@ -24,6 +25,7 @@ function UserDetailsButtons({ userId }) {
     try {
       if (userId === userData.userId) {
         toast.error(t("toDeleteAccountVisitProfile"));
+        setGeneralError(t("toDeleteAccountVisitProfile"));
         return;
       }
 
@@ -34,31 +36,42 @@ function UserDetailsButtons({ userId }) {
       console.error(error);
       if (error.response.status === 409) {
         toast.error(t("cannotDeleteTeacherGroup"));
+        setGeneralError(t("cannotDeleteTeacherGroup"));
       } else {
         toast.error(t("userDeleteError"));
+        setGeneralError(t("userDeleteError"));
       }
     }
   };
 
   return (
-    <div className="user-details-buttons">
-      <button className="user-details-button standard-button" onClick={goBack}>
-        <FaAngleLeft className="icon" /> {t("goBack")}
-      </button>
-      <button className="user-details-button edit-button" onClick={handleEdit}>
-        {t("edit")} <FaEdit className="icon" />
-      </button>
-      <button
-        className="user-details-button delete-button"
-        onClick={handleDelete}
-        disabled={userId === userData.userId}
-        title={
-          userId === userData.userId ? t("toDeleteAccountVisitProfile") : ""
-        }
-      >
-        {t("delete")} <FaTrash className="icon" />
-      </button>
-    </div>
+    <>
+      {generalError && <p className="error">{generalError}</p>}
+      <div className="user-details-buttons">
+        <button
+          className="user-details-button standard-button"
+          onClick={goBack}
+        >
+          <FaAngleLeft className="icon" /> {t("goBack")}
+        </button>
+        <button
+          className="user-details-button edit-button"
+          onClick={handleEdit}
+        >
+          {t("edit")} <FaEdit className="icon" />
+        </button>
+        <button
+          className="user-details-button delete-button"
+          onClick={handleDelete}
+          disabled={userId === userData.userId}
+          title={
+            userId === userData.userId ? t("toDeleteAccountVisitProfile") : ""
+          }
+        >
+          {t("delete")} <FaTrash className="icon" />
+        </button>
+      </div>
+    </>
   );
 }
 

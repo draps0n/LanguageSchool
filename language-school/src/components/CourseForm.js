@@ -24,6 +24,8 @@ import { useTranslation } from "react-i18next";
 function CourseForm() {
   const { t } = useTranslation();
 
+  const [generalError, setGeneralError] = useState("");
+
   // Hook do pobrania axios'a z autoryzacją
   const axios = useAxiosAuth();
 
@@ -227,6 +229,7 @@ function CourseForm() {
       validateGroupTime(formData.startTime, formData.endTime)
     ) {
       toast.error(t("formContainsErrors"));
+      setGeneralError(t("formContainsErrors"));
       return;
     }
 
@@ -256,6 +259,7 @@ function CourseForm() {
       toSend.endTime === group.endTime
     ) {
       toast.error(t("noChangesMade"));
+      setGeneralError(t("noChangesMade"));
       return;
     }
 
@@ -272,6 +276,7 @@ function CourseForm() {
     } catch (error) {
       if (error?.response?.status === 400) {
         toast.error(t("formContainsErrors"));
+        setGeneralError(t("formContainsErrors"));
         return;
       } else if (error?.response?.status === 409) {
         if (
@@ -279,11 +284,14 @@ function CourseForm() {
           "Cannot set places to less than taken places"
         ) {
           toast.error(t("groupHasMoreStudentsThanPlaces"));
+          setGeneralError(t("groupHasMoreStudentsThanPlaces"));
         } else {
           toast.error(t("teacherCannotTeachThisLanguage"));
+          setGeneralError(t("teacherCannotTeachThisLanguage"));
         }
       } else {
         toast.error(t("errorSavingData") + " " + t("tryAgainLater"));
+        setGeneralError(t("errorSavingData") + " " + t("tryAgainLater"));
       }
       console.error(error);
     }
@@ -395,6 +403,8 @@ function CourseForm() {
           required={true}
           error={errors.time}
         />
+
+        {generalError && <p className="error">{generalError}</p>}
 
         <div className="form-buttons">
           <BackButton />

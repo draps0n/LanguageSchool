@@ -121,7 +121,7 @@ const deleteApplication = async (req, res) => {
 
     if (fetchedApplication.status !== applicationStates.PENDING) {
       res
-        .status(403)
+        .status(400)
         .json({ message: "You can only delete pending applications" });
       return;
     }

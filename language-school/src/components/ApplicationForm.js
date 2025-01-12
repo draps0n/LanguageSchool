@@ -23,6 +23,7 @@ function ApplicationForm() {
   const { id, applicationId } = useParams();
   const navigate = useNavigate();
   const [groups, setGroups] = useState([]);
+  const [generalError, setGeneralError] = useState("");
 
   const [formData, setFormData] = useState({
     startDate: "",
@@ -52,6 +53,7 @@ function ApplicationForm() {
         }
       } catch (error) {
         toast.error(t("errorWhileFetchingData") + t("tryAgainLater"));
+        setGeneralError(t("errorWhileFetchingData") + t("tryAgainLater"));
         navigate(`/my-applications`);
       }
     };
@@ -78,6 +80,7 @@ function ApplicationForm() {
         }
       } catch (error) {
         toast.error(t("errorWhileFetchingData") + t("tryAgainLater"));
+        setGeneralError(t("errorWhileFetchingData") + t("tryAgainLater"));
         console.error(error);
       }
     };
@@ -97,6 +100,7 @@ function ApplicationForm() {
       (!id && validateApplicationGroup(formData.groupId))
     ) {
       toast.error(t("formContainsErrors"));
+      setGeneralError(t("formContainsErrors"));
       return;
     }
 
@@ -140,15 +144,19 @@ function ApplicationForm() {
     } catch (error) {
       if (error?.response?.status === 400) {
         toast.error(t("formContainsErrors"));
+        setGeneralError(t("formContainsErrors"));
       } else if (error?.response?.status === 409) {
         if (error?.response?.data?.message === "Group is full") {
           toast.error(t("groupIsFull"));
+          setGeneralError(t("groupIsFull"));
         } else {
           console.log(error.response.data);
           toast.error(t("userAlreadyApplied"));
+          setGeneralError(t("userAlreadyApplied"));
         }
       } else {
         toast.error(t("errorWhileSendingData") + t("tryAgainLater"));
+        setGeneralError(t("errorWhileSendingData") + t("tryAgainLater"));
       }
     }
   };
@@ -179,7 +187,7 @@ function ApplicationForm() {
   };
 
   if (applicationId && !formData.startDate) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (
@@ -218,6 +226,8 @@ function ApplicationForm() {
           onChange={handleChange}
           error={errors.comment}
         />
+
+        {generalError && <p className="error">{generalError}</p>}
 
         <div className="form-buttons">
           <BackButton />

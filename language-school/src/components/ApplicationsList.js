@@ -16,6 +16,7 @@ function ApplicationsList({
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(-1);
   const [applications, setApplications] = useState([]);
+  const [generalError, setGeneralError] = useState("");
 
   useEffect(() => {
     const getApplicationsForUser = async () => {
@@ -28,6 +29,7 @@ function ApplicationsList({
       } catch (error) {
         console.error("Error fetching applications:", error);
         toast.error(t("errorFetchingApplications"));
+        setGeneralError(t("errorFetchingApplications"));
       }
     };
 
@@ -41,6 +43,7 @@ function ApplicationsList({
       } catch (error) {
         console.error("Error fetching applications:", error);
         toast.error(t("errorFetchingApplications"));
+        setGeneralError(t("errorFetchingApplications"));
       }
     };
 
@@ -54,6 +57,7 @@ function ApplicationsList({
       } catch (error) {
         console.error("Error fetching applications:", error);
         toast.error(t("errorFetchingApplications"));
+        setGeneralError(t("errorFetchingApplications"));
       }
     };
 
@@ -67,6 +71,7 @@ function ApplicationsList({
       } catch (error) {
         console.error("Error fetching applications:", error);
         toast.error(t("errorFetchingApplications"));
+        setGeneralError(t("errorFetchingApplications"));
       }
     };
 
@@ -94,11 +99,12 @@ function ApplicationsList({
       setTotalPages(response.data.totalPages);
     } catch (error) {
       toast.error(t("applicationsRefreshError"));
+      setGeneralError(t("applicationsRefreshError"));
     }
   };
 
   if (totalPages === -1) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   if (applications.length === 0) {
@@ -108,6 +114,7 @@ function ApplicationsList({
   return (
     <div>
       <h1>{t("applicationsList")}</h1>
+      {generalError && <p className="error">{generalError}</p>}
       <div>
         {applications.map((application) => (
           <div key={application.id}>

@@ -27,6 +27,7 @@ function Profile() {
   const [editMode, setEditMode] = useState(false);
   const { userData } = useAuth();
   const axios = useAxiosAuth();
+  const [generalError, setGeneralError] = useState(null);
 
   const [user, setUser] = useState(null);
 
@@ -97,6 +98,7 @@ function Profile() {
       } catch (error) {
         console.error("Error fetching user data:", error);
         toast.error(t("errorFetchingUserData"));
+        setGeneralError(t("errorFetchingUserData"));
       }
     };
 
@@ -212,6 +214,7 @@ function Profile() {
         validateEmployeeSalary(formData.salary))
     ) {
       toast.error(t("formContainsErrors"));
+      setGeneralError(t("formContainsErrors"));
       return;
     }
 
@@ -257,15 +260,18 @@ function Profile() {
       toast.success(t("profileUpdated"));
       setEditMode(false);
     } catch (error) {
-      if (error.response.status === 409) {
+      if (error?.response?.status === 409) {
         toast.error(t("emailTaken"));
+        setGeneralError(t("emailTaken"));
       } else if (
-        error.response.status === 401 &&
+        error?.response?.status === 401 &&
         error?.response?.data?.message
       ) {
         toast.error(t("incorrectPassword"));
+        setGeneralError(t("incorrectPassword"));
       } else {
         toast.error(t("updateProfileError"));
+        setGeneralError(t("updateProfileError"));
       }
 
       // Resetuj dane w formularzy, gdy błąd
@@ -282,14 +288,12 @@ function Profile() {
         salary: user.salary,
       }));
 
-      toast.error(t("profileEditError"));
-      console.error("Error updating user data:", error);
       setEditMode(false);
     }
   };
 
   if (!user) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (
@@ -462,6 +466,7 @@ function Profile() {
             )}
           </div>
         </div>
+        {generalError && <p className="error">{generalError}</p>}
         <div className="profile-buttons">
           <button onClick={toggleEditMode} type="button">
             {editMode ? t("cancel") : t("edit")}

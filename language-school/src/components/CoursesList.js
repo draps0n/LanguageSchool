@@ -18,6 +18,7 @@ const CoursesList = ({ isUserSpecific }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [groups, setGroups] = useState([]);
   const [totalPages, setTotalPages] = useState(-1);
+  const [generalError, setGeneralError] = useState("");
   const groupsPerPage = 4;
 
   // Pobranie listy grup z serwera
@@ -36,6 +37,7 @@ const CoursesList = ({ isUserSpecific }) => {
       } catch (error) {
         console.error("Error fetching groups:", error);
         toast.error(t("errorFetchingCourses"));
+        setGeneralError(t("errorFetchingCourses"));
       }
     };
 
@@ -47,7 +49,7 @@ const CoursesList = ({ isUserSpecific }) => {
   };
 
   if (totalPages === -1) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   if (!groups.length) {

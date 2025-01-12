@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaTimesCircle, FaUsers, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ function ApplicationListItemStudentButtons({
   const { t } = useTranslation();
   const axios = useAxiosAuth();
   const navigate = useNavigate();
+  const [generalError, setGeneralError] = useState("");
 
   const viewEditApplication = () => {
     navigate(`/my-applications/${application.id}/edit`);
@@ -28,39 +29,43 @@ function ApplicationListItemStudentButtons({
     } catch (error) {
       console.error("Error while cancelling application: ", error);
       toast.error(t("applicationWithdrawError"));
+      setGeneralError(t("applicationWithdrawError"));
     }
   };
 
   return (
-    <div className="application-details-extra-buttons-container">
-      {shouldShowGroup && (
-        <button
-          className="application-details-button standard-button"
-          onClick={() => viewGroup(application.groupId)}
-          title={t("viewGroup")}
-        >
-          <FaUsers className="icon" />
-        </button>
-      )}
-      {application.status.id === applicationStates.PENDING && (
-        <>
+    <>
+      {generalError && <p className="error">{generalError}</p>}
+      <div className="application-details-extra-buttons-container">
+        {shouldShowGroup && (
           <button
-            className="application-details-button edit-button"
-            title={t("edit")}
-            onClick={viewEditApplication}
+            className="application-details-button standard-button"
+            onClick={() => viewGroup(application.groupId)}
+            title={t("viewGroup")}
           >
-            <FaEdit className="icon" />
+            <FaUsers className="icon" />
           </button>
-          <button
-            className="application-details-button delete-button"
-            title={t("withdraw")}
-            onClick={() => cancelApplication(application.id)}
-          >
-            <FaTimesCircle className="icon" />
-          </button>
-        </>
-      )}
-    </div>
+        )}
+        {application.status.id === applicationStates.PENDING && (
+          <>
+            <button
+              className="application-details-button edit-button"
+              title={t("edit")}
+              onClick={viewEditApplication}
+            >
+              <FaEdit className="icon" />
+            </button>
+            <button
+              className="application-details-button delete-button"
+              title={t("withdraw")}
+              onClick={() => cancelApplication(application.id)}
+            >
+              <FaTimesCircle className="icon" />
+            </button>
+          </>
+        )}
+      </div>
+    </>
   );
 }
 

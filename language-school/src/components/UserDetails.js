@@ -15,6 +15,7 @@ function UserDetails() {
   const axios = useAxiosAuth();
   const { userId } = useParams();
   const [loading, setLoading] = useState(true);
+  const [generalError, setGeneralError] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -24,6 +25,7 @@ function UserDetails() {
         setLoading(false);
       } catch (error) {
         toast.error(t("errorWhileFetchingData"));
+        setGeneralError(t("errorWhileFetchingData"));
         console.error(error);
       }
     };
@@ -32,7 +34,7 @@ function UserDetails() {
   }, [axios, userId, t]);
 
   if (loading) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (

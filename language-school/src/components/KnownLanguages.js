@@ -14,6 +14,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
   const [chosenLanguage, setChosenLanguage] = useState({ id: 0 });
   const [languageError, setLanguageError] = useState("");
   const [loading, setLoading] = useState(true);
+  const [generalError, setGeneralError] = useState("");
 
   useEffect(() => {
     const getTeacherLanguages = async () => {
@@ -23,6 +24,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
         setLoading(false);
       } catch (error) {
         toast.error(t("teacherLanguagesFetchError"));
+        setGeneralError(t("teacherLanguagesFetchError"));
         console.error("Error fetching teacher languages:", error);
       }
     };
@@ -44,6 +46,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
         setAvailableLanguages(filteredLanguages);
       } catch (error) {
         toast.error(t("languagesFetchError"));
+        setGeneralError(t("languagesFetchError"));
         console.error("Error fetching languages:", error);
       }
     };
@@ -69,8 +72,10 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
     } catch (error) {
       if (error?.response?.status === 409) {
         toast.error(t("cannotDeleteLanguageTeacherHasGroup"));
+        setGeneralError(t("cannotDeleteLanguageTeacherHasGroup"));
       } else {
         console.error("Error deleting teacher language:", error);
+        setGeneralError(t("deleteKnownLanguageError"));
         toast.error(t("deleteKnownLanguageError"));
       }
     }
@@ -98,13 +103,16 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
         setLanguageError("");
       } else {
         toast.error(t("addKnownLanguageError"));
+        setGeneralError(t("addKnownLanguageError"));
         throw new Error("Error adding teacher language.");
       }
     } catch (error) {
       if (error?.response?.status === 409) {
+        setGeneralError(t("teacherAlreadyKnowsLanguage"));
         toast.error(t("teacherAlreadyKnowsLanguage"));
       } else {
         console.error("Error adding teacher language:", error);
+        setGeneralError(t("addKnownLanguageError"));
         toast.error(t("addKnownLanguageError"));
       }
     }
@@ -129,7 +137,7 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
   };
 
   if (loading) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (
@@ -185,6 +193,9 @@ function KnownLanguages({ teacherId, shouldShowButtons }) {
               </form>
               {languageError && (
                 <p className="language-error-message">{t(languageError)}</p>
+              )}
+              {generalError && (
+                <p className="language-error-message">{t(generalError)}</p>
               )}
             </li>
           )}

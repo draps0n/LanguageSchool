@@ -18,6 +18,7 @@ import InputTextArea from "./InputTextArea";
 function Register() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [generalError, setGeneralError] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -52,6 +53,7 @@ function Register() {
       validateDescription(formData.description)
     ) {
       toast.error(t("formContainsErrors"));
+      setGeneralError(t("formContainsErrors"));
       return;
     }
 
@@ -96,6 +98,7 @@ function Register() {
         toast.error(t("emailTaken"));
       } else {
         toast.error(t("registrationError"));
+        setGeneralError(t("registrationError"));
       }
     }
   };
@@ -252,6 +255,8 @@ function Register() {
         <div className="form-group">
           <Link to="/login">{t("loginQuestion")}</Link>
         </div>
+
+        {generalError && <p className="error">{generalError}</p>}
 
         <button
           className="login-button"

@@ -19,6 +19,7 @@ const CourseDetails = () => {
   const [group, setGroup] = useState(null);
   const [takenPlaces, setTakenPlaces] = useState(0);
   const [absences, setAbsences] = useState(null);
+  const [generalError, setGeneralError] = useState("");
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -30,6 +31,7 @@ const CourseDetails = () => {
       } catch (error) {
         console.error("Error fetching course:", error);
         toast.error(t("errorFetchingCourse"));
+        setGeneralError(t("errorFetchingCourse"));
       }
     };
 
@@ -37,7 +39,7 @@ const CourseDetails = () => {
   }, [id, axios, t]);
 
   if (!group) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (

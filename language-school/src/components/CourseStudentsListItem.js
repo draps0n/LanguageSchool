@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useAuth from "../hooks/useAuth";
 import roles from "../constants/roles";
@@ -15,6 +15,7 @@ function CourseStudentsListItem({
   const { userData } = useAuth();
   const { t } = useTranslation();
   const axios = useAxiosAuth();
+  const [generalError, setGeneralError] = useState("");
 
   const handleDeleteFromCourse = async () => {
     try {
@@ -45,6 +46,7 @@ function CourseStudentsListItem({
       updateStudentAbsences(student.id, response.data.absences);
     } catch (error) {
       toast.error(t("errorUpdatingAbsences"));
+      setGeneralError(t("errorUpdatingAbsences"));
     }
   };
 
@@ -60,8 +62,10 @@ function CourseStudentsListItem({
     } catch (error) {
       if (error?.response?.status === 409) {
         toast.error(t("cannotHaveNegativeAbsences"));
+        setGeneralError = t("cannotHaveNegativeAbsences");
       }
       toast.error(t("errorUpdatingAbsences"));
+      setGeneralError(t("errorUpdatingAbsences"));
     }
   };
 
@@ -94,6 +98,7 @@ function CourseStudentsListItem({
             </>
           )}
         </div>
+        {generalError && <p className="error">{generalError}</p>}
       </div>
       {userData.roleId === roles.EMPLOYEE && (
         <button
