@@ -70,21 +70,21 @@ function Header() {
           <div className="logo-container">
             <img src="/favicon.ico" alt="Logo" className="logo" />
             <span className="logo-text">{t("title")}</span>
+            <select
+              className="page-language-select"
+              value={currentLanguage}
+              onChange={(e) => changeLanguage(e.target.value)}
+            >
+              <option value="pl">PL</option>
+              <option value="en">EN</option>
+              <option value="de">DE</option>
+            </select>
           </div>
           <div className="menu-toggle" onClick={toggleMenu}>
             <span></span>
             <span></span>
             <span></span>
           </div>
-          <select
-            className="page-language-select"
-            value={currentLanguage}
-            onChange={(e) => changeLanguage(e.target.value)}
-          >
-            <option value="pl">PL</option>
-            <option value="en">EN</option>
-            <option value="de">DE</option>
-          </select>
           <ul className={`nav-links ${menuOpen ? "active" : ""}`}>
             {(!userData || userData?.roleId !== roles.EMPLOYEE) && (
               <>
