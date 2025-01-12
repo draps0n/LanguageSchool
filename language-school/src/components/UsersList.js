@@ -53,7 +53,7 @@ function UsersList() {
       </button>
       <ul className="users-list">
         {users.map((user) => (
-          <UserListItem user={user} />
+          <UserListItem key={user.id} user={user} />
         ))}
       </ul>
       <Pagination

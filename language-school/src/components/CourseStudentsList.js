@@ -81,6 +81,7 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
       <ul>
         {students.map((student) => (
           <CourseStudentsListItem
+            key={student.id}
             student={student}
             groupId={groupId}
             refreshStudents={refreshStudents}

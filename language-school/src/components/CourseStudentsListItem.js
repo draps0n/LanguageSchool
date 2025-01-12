@@ -70,7 +70,7 @@ function CourseStudentsListItem({
   };
 
   return (
-    <li className="course-students-list-item" key={student.id}>
+    <li className="course-students-list-item">
       <div className="student-list-data">
         <div>
           <strong>{t("firstName")}:</strong> {student.name}

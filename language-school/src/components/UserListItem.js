@@ -22,7 +22,6 @@ function UserListItem({ user }) {
           : "student-card")
       }
       onClick={viewUserDetails}
-      key={user.id}
     >
       <img
         src={`/assets/images/user.svg`}
