@@ -241,5 +241,18 @@
   "applicantNameAndLastName": "Applicant's data",
   "applicantEmail": "Applicant's email address",
   "loggingIn": "Log in",
-  "errorFetchingLanguages": "An error occurred while retrieving languages."
+  "errorFetchingLanguages": "An error occurred while retrieving languages.",
+  "aboutWelcome": "Welcome to the Inglisz School! We are a modern language school that has been helping students become proficient in foreign languages ​​for years. Our mission is to develop communication skills and confidence in speaking, writing and listening.",
+  "howWeTeach": "How do we teach?",
+  "aboutHowWeTeach": "At the Inglisz School, we use modern teaching methods that combine interactivity with practical examples. Each class is conducted in small groups, which allows us to focus on the individual needs of our students. We use multimedia materials, simulations of everyday life situations and advanced educational technologies.",
+  "ourStory": "Our story",
+  "aboutOurStory": "The Inglisz School was founded in 2010 out of passion for teaching foreign languages. From a small, local venture, we have developed into one of the most renowned language schools in the region. Our success is based on a professional approach, teachers' experience and commitment to the development of each student.",
+  "whyUs": "Why us?",
+  "aboutWhyUs": "By choosing the Inglisz School, you choose:",
+  "aboutWhyUs1": "Experienced teachers with a passion for teaching",
+  "aboutWhyUs2": "Individual approach to each student",
+  "aboutWhyUs3": "Modern teaching methods",
+  "aboutWhyUs4": "A friendly and supportive atmosphere",
+  "aboutWhyUs5": "A wide selection of language courses for all levels of advancement",
+  "joinUs": "Join us and see how enjoyable and effective learning foreign languages can be!"
 }

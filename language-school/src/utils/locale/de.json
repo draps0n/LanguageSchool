@@ -241,5 +241,18 @@
   "applicantNameAndLastName": "Angaben zum Antragsteller",
   "applicantEmail": "E-Mail-Adresse des Einsenders",
   "loggingIn": "Anmeldung",
-  "errorFetchingLanguages": "Beim Abrufen der Sprachen ist ein Fehler aufgetreten."
+  "errorFetchingLanguages": "Beim Abrufen der Sprachen ist ein Fehler aufgetreten.",
+  "aboutWelcome": "Willkommen an der Inglisz-Schule! Wir sind eine moderne Sprachschule, die seit Jahren Schüler dabei unterstützt, Fremdsprachenkenntnisse zu erlangen. Unsere Mission ist es, Kommunikationsfähigkeiten und Selbstvertrauen beim Sprechen, Schreiben und Zuhören zu entwickeln.",
+  "howWeTeach": "Wie unterrichten wir?",
+  "aboutHowWeTeach": "An der Inglisz-Schule nutzen wir moderne Lehrmethoden, die Interaktivität mit praktischen Beispielen verbinden. Jeder Unterricht wird in kleinen Gruppen durchgeführt, wodurch wir uns auf die individuellen Bedürfnisse unserer Schüler konzentrieren können. Wir nutzen Multimedia-Materialien, Simulationen alltäglicher Lebenssituationen und fortschrittliche Bildungstechnologien.",
+  "ourStory": "Unsere Geschichte",
+  "aboutOurStory": "Die Inglisz-Schule wurde 2010 aus Leidenschaft für das Unterrichten von Fremdsprachen gegründet. Von einem kleinen, lokalen Unternehmen haben wir uns zu einer der renommiertesten Sprachschulen in der Region entwickelt. Unser Erfolg basiert auf einem professionellen Ansatz, der Erfahrung der Lehrer und dem Engagement für die Entwicklung jedes Schülers.",
+  "whyUs": "Warum wir?",
+  "aboutWhyUs": "Wenn Sie sich für die Inglisz-Schule entscheiden, entscheiden Sie sich für:",
+  "aboutWhyUs1": "Erfahrene Lehrer mit Leidenschaft für das Unterrichten",
+  "aboutWhyUs2": "Individuelle Herangehensweise an jeden Schüler",
+  "aboutWhyUs3": "Moderne Lehrmethoden",
+  "aboutWhyUs4": "Eine freundliche und unterstützende Atmosphäre",
+  "aboutWhyUs5": "Eine große Auswahl an Sprachkursen für alle Leistungsniveaus",
+  "joinUs": "Machen Sie mit und erleben Sie, wie angenehm und effektiv das Erlernen von Fremdsprachen sein kann!"
 }

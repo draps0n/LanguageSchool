@@ -8,6 +8,7 @@ function Contact() {
       <h1>{t("contactPage")}</h1>
       <section className="contact-section">
         <p>{t("contactDescription")}</p>
+        <br />
         <h2>{t("contact")}</h2>
         <p>
           {t("schoolAddress")}

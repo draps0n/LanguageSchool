@@ -241,5 +241,18 @@
   "applicantNameAndLastName": "Dane zgłaszającego",
   "applicantEmail": "E-mail zgłaszającego",
   "loggingIn": "Logowanie",
-  "errorFetchingLanguages": "Wystąpił błąd podczas pobierania języków."
+  "errorFetchingLanguages": "Wystąpił błąd podczas pobierania języków.",
+  "aboutWelcome": "Witamy w Szkole Inglisz! Jesteśmy nowoczesną szkołą językową, która od lat pomaga uczniom osiągać biegłość w językach obcych. Nasza misja to rozwijanie umiejętności komunikacyjnych i pewności siebie w mówieniu, pisaniu oraz słuchaniu.",
+  "howWeTeach": "Jak uczymy?",
+  "aboutHowWeTeach": "W Szkole Inglisz stosujemy nowoczesne metody nauczania, które łączą interaktywność z praktycznymi przykładami. Każde zajęcia są prowadzone w małych grupach, co pozwala nam skupić się na indywidualnych potrzebach naszych uczniów. Korzystamy z multimedialnych materiałów, symulacji sytuacji życia codziennego oraz zaawansowanych technologii edukacyjnych.",
+  "ourStory": "Nasza historia",
+  "aboutOurStory": "Szkoła Inglisz została założona w 2010 roku z pasji do nauczania języków obcych. Od małego, lokalnego przedsięwzięcia rozwinęliśmy się w jedną z najbardziej renomowanych szkół językowych w regionie. Nasz sukces opiera się na profesjonalnym podejściu, doświadczeniu nauczycieli oraz zaangażowaniu w rozwój każdego ucznia.",
+  "whyUs": "Dlaczego my?",
+  "aboutWhyUs": "Wybierając Szkołę Inglisz, wybierasz:",
+  "aboutWhyUs1": "Doświadczonych nauczycieli z pasją do nauczania",
+  "aboutWhyUs2": "Indywidualne podejście do każdego ucznia",
+  "aboutWhyUs3": "Nowoczesne metody nauczania",
+  "aboutWhyUs4": "Przyjazną i wspierającą atmosferę",
+  "aboutWhyUs5": "Szeroki wybór kursów językowych na wszystkich poziomach zaawansowania",
+  "joinUs": "Dołącz do nas i przekonaj się, jak przyjemna i skuteczna może być nauka języków obcych!"
 }

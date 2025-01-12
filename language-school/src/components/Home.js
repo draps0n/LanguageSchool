@@ -33,6 +33,7 @@ function Home() {
     <div className="home-container">
       <h1>{t("languageSchool")}</h1>
       <p>{t("welcomeMessage")}</p>
+      <br />
       <section className="about-section">
         <h2>{t("about")}</h2>
         <p>{t("schoolDescription")}</p>
