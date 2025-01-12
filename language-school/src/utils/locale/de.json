@@ -256,5 +256,6 @@
   "aboutWhyUs5": "Eine große Auswahl an Sprachkursen für alle Leistungsniveaus",
   "joinUs": "Machen Sie mit und erleben Sie, wie angenehm und effektiv das Erlernen von Fremdsprachen sein kann!",
   "errorUpdatingAbsences": "Beim Aktualisieren der Anzahl der Abwesenheiten ist ein Fehler aufgetreten.",
-  "cannotHaveNegativeAbsences": "Die Anzahl der Abwesenheiten kann nicht negativ sein."
+  "cannotHaveNegativeAbsences": "Die Anzahl der Abwesenheiten kann nicht negativ sein.",
+  "errorFetchingUsers": "Beim Abrufen der Benutzer ist ein Fehler aufgetreten."
 }

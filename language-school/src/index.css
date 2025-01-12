@@ -86,6 +86,13 @@ main {
     padding: 0 1rem;
 }
 
+.users-list-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+}
+
 .user-add-button {
     color: white;
     background-color: #313a4c;
@@ -94,8 +101,11 @@ main {
     border-radius: 4px;
     padding: 1rem;
     margin-bottom: 1rem;
-    width: 100%;
     cursor: pointer;
+}
+
+.users-list {
+    padding: 0;
 }
 
 .error {
@@ -113,6 +123,8 @@ main {
 }
 
 .user-card {
+    width: 100%;
+    min-width: 500px;
     background-color: #ffffff;
     border-radius: 8px;
     padding: 20px;

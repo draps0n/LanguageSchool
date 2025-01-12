@@ -256,5 +256,6 @@
   "aboutWhyUs5": "Szeroki wybór kursów językowych na wszystkich poziomach zaawansowania",
   "joinUs": "Dołącz do nas i przekonaj się, jak przyjemna i skuteczna może być nauka języków obcych!",
   "errorUpdatingAbsences": "Wystąpił błąd podczas aktualizacji liczby nieobecności.",
-  "cannotHaveNegativeAbsences": "Liczba nieobecności nie może być ujemna."
+  "cannotHaveNegativeAbsences": "Liczba nieobecności nie może być ujemna.",
+  "errorFetchingUsers": "Wystąpił błąd podczas pobierania użytkowników."
 }

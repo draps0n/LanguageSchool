@@ -11,6 +11,7 @@ function UsersList() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(-1);
+  const [generalError, setGeneralError] = useState("");
   const usersPerPage = 5;
 
   const [users, setUsers] = useState([]);
@@ -33,6 +34,7 @@ function UsersList() {
         setLoading(false);
       } catch (error) {
         console.error(error);
+        setGeneralError(t("errorFetchingUsers"));
       }
     };
 
@@ -40,7 +42,7 @@ function UsersList() {
   }, [axios, currentPage, t]);
 
   if (loading) {
-    return <Loading />;
+    return <Loading error={generalError} />;
   }
 
   return (
@@ -49,7 +51,7 @@ function UsersList() {
       <button className="user-add-button" onClick={handleAddUser}>
         {t("addEmpTeach")}
       </button>
-      <ul>
+      <ul className="users-list">
         {users.map((user) => (
           <UserListItem user={user} />
         ))}
