@@ -13,7 +13,7 @@ function Home() {
   useEffect(() => {
     const fetchLanguages = async () => {
       try {
-        const response = await axios.get("/languages");
+        const response = await axios.get("/languages/taught");
         setLanguages(response.data);
         setLoading(false);
       } catch (error) {
