@@ -19,16 +19,15 @@ function About() {
       <br />
 
       <h2>{t("whyUs")}</h2>
-      <p>
-        {t("aboutWhyUs")}
-        <ul>
-          <li>{t("aboutWhyUs1")}</li>
-          <li>{t("aboutWhyUs2")}</li>
-          <li>{t("aboutWhyUs3")}</li>
-          <li>{t("aboutWhyUs4")}</li>
-          <li>{t("aboutWhyUs5")}</li>
-        </ul>
-      </p>
+      <p>{t("aboutWhyUs")}</p>
+      <ul>
+        <li>{t("aboutWhyUs1")}</li>
+        <li>{t("aboutWhyUs2")}</li>
+        <li>{t("aboutWhyUs3")}</li>
+        <li>{t("aboutWhyUs4")}</li>
+        <li>{t("aboutWhyUs5")}</li>
+      </ul>
+
       <br />
 
       <p>{t("joinUs")}</p>

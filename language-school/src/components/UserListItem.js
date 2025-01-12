@@ -12,7 +12,7 @@ function UserListItem({ user }) {
   };
 
   return (
-    <div
+    <li
       className={
         "user-card " +
         (user.role.id === roles.EMPLOYEE
@@ -22,6 +22,7 @@ function UserListItem({ user }) {
           : "student-card")
       }
       onClick={viewUserDetails}
+      key={user.id}
     >
       <img
         src={`/assets/images/user.svg`}
@@ -43,7 +44,7 @@ function UserListItem({ user }) {
         </p>
         <br />
       </div>
-    </div>
+    </li>
   );
 }
 

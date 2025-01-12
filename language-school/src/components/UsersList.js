@@ -49,9 +49,11 @@ function UsersList() {
       <button className="user-add-button" onClick={handleAddUser}>
         {t("addEmpTeach")}
       </button>
-      {users.map((user) => (
-        <UserListItem user={user} />
-      ))}
+      <ul>
+        {users.map((user) => (
+          <UserListItem user={user} />
+        ))}
+      </ul>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}

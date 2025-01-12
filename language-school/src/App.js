@@ -105,7 +105,7 @@ function App() {
         closeOnClick={true}
         rtl={false}
         draggable
-        toastStyle={{ marginRight: "1rem", marginTop: "6rem" }}
+        toastStyle={{ marginRight: "1rem", marginTop: "4rem" }}
         closeButton={false}
       />
     </Router>
