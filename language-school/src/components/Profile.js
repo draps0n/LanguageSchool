@@ -105,8 +105,24 @@ function Profile() {
     getProfileData();
   }, [userData, axios, t]);
 
-  const toggleEditMode = () => {
-    setEditMode(!editMode);
+  const toggleEditMode = (newValue) => {
+    if (newValue !== undefined) {
+      setEditMode(newValue);
+    } else {
+      setEditMode((prev) => !prev);
+    }
+    setGeneralError("");
+    setErrors({
+      name: "",
+      lastName: "",
+      email: "",
+      dateOfBirth: "",
+      newPassword: "",
+      passwordConfirmation: "",
+      description: "",
+      salary: "",
+    });
+
     setFormData((prev) => ({
       ...prev,
       name: user.name,
@@ -258,7 +274,7 @@ function Profile() {
       }));
 
       toast.success(t("profileUpdated"));
-      setEditMode(false);
+      toggleEditMode(false);
     } catch (error) {
       if (error?.response?.status === 409) {
         toast.error(t("emailTaken"));
@@ -287,8 +303,6 @@ function Profile() {
         description: user.description,
         salary: user.salary,
       }));
-
-      setEditMode(false);
     }
   };
 
@@ -461,6 +475,7 @@ function Profile() {
                   onChange={handleChange}
                   value={formData.salary || ""}
                   readOnly={!editMode}
+                  error={errors.salary}
                 />
               </div>
             )}
@@ -468,7 +483,7 @@ function Profile() {
         </div>
         {generalError && <p className="error">{generalError}</p>}
         <div className="profile-buttons">
-          <button onClick={toggleEditMode} type="button">
+          <button onClick={() => toggleEditMode()} type="button">
             {editMode ? t("cancel") : t("edit")}
           </button>
           {editMode && <button type="submit">{t("save")}</button>}
