@@ -636,6 +636,35 @@ header {
     border-bottom: 1px solid #ccc;
 }
 
+.student-absences {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
+}
+
+.remove-absence-button {
+    color: #f44336;
+    background-color: inherit;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.remove-absence-button:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.add-absence-button {
+    color: #4caf50;
+    background-color: inherit;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
 .remove-from-course-button {
     color: #f44336;
     background-color: inherit;

@@ -254,5 +254,7 @@
   "aboutWhyUs3": "Moderne Lehrmethoden",
   "aboutWhyUs4": "Eine freundliche und unterstützende Atmosphäre",
   "aboutWhyUs5": "Eine große Auswahl an Sprachkursen für alle Leistungsniveaus",
-  "joinUs": "Machen Sie mit und erleben Sie, wie angenehm und effektiv das Erlernen von Fremdsprachen sein kann!"
+  "joinUs": "Machen Sie mit und erleben Sie, wie angenehm und effektiv das Erlernen von Fremdsprachen sein kann!",
+  "errorUpdatingAbsences": "Beim Aktualisieren der Anzahl der Abwesenheiten ist ein Fehler aufgetreten.",
+  "cannotHaveNegativeAbsences": "Die Anzahl der Abwesenheiten kann nicht negativ sein."
 }

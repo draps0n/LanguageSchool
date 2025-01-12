@@ -579,6 +579,55 @@ const leaveGroup = async (req, res) => {
   }
 };
 
+const updateAbsences = async (req, res) => {
+  const { groupId, studentId } = req.params;
+  const { increment } = req.body;
+
+  if (!groupId || isNaN(groupId)) {
+    return res.status(400).json({ message: "Group id is required" });
+  }
+
+  if (!studentId || isNaN(studentId)) {
+    return res.status(400).json({ message: "Student id is required" });
+  }
+
+  if (!increment || isNaN(increment)) {
+    return res.status(400).json({ message: "Increment is required" });
+  }
+
+  try {
+    const group = await groupModel.getGroupById(groupId);
+    if (!group) {
+      return res.status(404).json({ message: "Group not found" });
+    }
+
+    const student = await studentModel.getStudentById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const studentAbsences = await groupModel.getUserAbsences(
+      groupId,
+      studentId
+    );
+    if (studentAbsences === null) {
+      return res.status(404).json({ message: "Student is not in this group" });
+    }
+
+    const newAbsences = studentAbsences + increment;
+    if (newAbsences < 0) {
+      return res.status(409).json({ message: "Absences cannot be negative" });
+    }
+
+    await groupModel.updateAbsences(groupId, studentId, newAbsences);
+
+    res.json({ absences: newAbsences });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 module.exports = {
   getAllGroups,
   getGroupById,
@@ -591,4 +640,5 @@ module.exports = {
   getGroupStudents,
   deleteStudentFromGroup,
   leaveGroup,
+  updateAbsences,
 };

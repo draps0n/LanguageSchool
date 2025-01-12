@@ -5,6 +5,7 @@ const verifyRole = require("../middlewares/verifyRoleMiddleware");
 const { getRoles } = require("../config/roles");
 
 router
+  .put("/:groupId/students/:studentId/absences", groupController.updateAbsences)
   .get("/available", groupController.getAvailableGroupsForUser)
   .get("/user", verifyRole(getRoles().KURSANT), groupController.getUserGroups)
   .get(

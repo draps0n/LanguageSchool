@@ -254,5 +254,7 @@
   "aboutWhyUs3": "Modern teaching methods",
   "aboutWhyUs4": "A friendly and supportive atmosphere",
   "aboutWhyUs5": "A wide selection of language courses for all levels of advancement",
-  "joinUs": "Join us and see how enjoyable and effective learning foreign languages can be!"
+  "joinUs": "Join us and see how enjoyable and effective learning foreign languages can be!",
+  "errorUpdatingAbsences": "An error occurred while updating the number of absences.",
+  "cannotHaveNegativeAbsences": "The number of absences cannot be negative."
 }

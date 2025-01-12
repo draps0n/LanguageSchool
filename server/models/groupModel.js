@@ -378,6 +378,17 @@ const deleteStudentFromGroup = async (groupId, studentId) => {
   );
 };
 
+const updateAbsences = async (groupId, studentId, newAbsences) => {
+  await pool.query(
+    `
+    UPDATE uczestnictwo
+    SET liczba_nieobecnosci = ?
+    WHERE grupa = ? AND kursant = ?
+    `,
+    [newAbsences, groupId, studentId]
+  );
+};
+
 module.exports = {
   getAllGroups,
   getTotalGroups,
@@ -398,4 +409,5 @@ module.exports = {
   deleteGroupsMembershipsByStudentId,
   isStudentInGroup,
   deleteStudentFromGroup,
+  updateAbsences,
 };

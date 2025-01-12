@@ -56,6 +56,14 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
     }
   };
 
+  const updateStudentAbsences = (studentId, absences) => {
+    setStudents((prev) =>
+      prev.map((student) =>
+        student.id === studentId ? { ...student, absences } : student
+      )
+    );
+  };
+
   if (loading) {
     return <Loading />;
   }
@@ -73,6 +81,7 @@ function CourseStudentsList({ groupId, takenPlaces, setTakenPlaces }) {
             student={student}
             groupId={groupId}
             refreshStudents={refreshStudents}
+            updateStudentAbsences={updateStudentAbsences}
           />
         ))}
       </ul>

@@ -403,6 +403,7 @@ function Profile() {
               alt="user-picture"
               className="user-photo"
             />
+            <br />
             {userData.roleId === roles.STUDENT && (
               <div className="student-info">
                 <InputTextArea
