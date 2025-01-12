@@ -5,21 +5,37 @@ const verifyRole = require("../middlewares/verifyRoleMiddleware");
 const { getRoles } = require("../config/roles");
 
 router
-  .put("/:groupId/students/:studentId/absences", groupController.updateAbsences)
-  .get("/available", groupController.getAvailableGroupsForUser)
-  .get("/user", verifyRole(getRoles().KURSANT), groupController.getUserGroups)
-  .get(
-    "/teacher",
+  .put(
+    "/:groupId/students/:studentId/absences",
     verifyRole(getRoles().NAUCZYCIEL),
-    groupController.getTeacherGroups
+    groupController.updateAbsences
   )
   .delete(
     "/:groupId/students/:studentId",
     verifyRole(getRoles().PRACOWNIK_ADMINISTRACYJNY),
     groupController.deleteStudentFromGroup
   )
-  .get("/:id/students", groupController.getGroupStudents)
-  .delete("/:id/leave", groupController.leaveGroup)
+  .get(
+    "/available",
+    verifyRole(getRoles().KURSANT),
+    groupController.getAvailableGroupsForUser
+  )
+  .get("/user", verifyRole(getRoles().KURSANT), groupController.getUserGroups)
+  .get(
+    "/teacher",
+    verifyRole(getRoles().NAUCZYCIEL),
+    groupController.getTeacherGroups
+  )
+  .get(
+    "/:id/students",
+    verifyRole(getRoles().NAUCZYCIEL, getRoles().PRACOWNIK_ADMINISTRACYJNY),
+    groupController.getGroupStudents
+  )
+  .delete(
+    "/:id/leave",
+    verifyRole(getRoles().KURSANT),
+    groupController.leaveGroup
+  )
   .get("/:id", groupController.getGroupById)
   .delete(
     "/:id",
